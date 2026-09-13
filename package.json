@@ -4,15 +4,24 @@
   "private": true,
   "description": "Design-to-code MCP server for the tenet-ui design system: ingest pipeline, catalog tools, plan / audit / checks.",
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "ingest": "tsx src/ingest/cli.ts",
+    "start": "tsx src/main.ts",
+    "dev": "tsx watch src/main.ts",
+    "stdio": "tsx src/stdio.ts",
+    "token": "tsx src/auth/cli.ts",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test \"src/**/*.test.ts\""
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "jose": "^6.2.12",
     "tar": "^7.4.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "zod": "^4.6.4"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",
