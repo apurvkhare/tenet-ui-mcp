@@ -9,6 +9,7 @@ import { createMcpServer, SERVER_INFO, TOOL_SCOPES } from './server.js';
 import type { DesignStore } from './store/design-store.js';
 import type { VisionFn } from './design/vision.js';
 import { emit, traceFromHeader } from './telemetry.js';
+import { DASHBOARD_HTML, HookEventSchema, type MetricsStore } from './metrics.js';
 
 export interface HttpOptions {
   store: CatalogStore;
@@ -21,6 +22,8 @@ export interface HttpOptions {
   designs?: DesignStore;
   sealKey?: Buffer;
   vision?: VisionFn;
+  /** Event spool behind /events, /metrics.json and /dashboard (DESIGN.md §7). */
+  metrics?: MetricsStore;
 }
 
 const MAX_BODY = 6 * 1024 * 1024; // ingest_design images are ≤ 5 MB base64
@@ -43,6 +46,7 @@ export function createHttpServer(opts: HttpOptions): Server {
       if (url.pathname === '/.well-known/oauth-protected-resource') return sendJson(res, 200, prm(mcpUrl, auth));
       if (url.pathname === '/.well-known/oauth-authorization-server') return sendJson(res, 200, asMetadata(origin, auth));
       if (url.pathname === '/oauth/token' && req.method === 'POST') return await tokenEndpoint(req, res, auth, opts);
+      if (url.pathname === '/events' || url.pathname === '/metrics.json' || url.pathname === '/dashboard') { status = await observability(req, res, url, auth, opts, trace.traceId); return; }
       if (url.pathname !== '/mcp') { status = 404; return sendJson(res, 404, { error: 'not_found' }); }
 
       // Origin: browsers send it; a value not on the allowlist is a DNS-rebinding or CSRF attempt.
@@ -99,6 +103,43 @@ export function createHttpServer(opts: HttpOptions): Server {
       emit({ event: 'request', traceId: trace.traceId, method: req.method, path: url.pathname, status, durationMs: Math.round(performance.now() - t0) });
     }
   });
+}
+
+// ---- observability: hook events in, metrics and the dashboard out (DESIGN.md §7) ----------------
+async function observability(req: IncomingMessage, res: ServerResponse, url: URL, auth: AuthConfig, opts: HttpOptions, traceId: string): Promise<number> {
+  if (!opts.metrics) { sendJson(res, 404, { error: 'not_found', detail: 'metrics are not enabled (DATA_DIR)' }); return 404; }
+  let principal: Principal;
+  try {
+    principal = await verifyBearer(auth, header(req, 'authorization') ?? (url.searchParams.get('token') ? `Bearer ${url.searchParams.get('token')}` : undefined));
+  } catch (err) {
+    if (!(err instanceof AuthError)) throw err;
+    res.setHeader('WWW-Authenticate', `Bearer error="${err.code === 'unauthorized' ? 'invalid_request' : err.code}"`);
+    sendJson(res, err.status, { error: err.code, error_description: err.message });
+    return err.status;
+  }
+  if (url.pathname === '/events') {
+    if (req.method !== 'POST') { res.setHeader('allow', 'POST'); sendJson(res, 405, { error: 'method_not_allowed' }); return 405; }
+    const body = await readBody(req, 256 * 1024);
+    let parsed: unknown;
+    try { parsed = JSON.parse(body); } catch { sendJson(res, 400, { error: 'invalid_json' }); return 400; }
+    const items = Array.isArray(parsed) ? parsed : [parsed];
+    if (items.length > 200) { sendJson(res, 400, { error: 'too_many_events', max: 200 }); return 400; }
+    let accepted = 0;
+    const rejected: string[] = [];
+    for (const it of items) {
+      const r = HookEventSchema.safeParse(it);
+      if (!r.success) { rejected.push(r.error.issues[0]?.message ?? 'invalid'); continue; }
+      opts.metrics.record({ ...r.data, sub: principal.sub, traceId: r.data.traceId ?? traceId });
+      accepted++;
+    }
+    sendJson(res, 202, { accepted, rejected: rejected.length, ...(rejected.length ? { reasons: rejected.slice(0, 3) } : {}) });
+    return 202;
+  }
+  const days = Math.min(90, Math.max(1, Number(url.searchParams.get('days') ?? 7) || 7));
+  if (url.pathname === '/metrics.json') { sendJson(res, 200, opts.metrics.summary(days)); return 200; }
+  res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
+  res.end(DASHBOARD_HTML);
+  return 200;
 }
 
 // ---- discovery documents -----------------------------------------------------------------------

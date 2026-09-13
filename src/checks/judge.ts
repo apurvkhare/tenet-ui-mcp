@@ -111,26 +111,38 @@ export function judgeResults(data: VersionData, results: CaptureResults, theme: 
   if (!c.a11y || c.a11y.status === 'skipped') checks.a11y = { status: 'skipped', detail: c.a11y?.reason ?? 'not run' };
   else if (c.a11y.status === 'error' && !(c.a11y.renders?.length)) checks.a11y = { status: 'error', detail: c.a11y.reason ?? 'render failed' };
   else {
-    let gating = 0;
-    const seen = new Set<string>();
-    for (const r of c.a11y.renders ?? []) {
-      if (r.status === 'error') { findings.push({ check: 'a11y', rule: 'render/error', severity: 'error', message: `${r.story} [${r.theme}]: ${r.error ?? 'did not render'}`, fix: { hint: 'fix the render error first' }, id: fid(['a11y', 'render-error', r.story, r.theme]) }); continue; }
-      for (const v of r.violations) {
-        const sev = IMPACT[v.impact ?? ''] ?? 'warn';
-        if (sev === 'critical' || sev === 'serious') gating++;
-        const fix = AXE_FIX[v.id] ?? { hint: v.help ?? v.id, guideline: 'accessibility' };
-        for (const n of v.nodes) {
-          const key = fid(['a11y', v.id, n.target]);
-          const themes = seen.has(key) ? undefined : (c.a11y.renders ?? []).filter((x) => x.violations.some((y) => y.id === v.id && y.nodes.some((z) => z.target === n.target))).map((x) => x.theme);
-          if (seen.has(key)) continue;
-          seen.add(key);
-          findings.push({ check: 'a11y', rule: `axe/${v.id}`, severity: sev, message: `${v.id} on ${n.target} (${r.story}${themes && themes.length > 1 ? ', both themes' : `, ${r.theme}`}): ${n.summary || v.help || ''}`.trim(), fix: { hint: fix.hint, primitive: fix.primitive, guideline: g(fix.guideline), resource: v.helpUrl }, id: key });
-        }
-      }
-    }
-    checks.a11y = { status: gating ? 'fail' : (c.a11y.renders ?? []).some((r) => r.status === 'error') ? 'error' : 'pass', detail: `${c.a11y.renders?.length ?? 0} render(s), ${gating} serious/critical` };
+    const renders = c.a11y.renders ?? [];
+    for (const r of renders) if (r.status === 'error') findings.push({ check: 'a11y', rule: 'render/error', severity: 'error', message: `${r.story} [${r.theme}]: ${r.error ?? 'did not render'}`, fix: { hint: 'fix the render error first' }, id: fid(['a11y', 'render-error', r.story, r.theme]) });
+    const axe = axeFindings(data, renders.filter((r) => r.status !== 'error').map((r) => ({ label: r.story, theme: r.theme, violations: r.violations })));
+    findings.push(...axe.findings);
+    checks.a11y = { status: axe.gating ? 'fail' : renders.some((r) => r.status === 'error') ? 'error' : 'pass', detail: `${renders.length} render(s), ${axe.gating} serious/critical` };
   }
   return { findings, checks };
+}
+
+export interface AxeRender { label: string; theme: string; violations: Array<{ id: string; impact?: string; help?: string; helpUrl?: string; nodes: Array<{ target: string; html?: string; summary?: string }> }> }
+
+/** axe violations → findings in the contract's vocabulary; one finding per node across themes. Shared by run_checks and audit_page. */
+export function axeFindings(data: VersionData, renders: AxeRender[]): { findings: Finding[]; gating: number } {
+  const findings: Finding[] = [];
+  const g = (id: string): string => `ds://${data.version}/guidelines/${id}`;
+  const seen = new Set<string>();
+  let gating = 0;
+  for (const r of renders) {
+    for (const v of r.violations) {
+      const sev = IMPACT[v.impact ?? ''] ?? 'warn';
+      const fix = AXE_FIX[v.id] ?? { hint: v.help ?? v.id, guideline: 'accessibility' };
+      for (const n of v.nodes) {
+        const key = fid(['a11y', v.id, n.target]);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        if (sev === 'critical' || sev === 'serious') gating++;
+        const themes = renders.filter((x) => x.violations.some((y) => y.id === v.id && y.nodes.some((z) => z.target === n.target))).map((x) => x.theme);
+        findings.push({ check: 'a11y', rule: `axe/${v.id}`, severity: sev, message: `${v.id} on ${n.target} (${r.label}${themes.length > 1 ? ', both themes' : `, ${r.theme}`}): ${n.summary || v.help || ''}`.trim(), fix: { hint: fix.hint, primitive: fix.primitive, guideline: g(fix.guideline), resource: v.helpUrl }, id: key });
+      }
+    }
+  }
+  return { findings, gating };
 }
 
 function typeFinding(data: VersionData, e: { file?: string | null; line?: number | null; column?: number | null; code?: string; message: string }): Finding {
@@ -159,8 +171,13 @@ function typeFinding(data: VersionData, e: { file?: string | null; line?: number
   return { ...base, fix: { hint: 'fix the type error; the documented props are in get_component' } };
 }
 
-function protectedRule(name: string): string {
+export function protectedRule(name: string): string {
   const n = name.toLowerCase();
+  if (/no axe violations|axe/.test(n)) return 'accessibility: no serious or critical axe violation';
+  if (/accessible name|labell?ed|has alt/.test(n)) return 'accessibility: every interactive element has an accessible name';
+  if (/forwards? (its )?ref|classname|rest props/.test(n)) return 'contract: forwardRef, spread rest, accept className';
+  if (/does not call|disabled/.test(n)) return 'a disabled control is inert';
+  if (/^renders variant|^renders size|^renders /.test(n)) return 'a story per variant renders';
   if (/axe|a11y|accessib|aria|label|name/.test(n)) return 'accessibility: every interactive element has an accessible name';
   if (/keyboard|focus|escape|enter|space|arrow/.test(n)) return 'keyboard path and visible focus';
   if (/render|default/.test(n)) return 'renders with default props';

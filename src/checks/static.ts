@@ -72,6 +72,11 @@ export function staticChecks(data: VersionData, files: SourceFile[], theme: 'lig
           if (kind === 'fontWeight' && !/^\d{3}$/.test(v)) continue;
           if (kind !== 'fontWeight' && !isStyle && !/(px|rem|em)$/.test(v) && !/^\d+$/.test(v)) continue;
           const r = resolveValue(data.tokens, /^\d+(\.\d+)?$/.test(v) && kind !== 'fontWeight' ? `${v}px` : v, kind, theme);
+          // Pixel margins are a layout smell before they are a token miss: the contract wants Stack/Grid gaps.
+          if (kind === 'space' && /^margin/i.test(prop)) {
+            out.push({ check: 'contract', rule: 'contract/pixel-margin-layout', severity: 'error', file: f.path, line, column: m.index! + 1, message: `pixel margin ${prop}: ${v}`, fix: { hint: `lay siblings out with <Stack gap=…> or <Grid>; if a margin is unavoidable use var(${r.cssVar ?? '--space-n'})${r.tokenValue ? ` (${r.tokenValue})` : ''}`, primitive: 'Stack', token: r.token, guideline: guideline('layout') }, id: fid(['contract', 'pixel-margin-layout', f.path, line, prop, v]) });
+            continue;
+          }
           out.push({ check: 'tokens', rule: 'tokens/no-raw-spacing', severity: 'error', file: f.path, line, column: m.index! + 1, message: `raw ${prop}: ${v}`, fix: { hint: r.token ? `use var(${r.cssVar}) (${r.tokenValue}${r.delta ? `, Δ${r.delta}` : ''})` : `no ${kind} tokens in this version`, token: r.token, guideline: guideline(kind === 'space' ? 'layout' : 'typography') }, id: fid(['tokens', 'no-raw-spacing', f.path, line, prop, v]) });
         }
       }

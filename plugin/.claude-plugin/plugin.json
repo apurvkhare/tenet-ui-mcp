@@ -1,0 +1,8 @@
+{
+  "name": "tenet-ui",
+  "version": "0.1.0",
+  "description": "Companion plugin for the tenet-ui design-system MCP server: hooks that report what the agent did with the server's answers (layer two of the dashboard). Opt-in; names, counts and ids only.",
+  "author": { "name": "Apurv Khare" },
+  "repository": "https://github.com/apurvkhare/tenet-ui-mcp",
+  "keywords": ["design-system", "mcp", "tenet-ui", "hooks"]
+}

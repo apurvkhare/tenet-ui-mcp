@@ -6,6 +6,7 @@ import { A11Y_CONTRACT } from './tools/catalog-tools.js';
 import { ToolError } from './tools/context.js';
 import type { DesignStore } from './store/design-store.js';
 import type { DesignRow, MatchRow, PlanRow } from './tools/design-tools.js';
+import type { ReportRow } from './checks/report.js';
 
 export interface ResourceContent { uri: string; mimeType: string; text?: string; blob?: Buffer }
 export interface ReadContext { designs?: DesignStore; sub?: string }
@@ -13,6 +14,7 @@ export interface ReadContext { designs?: DesignStore; sub?: string }
 export function readResource(store: CatalogStore, uri: string, rc: ReadContext = {}): ResourceContent {
   const u = new URL(uri);
   if (u.protocol === 'design:') return readDesignResource(u, uri, rc);
+  if (u.protocol === 'audit:') return readAuditResource(u, uri, rc);
   if (u.protocol !== 'ds:') throw new ToolError(`unsupported scheme ${u.protocol}`, 'not_found');
   // ds://versions  |  ds://{v}/components/{name}  |  ds://{v}/tokens/{group}.json  |  ds://{v}/guidelines/{topic}  |  ds://{v}/gaps
   const host = u.host;
@@ -148,4 +150,20 @@ function readDesignResource(u: URL, uri: string, rc: ReadContext): ResourceConte
     return wantJson ? { uri, mimeType: 'application/json', text: json({ planId, ...p.data.plan }) } : { uri, mimeType: 'text/markdown', text: p.data.markdown };
   }
   throw new ToolError(`no resource at ${uri}; artifacts: layout.json, screenshot.png, match.json, matches/{id}.json, plan.md, plans/{id}.md|.json`, 'not_found');
+}
+
+// ---- audit:// (private, principal-bound; DESIGN.md §6) ------------------------------------------
+function readAuditResource(u: URL, uri: string, rc: ReadContext): ResourceContent {
+  if (!rc.designs || !rc.sub) throw new ToolError('audit resources are not available on this transport', 'not_found');
+  const auditId = u.host;
+  const artifact = u.pathname.replace(/^\/+/, '');
+  const row = rc.designs.get<ReportRow>('audit', rc.sub, auditId);
+  if (!row) throw new ToolError(`no resource at ${uri}`, 'not_found');
+  if (artifact === 'findings.json') {
+    const blob = rc.designs.getBlob(rc.sub, auditId, 'findings.json');
+    return { uri, mimeType: 'application/json', text: blob ? blob.toString('utf8') : json({ reportId: auditId, findings: [], note: 'findings were not stored for this report' }) };
+  }
+  if (artifact === 'delta.json') return { uri, mimeType: 'application/json', text: json(row.data.delta ?? { reportId: auditId, note: 'no previous report was given; pass auditId on the next run to get a delta' }) };
+  if (artifact === 'report.json' || artifact === '') { const { findingIds: _ids, ...rest } = row.data; return { uri, mimeType: 'application/json', text: json({ reportId: auditId, createdAt: row.createdAt, expiresAt: row.expiresAt, findings: _ids.length, ...rest }) }; }
+  throw new ToolError(`no resource at ${uri}; artifacts: findings.json, delta.json, report.json`, 'not_found');
 }

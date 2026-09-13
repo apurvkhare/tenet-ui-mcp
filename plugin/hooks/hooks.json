@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "^mcp__[^_].*__(search_components|get_component|find_tokens|search_icons|resolve_value|ingest_design|match_components|resolve_tokens|plan_component|audit_code|audit_page|plan_tests|run_checks)$",
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/ds-hook.mjs\" post-tool", "timeout": 10 }]
+      },
+      {
+        "matcher": "^(Write|Edit|MultiEdit|NotebookEdit)$",
+        "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/ds-hook.mjs\" file-written", "timeout": 10 }]
+      }
+    ],
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/ds-hook.mjs\" session-outcome", "timeout": 15 }] }
+    ]
+  }
+}

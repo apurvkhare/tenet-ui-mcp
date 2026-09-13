@@ -2,7 +2,7 @@
 
 The design-to-code MCP server for the [tenet-ui](https://github.com/apurvkhare/tenet-ui) design system, built to the design in `mcp-masterclass/design/ds-mcp-server/DESIGN.md` (rev 3). The server supplies context and judgment; the agent writes the code and runs the checks.
 
-Status: **build order steps 1–3 done** — ingest pipeline, five catalog tools, resources, Streamable HTTP with self-hosted auth, path one (ingest_design → match_components → resolve_tokens → plan_component) with form elicitation, and `run_checks` judging the capture script's results. Next: audit and tests (step 4).
+Status: **build order steps 1–4 done** — ingest pipeline, five catalog tools, resources, Streamable HTTP with self-hosted auth, path one (ingest_design → match_components → resolve_tokens → plan_component) with form elicitation, `run_checks` judging the capture script's results, path two (`audit_code`, `audit_page`), `plan_tests`, the three prompts, the hooks plugin and the first dashboard. The talk needs these four. Next: Figma (step 5), external OAuth and the eval harness (step 6).
 
 ## Run it
 
@@ -22,7 +22,9 @@ npm run token -- --sub apurv --scope ds:read        # prints a bearer token for 
 
 Claude Code, Cursor or any Streamable HTTP client: endpoint `http://127.0.0.1:3000/mcp`, header `Authorization: Bearer <token>`. For a local stdio client: `npm run stdio`.
 
-Environment: `PORT`, `HOST`, `PUBLIC_URL` (the `aud` of tokens and the resource in PRM), `AUTH_MODE` (`none` | `hs256`), `AUTH_HMAC_KEY`, `AUTH_CLIENT_ID` / `AUTH_CLIENT_SECRET` / `AUTH_CLIENT_SCOPES` (optional client-credentials client for CI at `POST /oauth/token`), `ALLOWED_ORIGINS`, `SNAPSHOTS_DIR`, `TELEMETRY=off`.
+Environment: `PORT`, `HOST`, `PUBLIC_URL` (the `aud` of tokens and the resource in PRM), `AUTH_MODE` (`none` | `hs256`), `AUTH_HMAC_KEY`, `AUTH_CLIENT_ID` / `AUTH_CLIENT_SECRET` / `AUTH_CLIENT_SCOPES` (optional client-credentials client for CI at `POST /oauth/token`), `ALLOWED_ORIGINS`, `SNAPSHOTS_DIR`, `DATA_DIR` (design store + event spool, default `.data/`), `TELEMETRY=off`.
+
+Dashboard: `GET /dashboard` (HTML) and `GET /metrics.json?days=7`, bearer-authenticated (header or `?token=`), read the event spool the server writes for its own calls and the companion plugin posts to `POST /events`.
 
 ## What the server serves
 
@@ -53,9 +55,25 @@ Every tool takes `dsVersion` (JSON schema carries `x-mcp-header: DsVersion`; a `
 |---|---|---|
 | `run_checks` | 16 KB | Takes the files the agent wrote and the `results.json` the skill's capture script produced (tsc, lint, tests, axe, screenshots). Scans the files itself for raw colours and lengths (nearest token + delta), unknown tokens, deprecated components and props from the migration registry, hand-built elements where a component exists, unlabeled icon buttons, `onClick` on non-interactive elements, missing `alt`, a missing stylesheet import, and imports this version does not export. Maps the agent's results to findings with fix hints: type errors to the documented prop (nearest name, allowed union values), lint rules to guideline pages, axe violations to the primitive that fixes them, failed tests to the rule they protect. Screenshots with embedded bytes (`--embed-screenshots`) are compared to the design image by SSIM with a 4×4 region map, advisory only. Returns one report sorted by severity with `checks`, `skipped` (never assumed green), pagination by file, and `delta` against a previous `auditId`. Types, lint, tokens, deprecations, tests and a11y gate; contract and visual inform. Nothing runs on the server. |
 
+**Path two, audit and test** (DESIGN.md §5):
+
+| Tool | Scope | Cap | What it does |
+|---|---|---|---|
+| `audit_code` | `audit:run` | 16 KB | The static scan of `run_checks` over source and style files, plus the contract rules: boolean prop explosions (three or more booleans on one props interface), exported components that do not `forwardRef`, system primitives re-styled inline or via CSS that targets `Tenet-*` classes, pixel margins between siblings. `rules` narrows by id or prefix. Per-file summary with the package imports and exported components. Paginated by file; `byRule` counts; `auditId` for fixed / new / remaining on the next run. |
+| `audit_page` | `audit:run` | 16 KB | Judges `snapshot.json` from `capture.mjs page <url>`: the runtime contract (critical when the stylesheet did not resolve), console errors; every computed colour, font size, radius, padding and gap on the page's own elements resolved to a token for the theme (elements inside `Tenet-*` components are the system's responsibility and are not judged); text contrast over the effective background (walks `parent` links) against WCAG and the documented pairs; missing accessible names, heading order and one `main` from the accessibility tree (axe-reported nodes are not double-counted); focus order against visual order; axe violations mapped to the primitive that fixes them; SSIM against a `designId` when the screenshot is embedded, advisory. Paginated by rule; `auditId`. |
+| `plan_tests` | `ds:read` | 12 KB | From the component's files (props interface, callbacks, unions, the primitives it imports, its stories) or from a `matchId` (the latest plan for it): a render case per variant and text prop, an interaction and a keyboard case per callback (and an inert-when-disabled case), a11y cases from the contract and from the primitives used (IconButton needs a name, Dialog traps focus and closes on Escape, Tabs arrow keys, …), the forwardRef/rest-props contract case, and a visual case per story with its Storybook id. Each case names the primitive it exercises and the rule it protects; `run_checks` maps failed tests back by name. Includes a test-file skeleton with one `it.todo` per case. |
+
+**Reports** from `run_checks`, `audit_code` and `audit_page` share one shape and one store: `audit://{auditId}/findings.json` (every finding, beyond the inline page), `delta.json`, `report.json`; private to the principal, 24 h.
+
+**Prompts:** `design-to-code`, `audit-ui`, `test-ui` — the path, the anti-duplicate-call rule, the stop condition (no critical or serious finding, or three rounds).
+
+**Hooks plugin** (`plugin/`, DESIGN.md §7 layer two): a Claude Code plugin with a `PostToolUse` hook on the server's tools, a `PostToolUse` hook on `Write`/`Edit`, and a `Stop` hook. It records tool name, trace id and outcome; that a file changed and what it followed (plan, audit, checks, catalog lookup); and at the end of the turn the rounds of `run_checks`, whether the last one was green, writes after a plan, lookups before a write, suppressed findings. Spooled locally under `~/.tenet-ui/hooks/` and posted to `POST /events` when `DS_SERVER_URL` and `DS_SERVER_TOKEN` are set. Never arguments, contents or paths in clear. See `plugin/README.md`.
+
+**Dashboard** (`GET /dashboard`): the eight questions of DESIGN.md §7 — calls and principals per tool, p50/p95 and bytes per tool, elicitation rounds and unresolved picks, first-run pass rate per check, findings per audit and fixed in session, rounds to green and writes after a plan (from hooks), zero-result searches and token exceptions, version distribution and fallbacks, `full: true` rate. Server events carry names, counts, durations, outcomes and per-check statuses only.
+
 **Elicitation** follows the MRTR shape of DESIGN.md §8 at the result level, because the MCP SDK does not ship it yet: a tool that needs an answer returns `structuredContent.resultType = "input_required"` with `inputRequests` (form elicitation params) and a sealed `requestState` (AES-GCM; principal, ten-minute expiry, argument digest, partial result). The client calls the same tool again with `inputResponses` and the untouched `requestState`. Another principal, a tampered blob, changed arguments, or an expired state are rejected. An agent can answer the questions itself or show them to the user.
 
-**Design store:** rows (`dsg_…`, `mtc_…`, `pln_…`) are bound to the caller's `sub`, expire after 24 h, live under `DATA_DIR` (default `.data/`). Another principal gets not-found, never forbidden. Private resources: `design://{designId}/layout.json`, `screenshot.png`, `match.json`, `matches/{matchId}.json`, `plan.md`, `plans/{planId}.md|.json`.
+**Design store:** rows (`dsg_…`, `mtc_…`, `pln_…`, `aud_…`) are bound to the caller's `sub`, expire after 24 h, live under `DATA_DIR` (default `.data/`). Another principal gets not-found, never forbidden. Private resources: `design://{designId}/layout.json`, `screenshot.png`, `match.json`, `matches/{matchId}.json`, `plan.md`, `plans/{planId}.md|.json`.
 
 **Vision:** `@anthropic-ai/sdk`, model `VISION_MODEL` (default `claude-opus-5`), structured output via `betaZodOutputFormat`, server-side refusal fallbacks on. Enabled when `ANTHROPIC_API_KEY` (or an `ant auth login` profile with `VISION=on`) is present; otherwise `ingest_design` accepts layouts only and says so.
 
@@ -67,7 +85,7 @@ Every tool takes `dsVersion` (JSON schema carries `x-mcp-header: DsVersion`; a `
 
 ## Protocol note
 
-`@modelcontextprotocol/sdk` 1.30 implements MCP **2025-11-25**: initialize handshake, `tools/list`, structured output, resource templates, Tasks. The stateless, no-handshake `server/discover` and MRTR elicitation that DESIGN.md §8 describes for the 2026-07-28 revision are not in the SDK yet. The server is stateless today (one `McpServer` per request, no session id), so the handshake is a formality and the move is contained in `src/http.ts`; elicitation already uses the MRTR result shape. `tools/list` is about 16 KB for nine tools with output schemas — the 7 KB figure in DESIGN.md §6 is not reachable with per-tool output schemas and is tracked as a budget of 2 KB per tool in the tests.
+`@modelcontextprotocol/sdk` 1.30 implements MCP **2025-11-25**: initialize handshake, `tools/list`, structured output, resource templates, Tasks. The stateless, no-handshake `server/discover` and MRTR elicitation that DESIGN.md §8 describes for the 2026-07-28 revision are not in the SDK yet. The server is stateless today (one `McpServer` per request, no session id), so the handshake is a formality and the move is contained in `src/http.ts`; elicitation already uses the MRTR result shape. `tools/list` is about 26 KB for thirteen tools with output schemas — the 7 KB figure in DESIGN.md §6 is not reachable with per-tool output schemas and is tracked as a budget of 2 KB per tool in the tests.
 
 ## Layout
 
@@ -76,14 +94,17 @@ src/ingest/            the data pipeline (DESIGN.md §10) — see below
 src/catalog/store.ts   snapshot reads + dsVersion resolution
 src/catalog/resolve.ts nearest-token resolution (ΔE / distance)
 src/catalog/synonyms.ts what people call components and token groups
-src/tools/             tools as plain functions (unit-tested without a transport): catalog-tools, design-tools
-src/design/            layout schema, vision call, matcher, token resolution, plan builder
-src/checks/            static scan, judgment over capture results, SSIM
-src/store/             the design store (principal-bound rows, 24 h TTL)
+src/tools/             tools as plain functions (unit-tested without a transport): catalog-, design-, audit-, test-, checks-tools
+src/design/            layout schema, vision call, matcher, token resolution, plan builder, test-plan builder
+src/checks/            static scan + contract rules, source parser, judgment over capture results, page judgment, SSIM, shared report plumbing
+src/store/             the design store (principal-bound rows, 24 h TTL; designs, matches, plans, reports)
 src/auth/seal.ts       requestState AEAD sealing
-src/resources.ts       ds:// resources
-src/server.ts          McpServer factory: registration order, structured output, _meta, telemetry
-src/http.ts            Streamable HTTP: Origin, bearer, scopes, PRM, AS metadata, client credentials
+src/resources.ts       ds:// public, design:// and audit:// private resources
+src/prompts.ts         design-to-code, audit-ui, test-ui
+src/metrics.ts         event spool, the §7 summary, the dashboard page
+src/server.ts          McpServer factory: registration order, structured output, _meta, telemetry with derived metrics
+src/http.ts            Streamable HTTP: Origin, bearer, scopes, PRM, AS metadata, client credentials; /events, /metrics.json, /dashboard
+plugin/                the companion Claude Code plugin: hooks.json + ds-hook.mjs (layer two)
 src/auth/tokens.ts     HS256 issuer + verifier (jose); src/auth/cli.ts mints tokens
 src/content/           the component contract and audit rule catalog (ds://…/guidelines/contract, audit-rules)
 snapshots/             one folder per ingested version + one per guidelines revision (committed)
@@ -113,4 +134,4 @@ Every snapshot carries a `manifest.json` (each source with `sourceRef`, content 
 
 ## Next
 
-DESIGN.md §15 step 4: `audit_code` (the static scan above, paginated by file, with an `auditId` for deltas), `audit_page` over the capture script's `snapshot.json` (computed styles → tokens, contrast against documented pairs, accessibility-tree problems, drift against a `designId`), `plan_tests` (from props, variants and the contract), the hooks plugin and the first dashboard. `design_to_plan` as a Task once the composite is worth it.
+DESIGN.md §15 steps 5 and 6: Figma (URL elicitation, connect page, token storage, Figma design context as an ingest source); external OAuth (PRM against a real AS, CIMD), the skill moved into this repo's plugin, the dual-path eval harness over golden screenshots and golden source files. `design_to_plan` as a Task once the composite is worth it; a live vision run once credentials are available (the vision path is wired but has never been exercised against the model).
