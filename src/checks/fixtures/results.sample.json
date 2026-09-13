@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "tenet-ui-skill/capture",
+    "version": "0.1.0"
+  },
+  "capturedAt": "2026-09-12T19:20:00.818Z",
+  "dsVersion": "0.4.0",
+  "project": "/private/tmp/claude-501/-Users-apurvkhare-Developer-repos-design-system-skill-demo-design-system/3406cb03-cb4a-4c3d-a801-d34079dee37c/scratchpad/capture-test",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "files": [
+    "src/ArticleCard.tsx",
+    "src/ArticleCard.stories.tsx"
+  ],
+  "checks": {
+    "types": {
+      "status": "pass",
+      "tsconfig": "tsconfig.json",
+      "typescript": "5.9.3",
+      "dsTypes": "0.4.0",
+      "storybookStubs": true,
+      "errors": []
+    },
+    "lint": {
+      "status": "fail",
+      "config": "built-in: eslint-plugin-tenet-ui recommended + @typescript-eslint/parser",
+      "findings": [
+        {
+          "file": "src/ArticleCard.tsx",
+          "line": 14,
+          "column": 10,
+          "ruleId": "tenet-ui/prefer-component",
+          "severity": "error",
+          "message": "Raw <h1> where tenet-ui provides <Heading>. import { Heading } from 'tenet-ui'. Guideline: Components.",
+          "fixable": false
+        },
+        {
+          "file": "src/ArticleCard.tsx",
+          "line": 14,
+          "column": 30,
+          "ruleId": "tenet-ui/no-raw-color",
+          "severity": "error",
+          "message": "Raw colour #c2410c — no tenet-ui token has this value; pick a --fgColor-* token (e.g. var(--fgColor-default)). Guideline: Foundations > Color.",
+          "fixable": false
+        },
+        {
+          "file": "src/ArticleCard.tsx",
+          "line": 17,
+          "column": 37,
+          "ruleId": "tenet-ui/no-deprecated-api",
+          "severity": "error",
+          "message": "`block` on <Button> is deprecated since tenet-ui 0.4.0; use `fullWidth`. Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0. Guideline: Changelog > Deprecations.",
+          "fixable": true
+        }
+      ]
+    },
+    "tests": {
+      "status": "fail",
+      "runner": "vitest",
+      "files": [
+        "src/ArticleCard.test.tsx"
+      ],
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "cases": [
+        {
+          "file": "src/ArticleCard.test.tsx",
+          "name": "ArticleCard renders the title",
+          "status": "passed"
+        },
+        {
+          "file": "src/ArticleCard.test.tsx",
+          "name": "ArticleCard fails on purpose",
+          "status": "failed",
+          "message": "AssertionError: expected null not to be null\n    at /private/tmp/claude-501/-Users-apurvkhare-Developer-repos-design-system-skill-demo-design-system/3406cb03-cb4a-4c3d-a801-d34079dee37c/scratchpad/capture-test/src/ArticleCard.test.tsx:13:66\n    at file:///private/tmp/claude-501/-Users-apurvkhare-Developer-repos-design-system-skill-demo-design-system/3406cb03-cb4a-4c3d-a801-d34079dee37c/scratchpad/capture-test/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11\n    at file:///private/tmp/claude-501/-Users-apurvkhare-Developer-repos-design-system-skill-demo-design-system/3406cb03-cb4a-4c3d-a801-d34079dee37c/scratchpad/capture-test/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26\n    at file:///private/tmp/claude-501/-Users-apurvkhare-Developer-repos-design-system-skill-demo-design-system/3406cb03-cb4a-4c3d-a801-d34079dee37c/scratchpad/capture-test/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///private/tmp/claude-501/-Users-apurvkhare-Developer-repos-design-system-skill-demo-design-system/3406cb03-cb4a-4c3d-a801-d34079dee37c/scratchpad/capture-test/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)\n    at runTest (file:///private/tmp/claude-501/-Users-apurvkhare-Developer-repos-design-system-skill-demo-design-system/3406cb03-cb4a-4c3d-a801-d34079dee37c/scratchpad/capture-test/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at runSuite (file:///private/tmp/claude-501/-Users-apurvkhare-Developer-repos-design-system-skill-demo-design-system/3406cb03-cb4a-4c3d-a801-d34079dee37c/scratchpad/capture-test/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)\n    at runSuite (file:///private/tmp/claude-501/-Users-apurvkhare-Developer-repos-design-system-skill-demo-design-system/3406cb03-cb4a-4c3d-a801-d34079dee37c/scratchpad/capture-test/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)"
+        }
+      ]
+    },
+    "a11y": {
+      "status": "fail",
+      "renders": [
+        {
+          "story": "Default",
+          "storyId": "components-articlecard--default",
+          "theme": "light",
+          "status": "fail",
+          "violations": [
+            {
+              "id": "button-name",
+              "impact": "critical",
+              "help": "Buttons must have discernible text",
+              "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI",
+              "nodes": [
+                {
+                  "target": ".Tenet-IconButton",
+                  "html": "<button type=\"button\" class=\"Tenet-IconButton Tenet-IconButton--variant-default Tenet-IconButton--size-medium\">",
+                  "summary": "Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty   Element has no title attribute   Element does not have an implicit (wrapped) <label>   Element does not have an explicit <label>   Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "story": "Default",
+          "storyId": "components-articlecard--default",
+          "theme": "dark",
+          "status": "fail",
+          "violations": [
+            {
+              "id": "button-name",
+              "impact": "critical",
+              "help": "Buttons must have discernible text",
+              "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI",
+              "nodes": [
+                {
+                  "target": ".Tenet-IconButton",
+                  "html": "<button type=\"button\" class=\"Tenet-IconButton Tenet-IconButton--variant-default Tenet-IconButton--size-medium\">",
+                  "summary": "Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty   Element has no title attribute   Element does not have an implicit (wrapped) <label>   Element does not have an explicit <label>   Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "story": "LongTitle",
+          "storyId": "components-articlecard--long-title",
+          "theme": "light",
+          "status": "fail",
+          "violations": [
+            {
+              "id": "button-name",
+              "impact": "critical",
+              "help": "Buttons must have discernible text",
+              "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI",
+              "nodes": [
+                {
+                  "target": ".Tenet-IconButton",
+                  "html": "<button type=\"button\" class=\"Tenet-IconButton Tenet-IconButton--variant-default Tenet-IconButton--size-medium\">",
+                  "summary": "Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty   Element has no title attribute   Element does not have an implicit (wrapped) <label>   Element does not have an explicit <label>   Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "story": "LongTitle",
+          "storyId": "components-articlecard--long-title",
+          "theme": "dark",
+          "status": "fail",
+          "violations": [
+            {
+              "id": "button-name",
+              "impact": "critical",
+              "help": "Buttons must have discernible text",
+              "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/button-name?application=axeAPI",
+              "nodes": [
+                {
+                  "target": ".Tenet-IconButton",
+                  "html": "<button type=\"button\" class=\"Tenet-IconButton Tenet-IconButton--variant-default Tenet-IconButton--size-medium\">",
+                  "summary": "Element does not have inner text that is visible to screen readers   aria-label attribute does not exist or is empty   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty   Element has no title attribute   Element does not have an implicit (wrapped) <label>   Element does not have an explicit <label>   Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "impactsGating": [
+        "serious",
+        "critical"
+      ],
+      "tags": [
+        "wcag2a",
+        "wcag2aa",
+        "wcag21aa"
+      ]
+    },
+    "visual": {
+      "status": "captured",
+      "screenshots": [
+        {
+          "story": "Default",
+          "storyId": "components-articlecard--default",
+          "theme": "light",
+          "status": "captured",
+          "file": ".tenet-capture/default.light.png",
+          "sha256": "0fa1cd732cb3fa281323e3f8d428e6bbe7209f3775e014eaf02388e3ea2df2a7",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "bytes": 21782
+        },
+        {
+          "story": "Default",
+          "storyId": "components-articlecard--default",
+          "theme": "dark",
+          "status": "captured",
+          "file": ".tenet-capture/default.dark.png",
+          "sha256": "4c2b8bc014f941cfeffec88d16b127401fef9b8617246a9ce35ea3221134347b",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "bytes": 21303
+        },
+        {
+          "story": "LongTitle",
+          "storyId": "components-articlecard--long-title",
+          "theme": "light",
+          "status": "captured",
+          "file": ".tenet-capture/long-title.light.png",
+          "sha256": "9cef6f58991cf284b47f9b4ce31b7add9b4f98e28a89bf71bd6687c1fb757646",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "bytes": 23566
+        },
+        {
+          "story": "LongTitle",
+          "storyId": "components-articlecard--long-title",
+          "theme": "dark",
+          "status": "captured",
+          "file": ".tenet-capture/long-title.dark.png",
+          "sha256": "b6dd54ed95c68b6a7fedf6900ad698853d0e36e6df8d34ce71d266eedef1d15c",
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "bytes": 22984
+        }
+      ],
+      "note": "Compare each screenshot with the baseline resource for its storyId; the server reports SSIM as advisory."
+    }
+  },
+  "render": {
+    "stories": "src/ArticleCard.stories.tsx",
+    "title": "Components/ArticleCard",
+    "component": "ArticleCard",
+    "runtimeContract": {
+      "stylesheetLoaded": true,
+      "missingTokens": [],
+      "colorMode": "light"
+    },
+    "errors": []
+  },
+  "durationMs": 5400
+}

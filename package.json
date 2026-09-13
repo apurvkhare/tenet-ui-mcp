@@ -19,7 +19,9 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",
     "@modelcontextprotocol/sdk": "^1.30.0",
+    "@types/pngjs": "^6.0.5",
     "jose": "^6.2.12",
+    "pngjs": "^7.0.0",
     "tar": "^7.4.3",
     "typescript": "^5.9.3",
     "zod": "^4.6.4"

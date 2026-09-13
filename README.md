@@ -2,7 +2,7 @@
 
 The design-to-code MCP server for the [tenet-ui](https://github.com/apurvkhare/tenet-ui) design system, built to the design in `mcp-masterclass/design/ds-mcp-server/DESIGN.md` (rev 3). The server supplies context and judgment; the agent writes the code and runs the checks.
 
-Status: **build order steps 1 and 2 done** — ingest pipeline, five catalog tools, resources, Streamable HTTP with self-hosted auth, and path one (ingest_design → match_components → resolve_tokens → plan_component) with form elicitation. Next: run_checks over the capture script's results (step 3), then audit and tests (step 4).
+Status: **build order steps 1–3 done** — ingest pipeline, five catalog tools, resources, Streamable HTTP with self-hosted auth, path one (ingest_design → match_components → resolve_tokens → plan_component) with form elicitation, and `run_checks` judging the capture script's results. Next: audit and tests (step 4).
 
 ## Run it
 
@@ -47,6 +47,12 @@ Every tool takes `dsVersion` (JSON schema carries `x-mcp-header: DsVersion`; a `
 | `resolve_tokens` | 6 KB | Every raw value the analyser read → nearest token with delta. Off-scale values become questions: snap, use an alternative, keep as a documented exception, or propose a token. |
 | `plan_component` | 24 KB | The plan: tree with exact imports, prop mapping per node (variant from colour and state, heading level from size, placeholders, wrappers), token references, a11y per node, files, contract rules, catalog excerpts, story and test ideas. A plan, never source. |
 
+**Checks** (`checks:run`; DESIGN.md §5, §11, rev 3):
+
+| Tool | Cap | What it does |
+|---|---|---|
+| `run_checks` | 16 KB | Takes the files the agent wrote and the `results.json` the skill's capture script produced (tsc, lint, tests, axe, screenshots). Scans the files itself for raw colours and lengths (nearest token + delta), unknown tokens, deprecated components and props from the migration registry, hand-built elements where a component exists, unlabeled icon buttons, `onClick` on non-interactive elements, missing `alt`, a missing stylesheet import, and imports this version does not export. Maps the agent's results to findings with fix hints: type errors to the documented prop (nearest name, allowed union values), lint rules to guideline pages, axe violations to the primitive that fixes them, failed tests to the rule they protect. Screenshots with embedded bytes (`--embed-screenshots`) are compared to the design image by SSIM with a 4×4 region map, advisory only. Returns one report sorted by severity with `checks`, `skipped` (never assumed green), pagination by file, and `delta` against a previous `auditId`. Types, lint, tokens, deprecations, tests and a11y gate; contract and visual inform. Nothing runs on the server. |
+
 **Elicitation** follows the MRTR shape of DESIGN.md §8 at the result level, because the MCP SDK does not ship it yet: a tool that needs an answer returns `structuredContent.resultType = "input_required"` with `inputRequests` (form elicitation params) and a sealed `requestState` (AES-GCM; principal, ten-minute expiry, argument digest, partial result). The client calls the same tool again with `inputResponses` and the untouched `requestState`. Another principal, a tampered blob, changed arguments, or an expired state are rejected. An agent can answer the questions itself or show them to the user.
 
 **Design store:** rows (`dsg_…`, `mtc_…`, `pln_…`) are bound to the caller's `sub`, expire after 24 h, live under `DATA_DIR` (default `.data/`). Another principal gets not-found, never forbidden. Private resources: `design://{designId}/layout.json`, `screenshot.png`, `match.json`, `matches/{matchId}.json`, `plan.md`, `plans/{planId}.md|.json`.
@@ -72,6 +78,7 @@ src/catalog/resolve.ts nearest-token resolution (ΔE / distance)
 src/catalog/synonyms.ts what people call components and token groups
 src/tools/             tools as plain functions (unit-tested without a transport): catalog-tools, design-tools
 src/design/            layout schema, vision call, matcher, token resolution, plan builder
+src/checks/            static scan, judgment over capture results, SSIM
 src/store/             the design store (principal-bound rows, 24 h TTL)
 src/auth/seal.ts       requestState AEAD sealing
 src/resources.ts       ds:// resources
@@ -106,4 +113,4 @@ Every snapshot carries a `manifest.json` (each source with `sourceRef`, content 
 
 ## Next
 
-DESIGN.md §15 step 3: the contract resource is in place; add `run_checks` as inline judgment over the capture script's `results.json` (types, lint, tokens, deprecations, tests, axe, SSIM against the release baselines). Then step 4: `audit_code` with the migration registry, `audit_page` over `snapshot.json`, `plan_tests`, the hooks plugin. `design_to_plan` as a Task once the composite is worth it.
+DESIGN.md §15 step 4: `audit_code` (the static scan above, paginated by file, with an `auditId` for deltas), `audit_page` over the capture script's `snapshot.json` (computed styles → tokens, contrast against documented pairs, accessibility-tree problems, drift against a `designId`), `plan_tests` (from props, variants and the contract), the hooks plugin and the first dashboard. `design_to_plan` as a Task once the composite is worth it.

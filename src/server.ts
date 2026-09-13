@@ -9,6 +9,7 @@ import { listResources, readResource } from './resources.js';
 import { emit } from './telemetry.js';
 import { CATALOG_TOOLS } from './tools/catalog-tools.js';
 import { DESIGN_TOOLS } from './tools/design-tools.js';
+import { CHECK_TOOLS } from './tools/checks-tools.js';
 import type { DesignStore } from './store/design-store.js';
 import type { VisionFn } from './design/vision.js';
 import { bytes } from './tools/caps.js';
@@ -17,7 +18,7 @@ import type { Principal } from './auth/tokens.js';
 
 export const SERVER_INFO = { name: 'tenet-ui-mcp', version: '0.1.0', title: 'tenet-ui design system' } as const;
 
-export const ALL_TOOLS = [...CATALOG_TOOLS, ...DESIGN_TOOLS];
+export const ALL_TOOLS = [...CATALOG_TOOLS, ...DESIGN_TOOLS, ...CHECK_TOOLS];
 export const TOOL_SCOPES: Record<string, string> = Object.fromEntries(ALL_TOOLS.map((t) => [t.name, t.scope]));
 
 export interface RequestScope {

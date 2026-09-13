@@ -1,0 +1,23 @@
+import { Button, Card, IconButton, Stack, Text } from 'tenet-ui';
+import { TrashIcon } from 'tenet-ui/icons';
+
+export interface ArticleCardProps {
+  title: string;
+  summary: string;
+  onDelete?: () => void;
+}
+
+export function ArticleCard({ title, summary, onDelete }: ArticleCardProps) {
+  return (
+    <Card>
+      <Stack gap="normal">
+        <h1 style={{ color: '#c2410c', margin: 0 }}>{title}</h1>
+        <Text tone="muted">{summary}</Text>
+        <Stack direction="horizontal" gap="condensed">
+          <Button variant="primary" block>Publish</Button>
+          <IconButton icon={<TrashIcon />} onClick={onDelete} />
+        </Stack>
+      </Stack>
+    </Card>
+  );
+}
