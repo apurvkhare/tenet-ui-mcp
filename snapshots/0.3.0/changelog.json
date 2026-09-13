@@ -1,0 +1,19 @@
+{
+  "entries": [
+    {
+      "version": "0.3.0",
+      "date": "2026-06-23",
+      "body": "Hardening pass from a systematic audit (accessibility, CSS/layout, and API\nreviews across all components, plus a runtime sweep at multiple viewports and in\nboth themes).\n\n### Changed (potentially breaking)\n- **Table** now renders its `<table>` inside a `<div class=\"Tenet-Table__scroll\">`\n  scroll viewport so wide tables scroll horizontally instead of being clipped.\n  Update any CSS that assumed `<table>` was a direct child of\n  `.Tenet-Table__container`.\n- **Overlays** (`Menu`, `Select`, `Popover`, `DatePicker`, `Tooltip`) now render\n  their floating layer in a portal to `document.body`, positioned to the viewport\n  (so they can't be clipped by an `overflow:hidden` ancestor or run off-screen).\n  Overlay `z-index` is now `150` (above `Dialog`'s `100`, below `Toast`'s `200`).\n  Theming assumes `data-color-mode` is on `<html>`/`<body>`.\n\n### Added\n- `Textarea` gains a `size` scale (`small | medium | large`) to match the other\n  fields.\n- `Select` and `SegmentedControl` now extend their host element's HTML attributes\n  and forward `...rest` (so `data-*`, `style`, `onBlur`, etc. pass through).\n- New semantic token `--bgColor-backdrop` (modal scrim), themed.\n- `ToastEntry` type is now exported.\n\n### Fixed\n- **Accessibility:** `aria-describedby` is merged (not overwritten) in `Radio`,\n  `RadioGroup`, and `Tooltip`; `Menu`/`Popover` compose the caller's\n  `onClick`/`onKeyDown`/`ref` on the trigger instead of clobbering them.\n- **Dialog** no longer hides notification layers (`Toast`) from screen readers\n  while open (layers marked `data-tenet-layer` are skipped in its `aria-hidden`\n  sweep).\n- **Layout:** long labels in `Menu`/`Select` and long `Accordion` titles now\n  ellipsize/wrap instead of spilling; `Pagination` wraps at narrow widths; a\n  global `box-sizing: border-box` reset (scoped to tenet-ui elements) prevents\n  `width:100%`+padding overflow (e.g. fields inside a `Dialog`).\n- **Tokens:** `Dialog` backdrop and `Switch` focus ring now use tokens instead of\n  hardcoded values.\n- `docs.json` catalog drift fixed (`Checkbox` `invalid`/`indeterminate`, `Select`\n  `className`, `Textarea` `size`)."
+    },
+    {
+      "version": "0.2.0",
+      "date": "2026-06-21",
+      "body": "- \"Editorial Ink\" visual identity (token-layer rebrand) across light and dark.\n- Expanded to 36 components.\n- Dual-package correctness: per-condition `types` in `exports` (ESM `.d.ts` /\n  CJS `.d.cts`), `engines.node >= 18`. publint + @arethetypeswrong/cli clean."
+    },
+    {
+      "version": "0.1.0",
+      "date": "2026-06-21",
+      "body": "- Initial release: design tokens + React component library."
+    }
+  ]
+}

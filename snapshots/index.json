@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "package": "tenet-ui",
+  "updatedAt": "2026-09-13T12:54:54.257Z",
+  "versions": {
+    "0.4.0": {
+      "dir": "0.4.0",
+      "ingestedAt": "2026-09-13T12:54:50.902Z",
+      "sourceRef": {
+        "tag": "v0.4.0",
+        "commit": "7549706cd05734a3c7feb99ab19cfa8fd537df9b",
+        "tarball": "https://registry.npmjs.org/tenet-ui/-/tenet-ui-0.4.0.tgz",
+        "tarballSha256": "765d8f7fcb1de98b95f1d9d59f33259ba4c3019eaed0a387aa6627703f52cd4b"
+      },
+      "provenance": "claim-verified",
+      "guidelinesRevision": "2026-09-13-fefd243e",
+      "counts": {
+        "exportedComponents": 42,
+        "exportedHooks": 1,
+        "exportedTypes": 127,
+        "guidelinePages": 50,
+        "components": 41,
+        "props": 244,
+        "tokens": 104,
+        "contrastPairs": 122,
+        "icons": 80,
+        "deprecations": 8,
+        "changelogEntries": 4,
+        "stories": 153,
+        "storiesWithPlay": 9,
+        "baselines": 306
+      }
+    },
+    "0.3.0": {
+      "dir": "0.3.0",
+      "ingestedAt": "2026-09-13T12:54:54.257Z",
+      "sourceRef": {
+        "tag": "v0.3.0",
+        "tarball": "https://registry.npmjs.org/tenet-ui/-/tenet-ui-0.3.0.tgz",
+        "tarballSha256": "49d9678ef77a9239ddd8829cc22bee36319f47480f97d2f369fd56aed52e444f"
+      },
+      "provenance": "none",
+      "counts": {
+        "exportedComponents": 37,
+        "exportedHooks": 1,
+        "exportedTypes": 106,
+        "components": 36,
+        "props": 210,
+        "tokens": 98,
+        "contrastPairs": 0,
+        "changelogEntries": 3
+      }
+    }
+  },
+  "latest": "0.4.0"
+}

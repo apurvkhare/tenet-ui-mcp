@@ -1,0 +1,1922 @@
+{
+  "id": "2026-09-13-fefd243e",
+  "date": "2026-09-13",
+  "contentHash": "fefd243e024b75b155f9e8f031e357e0cd5f7bbdc8f93bd129a9b7c636e00af7",
+  "adapter": "package-markdown",
+  "pages": [
+    {
+      "id": "accordion",
+      "scope": "component",
+      "file": "accordion.md",
+      "title": "Accordion — usage guidelines",
+      "frontmatter": {
+        "component": "accordion",
+        "related": [],
+        "updated": "2026-06-22"
+      },
+      "updated": "2026-06-22",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Accordion — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** progressively disclosing stacked sections of content (FAQs, settings groups) so the page stays scannable. For switching between peer views use `Tabs`; for a single show/hide, a lone disclosure button is enough."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Compose `Accordion.Item`s, each with a unique `value` and a `title`. Each item is a real `<button aria-expanded>` controlling a labelled `region` — keyboard and screen-reader support come for free (Enter/Space toggle; Up/Down/Home/End move between headers).\n- Use `type=\"single\"` (default) when only one section should be open; `type=\"multiple\"` when several can. Control with `value` + `onValueChange`, or uncontrolled with `defaultValue`.\n- Put the most important section first; don't bury critical content behind a collapsed header by default.\n- Don't nest accordions deeply — one level keeps it comprehensible."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Accordion type=\"single\" defaultValue={['faq-1']}><Accordion.Item value=\"faq-1\" title=\"…\">…</Accordion.Item></Accordion>`\n- ❌ A `<div onClick>` that toggles `display` with no `aria-expanded`/region.\n- ❌ Hiding must-see content (errors, primary actions) inside a collapsed item."
+        }
+      ],
+      "contentHash": "33c898b2a3bfa8a36d66dcec31439d646eae6a17d15273e2af9aa79c7813f40d",
+      "bytes": 1265
+    },
+    {
+      "id": "avatar",
+      "scope": "component",
+      "file": "avatar.md",
+      "title": "Avatar — usage guidelines",
+      "frontmatter": {
+        "component": "avatar",
+        "related": [],
+        "updated": "2026-06-22"
+      },
+      "updated": "2026-06-22",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Avatar — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** representing a person or entity (user, org, repo) with an image or initials."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Always pass `name` — it generates the initials **and** the accessible label, so the avatar is never an unlabelled image to a screen reader. The decorative `<img>` itself gets empty alt.\n- Provide `src` when you have a photo; the component falls back to initials automatically if it's missing or fails to load (no broken-image icon).\n- Use `shape=\"circle\"` for people and `shape=\"rounded\"` for orgs/repos so the two read differently at a glance.\n- Pick `size` from the scale rather than overriding width/height, so avatars line up with adjacent controls."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Avatar src={user.photo} name={user.fullName} />`\n- ✅ `<Avatar name=\"design-tokens\" shape=\"rounded\" />`\n- ❌ `<Avatar src={url} name=\"\" />` — no label, no initials fallback.\n- ❌ A raw `<img>` with no alt strategy and no fallback."
+        }
+      ],
+      "contentHash": "c5b4d0059611a7de80b80374d028e5d9f859530ce79b584b80f96c4581995abd",
+      "bytes": 1013
+    },
+    {
+      "id": "badge",
+      "scope": "component",
+      "file": "badge.md",
+      "title": "Badge — usage guidelines",
+      "frontmatter": {
+        "component": "badge",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Badge — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** a compact count or presence dot attached to something else — unread counts on a nav item, a \"new\" dot on an avatar. For a labelled status word on a row (passing / failing) use `Tag`; for a contextual message use `Banner`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Use `count` for quantities; it collapses to `max+` (default `99+`) past the threshold — don't render \"1284\" in a badge.\n- Use `dot` for pure presence/attention with no number.\n- Pick `variant` by meaning. `danger` for things demanding attention (errors, overdue), `accent` for neutral counts.\n- A badge is decorative-adjacent: if the count conveys meaning not otherwise on screen, make sure the surrounding control has an accessible name that includes it (e.g. `aria-label=\"Notifications, 3 unread\"`)."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Badge variant=\"danger\" count={5} />`\n- ✅ `<Badge dot variant=\"success\" />`\n- ❌ Using a Badge for a status word — that's `Tag` (a Badge is a count or a dot; a Tag is a word).\n- ❌ Relying on the badge alone to convey critical info to screen-reader users.\n\n**See also:** `Tag` for words; system guideline `data-display` (Badge vs Tag, and the deprecated `Label`)."
+        }
+      ],
+      "contentHash": "4abb8987c535f9da7f2852de06a7b12b0d460ed6bdf66bee4711800faf4dc8a5",
+      "bytes": 1239
+    },
+    {
+      "id": "banner",
+      "scope": "component",
+      "file": "banner.md",
+      "title": "Banner — usage guidelines",
+      "frontmatter": {
+        "component": "banner",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Banner — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** an inline, contextual message anchored to the content it describes — a form-level error, a page notice, a \"you're approaching your limit\" warning. For transient floating feedback use a toast; for a one-word status on a table row use `Tag`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Pick `variant` by meaning: `info` (clay), `success` (olive), `warning` (ochre), `danger` (brick). Don't pick by color.\n- `danger` renders `role=\"alert\"` (interrupts assistive tech); the others render `role=\"status\"` (announced politely). Don't override the role to make a non-critical message shout.\n- Lead with a short `title`; keep the body to a sentence or two with a clear next step.\n- Only add `onDismiss` when the message is non-critical — never let users dismiss a blocking error they still need to fix.\n- Colors come from the semantic tint tokens — never hardcode a background."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Banner variant=\"danger\" title=\"Build failed\">3 tests are failing.</Banner>`\n- ✅ `<Banner variant=\"success\" title=\"Saved\" onDismiss={hide}>Your changes are live.</Banner>`\n- ❌ A `<div style={{background:'#fee'}}>` hand-rolled alert — off-system, no role, no AA guarantee.\n- ❌ A dismiss button on a required-fix error.\n\n**See also:** `Toast` (transient), `Dialog` (blocking decision), `FormControl.Validation` (one field); system guideline `feedback` has the decision table."
+        }
+      ],
+      "contentHash": "6bf02542a25ca7725c201e0ae580edf4337f0f853704e2ca97a29eda0b60c223",
+      "bytes": 1457
+    },
+    {
+      "id": "breadcrumbs",
+      "scope": "component",
+      "file": "breadcrumbs.md",
+      "title": "Breadcrumbs — usage guidelines",
+      "frontmatter": {
+        "component": "breadcrumbs",
+        "related": [],
+        "updated": "2026-06-22"
+      },
+      "updated": "2026-06-22",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Breadcrumbs — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** showing where the current page sits in a hierarchy and letting users jump back up it. For switching between peer views use `Tabs`; for paging through results use `Pagination`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Pass `items` root-first; the **last** item is the current page and is rendered as text with `aria-current=\"page\"` (not a link) — don't pass it an `href`.\n- It renders a `<nav aria-label>` landmark with an ordered list. Give a distinct `aria-label` if the page has more than one nav.\n- The separator is decorative (`aria-hidden`); don't encode meaning in it.\n- Keep labels short; truncate long middle segments rather than wrapping to many lines."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Breadcrumbs items={[{label:'Home',href:'/'},{label:'Repos',href:'/repos'},{label:'web-client'}]} />`\n- ❌ Giving the last (current) item an `href`.\n- ❌ Using breadcrumbs as the primary navigation of a flat site with no hierarchy."
+        }
+      ],
+      "contentHash": "eed0d7dc54da4ab62106d071a55fe18a6f8ef5297f3d7c46c872a393176a9d79",
+      "bytes": 1010
+    },
+    {
+      "id": "button",
+      "scope": "component",
+      "file": "button.md",
+      "title": "Button — usage guidelines",
+      "frontmatter": {
+        "component": "button",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Button — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** a Button triggers an action (submit, save, delete, open). For navigation to another page, use a link, not a Button."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Use exactly **one** `variant=\"primary\"` per surface — the single most important action.\n- Use `variant=\"default\"` for secondary actions, `variant=\"invisible\"` for low-emphasis / tertiary actions.\n- Use `variant=\"danger\"` **only** for destructive actions (delete, remove); pair it with a confirmation.\n- **Never** hardcode colors, padding, or sizes. All colors come from `fgColor` / `bgColor` / `borderColor` tokens; all spacing from the `space` scale; heights from `control.*`.\n- Always provide a visible text label. Icon-only buttons must use `IconButton` with an `aria-label`; icons come from `tenet-ui/icons` and go in `leadingIcon` / `trailingIcon` (decorative).\n- Do not nest interactive elements (links, buttons) inside a Button.\n- Use `fullWidth` to fill the container (inside a `Stack.Item` or `Grid.Item`); `block` is the deprecated 0.3.0 name and warns.\n- Labels are verbs that name the outcome (\"Save changes\", \"Delete article\"), sentence case, never \"Submit\" or \"OK\"."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Button variant=\"primary\">Save changes</Button>`\n- ❌ `<button style={{ background: '#0969da', padding: '13px' }}>Save</button>` — raw element, hardcoded color, off-scale padding.\n- ❌ `<Button kind=\"primary\">` — `kind` is not a prop; the prop is `variant`.\n\n**See also:** `IconButton` for icon-only actions, `Link` for navigation; system guidelines `content` (button labels) and `color` (one primary per surface)."
+        }
+      ],
+      "contentHash": "ffa5ec9524d53fbe7b1f28981af630e5596f2f8fe7377db62596ae896d572f80",
+      "bytes": 1662
+    },
+    {
+      "id": "calendar",
+      "scope": "component",
+      "file": "calendar.md",
+      "title": "Calendar — usage guidelines",
+      "frontmatter": {
+        "component": "calendar",
+        "related": [],
+        "updated": "2026-06-22"
+      },
+      "updated": "2026-06-22",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Calendar — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** an always-visible month grid for picking a day — e.g. inline in a booking flow, or hosted in a popover by `DatePicker`. For a compact field that opens on demand, reach for `DatePicker` (which wraps this)."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Give it an accessible name via `aria-label` (e.g. \"Departure date\").\n- Control it with `value` + `onChange`, or leave uncontrolled with `defaultValue`. `onChange` hands you a real `Date`.\n- Constrain selectable days with `min` / `max` — out-of-range days are disabled and the month-nav arrows stop at the boundary.\n- Set `weekStartsOn={1}` for Monday-first locales. Month and weekday names follow `locale` (defaults to the runtime locale) — don't hardcode English.\n- It implements the ARIA grid + roving-tabindex keyboard model (arrows, Home/End, PageUp/PageDown, Enter/Space). **Don't** rebuild this with a plain table of clickable `<div>`s."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Calendar aria-label=\"Departure date\" defaultValue={new Date()} min={new Date()} />`\n- ✅ controlled: `<Calendar value={date} onChange={setDate} weekStartsOn={1} />`\n- ❌ A grid of `<div onClick>` cells — no keyboard, no roles, no roving focus.\n- ❌ Formatting the month/weekday labels yourself in English — pass `locale` and let `Intl` do it."
+        }
+      ],
+      "contentHash": "01e13046aa3c7ed73076fd4e3c3041fc684334053911e40da19e9a0fbb42f621",
+      "bytes": 1352
+    },
+    {
+      "id": "card",
+      "scope": "component",
+      "file": "card.md",
+      "title": "Card — usage guidelines",
+      "frontmatter": {
+        "component": "card",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Card — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** to group related content on a bordered, rounded surface (a panel, a list container, a pinned item). `Card` is the design-system \"box\" — use it instead of a styled `<div>` with hardcoded border, radius, or shadow."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Use `variant=\"default\"` for surfaces that sit on the page, `variant=\"muted\"` for recessed/secondary surfaces (e.g. a toolbar strip).\n- Use `padding` from the `space` scale; use `padding=\"none\"` when children manage their own padding (e.g. a list whose rows are padded individually).\n- **Never** hardcode `border`, `border-radius`, `box-shadow`, or `background` — they come from `borderColor`, `borderRadius`, `shadow`, and `bgColor` tokens.\n- For internal layout, compose a `Stack` inside the `Card`; don't add flex styles to the Card itself.\n- A `Card` is for a discrete, self-contained object (a summary tile, a settings group with its own actions, a list container). Content that flows with the page is a plain section: `Heading` + `Stack`, no card. Never nest a `Card` in a `Card`, and never wrap a whole page in one."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Card variant=\"muted\" padding=\"condensed\"><Stack>…</Stack></Card>`\n- ❌ `<div style={{ border: '1px solid #d0d7de', borderRadius: 6, boxShadow: '0 1px 0 rgba(0,0,0,.04)' }}>` — reinvented surface, hardcoded everything.\n\n**See also:** `Stack` and `Grid` for layout inside and around cards; system guideline `layout` states the Card vs plain section test."
+        }
+      ],
+      "contentHash": "8c31f5be37a00864e52fbb70159756811a00e3aa32a58fd5d2b718be994daf90",
+      "bytes": 1537
+    },
+    {
+      "id": "checkbox",
+      "scope": "component",
+      "file": "checkbox.md",
+      "title": "Checkbox — usage guidelines",
+      "frontmatter": {
+        "component": "checkbox",
+        "related": [],
+        "updated": "2026-06-21"
+      },
+      "updated": "2026-06-21",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Checkbox — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** an independent on/off choice (or several non-exclusive ones). Use `Checkbox` with its `label`, not a raw `<input>` or a styled toggle `<div>`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Always pass a `label` (it is associated to the input automatically); add `caption` for help text.\n- For a set of mutually exclusive options use `RadioGroup`, not multiple checkboxes.\n- Control with `checked` + `onChange`, or leave uncontrolled with `defaultChecked`.\n- The tick color comes from the accent token (`accent-color`) — **never** restyle it with hardcoded colors."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Checkbox label=\"Watch this repository\" caption=\"Get notified of all activity.\" />`\n- ❌ `<div className=\"checkbox checked\" />` — not focusable, not a real input, no label."
+        }
+      ],
+      "contentHash": "115bb25f2408ff058acc1107bc08fb394394c9f3ea592c13ad3d77c11f553f48",
+      "bytes": 843
+    },
+    {
+      "id": "data-table",
+      "scope": "component",
+      "file": "data-table.md",
+      "title": "DataTable — usage guidelines",
+      "frontmatter": {
+        "component": "data-table",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "DataTable — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** rendering a list of records where users need to **search, filter, or sort** without you wiring it all by hand. It's built on the `Table` primitives plus `TextInput` + `Select`, so it stays on-system. For a bespoke layout (grouped rows, custom toolbars, server-driven paging), drop down to `Table.*` directly."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Describe the table with `columns` (id, header, optional `accessor`/`cell`, `align`, `sortable`, `filterable`) + `data`. Don't hand-roll `<th>`/`<td>`.\n- `accessor` returns the **raw** value used for sorting + filtering; `cell` is only for display (e.g. wrapping a status in a `Tag`). Keep them consistent — sort on the value, not the badge.\n- Turn on `sortable` per column for click-to-sort (asc → desc → off), and `filterable` for a per-column dropdown built from the column's distinct values.\n- Provide a `rowKey` when rows can reorder or the list is large — falling back to the index is fine only for static data.\n- Use numeric `align=\"end\"` for number columns so they line up.\n- `emptyText` speaks when a search or filter matches no rows and the table stays on screen. When the collection itself has zero records, render an `EmptyState` instead of the table.\n- This is **client-side** (filters/sort run over the `data` you pass). For huge or server-paged data, drive `Table.*` yourself and fetch on change."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<DataTable columns={cols} data={rows} title=\"Repositories\" />`\n- ✅ a status column: `{ id: 'status', header: 'CI', filterable: true, cell: r => <Tag variant={r.variant}>{r.status}</Tag> }`\n- ❌ Building search/filter/sort state around a raw `Table` when DataTable already does it.\n- ❌ Sorting/filtering on the rendered `cell` output instead of the underlying value.\n\n**See also:** `Table` for hand-composed markup, `EmptyState` for an empty collection, `Pagination` for paged data; system guideline `data-display`."
+        }
+      ],
+      "contentHash": "44a5ddd173b6354e10b45e9cad8a98a331c4b958e8e169bd892a9254cbb5e917",
+      "bytes": 1998
+    },
+    {
+      "id": "date-picker",
+      "scope": "component",
+      "file": "date-picker.md",
+      "title": "DatePicker — usage guidelines",
+      "frontmatter": {
+        "component": "date-picker",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "DatePicker — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** picking a single date from a compact field that opens a calendar on demand (forms, filters). For an always-visible month grid, use `Calendar` directly (DatePicker wraps it)."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Give it an accessible name via `FormControl.Label` or `aria-label`.\n- Control it with `value` + `onChange`, or leave uncontrolled with `defaultValue`. `onChange` hands you a real `Date`.\n- Constrain with `min` / `max`; the popover calendar disables out-of-range days and stops its nav at the boundary.\n- For form submission pass `name` — it emits a hidden `yyyy-mm-dd` input. Use `size` / `fullWidth` from the scale (`block` is the deprecated 0.3.0 name and warns) and `invalid` for validation state.\n- Set `weekStartsOn={1}` and/or `locale` for non-US conventions; the displayed date and the calendar both follow them.\n- **Never** assemble a text input + hand-built dropdown calendar yourself — the popover focus management, the ARIA grid, and the keyboard model are exactly what this composes for you."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<DatePicker aria-label=\"Due date\" defaultValue={new Date()} min={new Date()} />`\n- ✅ in a form: `<FormControl><FormControl.Label>Start date</FormControl.Label><DatePicker name=\"start\" /></FormControl>`\n- ❌ `<TextInput />` next to a `<div>` calendar wired by hand — no focus trap-out, no roving grid, no Escape handling.\n- ❌ Storing the value as a formatted string — keep the `Date`; format only for display.\n\n**See also:** `Calendar` (the inline grid it wraps), `FormControl`; system guideline `forms`."
+        }
+      ],
+      "contentHash": "08a411ec1a977bcaf25e41f466232520ca150af7a0f1648d80e7e0e8080643d6",
+      "bytes": 1647
+    },
+    {
+      "id": "dialog",
+      "scope": "component",
+      "file": "dialog.md",
+      "title": "Dialog — usage guidelines",
+      "frontmatter": {
+        "component": "dialog",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Dialog — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** a focused task or confirmation that must interrupt the flow — destructive confirmations, short forms, critical choices. For non-blocking feedback use a toast or `Banner`; for lightweight hints use a `Tooltip`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- It's a controlled component: drive `open` and handle `onClose` (Escape, backdrop, and the close button all call it). Render your actions in `footer`.\n- Always pass a `title` — it's the dialog's accessible name. Add a `description` for context; it's wired as `aria-describedby`.\n- Focus management is automatic: focus moves in on open, is trapped while open, and is restored to the trigger on close, and body scroll is locked. **Don't** re-implement this with a `position:fixed` div.\n- For a destructive confirm, keep the confirming button `variant=\"danger\"` and make the consequence explicit in the body.\n- Keep dialogs short. If it scrolls a lot or has many steps, it probably wants its own page."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Dialog open={open} onClose={close} title=\"Delete repository?\" description=\"This can't be undone.\" footer={<><Button variant=\"invisible\" onClick={close}>Cancel</Button><Button variant=\"danger\" onClick={confirm}>Delete</Button></>}>…</Dialog>`\n- ❌ A hand-built overlay div — no focus trap, no scroll lock, no Escape, no restore.\n- ❌ Using a dialog for a transient \"Saved!\" message — that's a toast.\n\n**See also:** `Popover` for non-modal surfaces, `Banner` and `Toast` for non-blocking messages; system guideline `feedback` has the decision table."
+        }
+      ],
+      "contentHash": "390388d4bc51c90c4b5cbb4a16c3a4027383fd11a95194a52d59a6d21b666adc",
+      "bytes": 1612
+    },
+    {
+      "id": "divider",
+      "scope": "component",
+      "file": "divider.md",
+      "title": "Divider — usage guidelines",
+      "frontmatter": {
+        "component": "divider",
+        "related": [],
+        "updated": "2026-06-22"
+      },
+      "updated": "2026-06-22",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Divider — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** a thin rule that separates content groups — sections of a menu, columns in a toolbar, an \"or\" between two choices."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- It renders `role=\"separator\"` with the correct `aria-orientation`, so it's a real separator, not a decorative border. Use it instead of a styled `<hr>` or a bordered `<div>`.\n- Use a labelled horizontal divider (\"or\") to split alternative actions; keep the label one or two words.\n- Vertical dividers need a flex parent with a height to stretch against.\n- Don't stack dividers to fake spacing — reach for `Stack` gaps for layout and a divider only when a visible rule communicates a boundary."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Divider />`  ·  `<Divider>or</Divider>`\n- ✅ `<Stack direction=\"horizontal\"><span>A</span><Divider orientation=\"vertical\" /><span>B</span></Stack>`\n- ❌ `<hr style={{opacity:.2}} />` — off-system thickness/color."
+        }
+      ],
+      "contentHash": "db525feb4580d8bc05721c695982c585b6c230bdba37eee0f1a8d988cd6418d5",
+      "bytes": 976
+    },
+    {
+      "id": "empty-state",
+      "scope": "component",
+      "file": "empty-state.md",
+      "title": "EmptyState — usage guidelines",
+      "frontmatter": {
+        "component": "empty-state",
+        "related": [
+          "heading",
+          "text",
+          "button",
+          "data-table",
+          "card"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "heading",
+        "text",
+        "button",
+        "data-table",
+        "card"
+      ],
+      "sections": [
+        {
+          "heading": "EmptyState — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** a table, list, inbox, search or filter that has nothing to show — first run (\"No stories yet\"), an exhausted filter (\"No results for 'budget'\"), a cleared queue (\"You're all caught up\"). For zero records, render it *in place of* the rows, inside the same `Card`/`Table.Container`, so the layout doesn't jump. For an exhausted search or filter, keep the table and its toolbar on screen and pass a compact `EmptyState` (`headingLevel={4}`, no `size=\"large\"`) as `DataTable` `emptyText`. It is not for errors (use `Banner variant=\"danger\"`) or for loading (use `Skeleton`/`Spinner`)."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- `title` is required and specific: name what is empty and, for filters, echo the query. Avoid \"Nothing here\" / \"Oops\".\n- `description` explains why and what to do next in one or two sentences; keep it inline content (it renders inside a paragraph).\n- `action` is the single step that fixes the emptiness — a `Button variant=\"primary\"` (\"Create story\", \"Clear filters\"). `secondaryAction` is optional and quieter (`Button variant=\"invisible\"`, a `Link` to docs). Never two primaries; no action at all is fine when there is nothing the user can do.\n- `icon` is decorative and is wrapped `aria-hidden` — the title already carries the meaning. Pass an `Icon` or an inline `<svg>` that uses `currentColor`; it is tinted `fgColor-muted` and sized from the size scale. Don't put text or a status meaning in it.\n- `headingLevel` (2–4, default 3) sets the title's **rank** in the outline so it nests under the surrounding page/section heading; its visual size follows `size`. Use `size=\"large\"` only for whole-page or first-run states.\n- Don't hand-build one: a centered `<div>` with inline `textAlign` and a `<h3 style>` skips the type scale, the muted tone and the outline rules this component encodes."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<EmptyState title=\"No stories yet\" description=\"Stories you create or are assigned will appear here.\" action={<Button variant=\"primary\">Create story</Button>} />`\n- ✅ `<EmptyState title={`No results for “${query}”`} description=\"Try a different spelling or clear the filters.\" action={<Button onClick={clear}>Clear filters</Button>} headingLevel={4} />` passed as `DataTable` `emptyText`, so the toolbar and active filters stay.\n- ✅ `<EmptyState size=\"large\" headingLevel={2} icon={<InboxIcon />} title=\"You're all caught up\" />` as a page's only content under its `h1`.\n- ❌ `<div style={{ textAlign: 'center', padding: 40 }}><h3>Nothing here</h3></div>` — off-system and unspecific.\n- ❌ `<EmptyState title=\"Error\" description=\"Request failed\" />` — failures are a `Banner`, not an empty state.\n\n**See also:** `DataTable` (`emptyText` for an exhausted filter), `Banner` for failures, `Skeleton` while loading; system guidelines `data-display` (when a collection shows an EmptyState) and `content` (title, description, and action copy)."
+        }
+      ],
+      "contentHash": "86ee28d4e2d95dc36bac1a68cc496cdb96a72c9dec1e83bbe86dc3e503e354a8",
+      "bytes": 3027
+    },
+    {
+      "id": "form-control",
+      "scope": "component",
+      "file": "form-control.md",
+      "title": "FormControl & form fields — usage guidelines",
+      "frontmatter": {
+        "component": "form-control",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "FormControl & form fields — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** every labeled form field. `FormControl` wraps a label, a field, and optional caption/validation, and wires the accessibility for you. Build forms by stacking `FormControl`s in a `Stack`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Wrap text-like fields (`TextInput`, `Textarea`, `Select`) in a `FormControl` with a `FormControl.Label`. The control generates a shared id and sets `htmlFor`, `aria-describedby`, `aria-invalid`, `required`, and `disabled` automatically — **don't** wire ids by hand, and **never** use a placeholder as the label.\n- Use `FormControl.Caption` for help text and `FormControl.Validation variant=\"error\"` for errors (it also flips the field to invalid). Use `variant=\"success\"` for confirmation.\n- For booleans use `Checkbox` (with its own `label`); for one-of-many use `RadioGroup` + `Radio` (a `<fieldset>`/`<legend>` group). Don't put these in a `FormControl`.\n- Lay out fields with `<Stack gap=\"normal\">` (or a `Grid` for side-by-side fields); submit with `<Button variant=\"primary\">` (one per form). Spacing comes from the `space` scale only.\n- Mark required fields with `required` on the `FormControl` (it propagates to the field and marks the label). Use `FormControl.Label visuallyHidden` only for a single search-style field.\n- Field errors are inline `FormControl.Validation`; a form-level or server error is a `Banner variant=\"danger\"` above the fields, never a toast.\n- **Never** use raw `<input>`, `<textarea>`, `<select>`, or a styled `<div>` toggle — every field has a design-system component."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅\n  ```tsx\n  <FormControl required>\n    <FormControl.Label>Email</FormControl.Label>\n    <TextInput type=\"email\" />\n    <FormControl.Validation variant=\"error\">Enter a valid email.</FormControl.Validation>\n  </FormControl>\n  ```\n- ❌ `<label>Email</label><input style={{ border: '1px solid #d0d7de' }} />` — raw element, hardcoded border, label not associated, no error wiring.\n\n**See also:** System guidelines `forms` (composition, validation display, widths, actions) and `feedback` (Validation vs Banner vs Toast vs Dialog)."
+        }
+      ],
+      "contentHash": "65fcfeea700ed84185742ef2d8b2052ddb5ae395c7aad98c58915f76ec0ac318",
+      "bytes": 2190
+    },
+    {
+      "id": "grid",
+      "scope": "component",
+      "file": "grid.md",
+      "title": "Grid — usage guidelines",
+      "frontmatter": {
+        "component": "grid",
+        "related": [
+          "stack",
+          "card"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "stack",
+        "card"
+      ],
+      "sections": [
+        {
+          "heading": "Grid — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** laying out equal-width columns that reflow with the viewport — a row of stat cards, a card gallery, a two-column form section, a dashboard of panels. `Grid` and `Stack` are the only layout primitives: `Stack` for one axis (toolbars, form fields, vertical rhythm), `Grid` for two. Reach for it instead of `display: grid` with pixel gaps or a hand-written media query."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- `columns` is the number of equal tracks, fixed (`columns={3}`) or per breakpoint (`columns={{ base: 1, sm: 2, lg: 4 }}`). It is mobile-first: `base` applies from 0, `sm`/`md`/`lg` switch on at the `breakpoint-sm/md/lg` tokens (640 / 960 / 1280) and a missing step inherits the previous one. Always give a `base` (or a plain number) — a grid that is 4-wide on phones is a bug.\n- `gap` maps to the `space` scale (`condensed`=8, `normal`=16, `spacious`=24) and applies to both axes; `rowGap` overrides the row spacing only. **Never** set a pixel gap or margins between grid children.\n- Use `Grid.Item span` for a child that should cover several columns (a featured card, a full-width footer row). `span` accepts the same responsive object, so a sidebar can be `span={{ base: 1, md: 2 }}`. Don't let a span exceed the column count at that breakpoint.\n- Tracks are `minmax(0, 1fr)`, so long unbroken content truncates or wraps inside its cell rather than widening the column. Put `truncate` on the `Heading`/`Text` inside, not `overflow` on the grid.\n- `align` controls block-axis alignment within a row (`stretch` makes cards in a row equal height, `start` keeps short items at the top).\n- Don't nest a `Grid` to fake a table — tabular data is a `Table`/`DataTable`."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Grid columns={{ base: 1, sm: 2, lg: 4 }} gap=\"normal\">{stats.map(s => <Card key={s.id}>…</Card>)}</Grid>`\n- ✅ `<Grid columns={3}><Grid.Item span={2}>…main…</Grid.Item><aside>…</aside></Grid>`\n- ✅ `<Grid columns={2} gap=\"condensed\" rowGap=\"normal\">` — tight columns, roomier rows, both from the scale.\n- ❌ `<div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>` — raw grid, off-scale gap, no responsive story.\n- ❌ `<Grid columns={4}>` for a phone-first page — fixed four columns squeeze to nothing at 375px; give it a `base`.\n\n**See also:** `Stack` for one-axis layout, `Card` for the tiles a grid usually holds; system guideline `layout` (gap scale, breakpoints, container widths)."
+        }
+      ],
+      "contentHash": "eb5c7978fb4d92a83729b91fae53fa42a7800e474dadd6425be647793dd744de",
+      "bytes": 2519
+    },
+    {
+      "id": "heading",
+      "scope": "component",
+      "file": "heading.md",
+      "title": "Heading — usage guidelines",
+      "frontmatter": {
+        "component": "heading",
+        "related": [
+          "text",
+          "empty-state",
+          "stack"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "text",
+        "empty-state",
+        "stack"
+      ],
+      "sections": [
+        {
+          "heading": "Heading — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** every page, section, card and dialog title. `Heading` is the only way to put the display (serif) type scale on screen — reach for it instead of a raw `<h1 className=\"page-title\">` with custom CSS. For body copy, captions and labels use `Text`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- `level` (1–4) picks the **size** from the type scale (36 / 28 / 20 / 16) and the default element (`h1`…`h4`). Never set `fontSize` or `fontFamily` inline — the scale is the token.\n- `as` picks the **element** when semantics and size must differ. Keep the document outline honest: one `h1` per page, then `h2`, `h3`… in order without skipping ranks. If a section title should *look* big but sit under the page `h1`, write `<Heading level={1} as=\"h2\">`; if a card title is visually small but is the card's own `h2`, write `<Heading level={4} as=\"h2\">`.\n- Use `as=\"p\"` / `\"div\"` / `\"span\"` for display-styled text that is *not* a heading (a hero stat, a decorative quote) so screen readers don't announce a false section.\n- `truncate` clips to one line with an ellipsis — use it in constrained rows (table titles, cards in a grid); make sure the full text is reachable elsewhere (a tooltip, the detail page).\n- Color is always `fgColor-default`; a muted or accent title is a `Text` with `weight=\"semibold\"`, not a recolored heading."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Heading level={1}>Newsroom</Heading>` — the page title.\n- ✅ `<Heading level={3} as=\"h2\">Recent stories</Heading>` — a section `h2` at the level-3 size.\n- ✅ `<Heading level={4} truncate>{story.title}</Heading>` — a card title that must fit one line.\n- ❌ `<h1 style={{ fontSize: 36, fontFamily: 'Georgia' }}>` — off-scale, off-token.\n- ❌ `<Heading level={4} as=\"h1\">Settings</Heading>` next to `<Heading level={1} as=\"h5\">` — the outline no longer matches what people see; keep ranks in reading order.\n\n**See also:** `Text` for everything that is not a section title; system guidelines `typography` (the scale, one `level={1}` per page, `as` for honest ranks) and `content` (sentence case)."
+        }
+      ],
+      "contentHash": "5697f3c5ac1a2d470a1e8798606be177c8388dc083df4ba84843b85bf9fabc5c",
+      "bytes": 2163
+    },
+    {
+      "id": "icon-button",
+      "scope": "component",
+      "file": "icon-button.md",
+      "title": "IconButton",
+      "frontmatter": {
+        "component": "icon-button",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "IconButton",
+          "level": 1,
+          "body": "A square, icon-only button for compact actions where a text label won't fit."
+        },
+        {
+          "heading": "When to use",
+          "level": 2,
+          "body": "- Use **IconButton** for dense surfaces: toolbars, table-row actions, the close\n  affordance in a dialog/banner corner, segmented toolbars.\n- Use **Button** (with a `leadingIcon`) whenever you have room for a label — a\n  visible label is always clearer than an icon alone. Reach for IconButton only\n  when space is genuinely the constraint.\n- For a menu of actions behind one trigger, use **Menu**; IconButton is a single\n  action, not a disclosure."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- **It must have an accessible name.** The icon is the only visible content and is\n  rendered `aria-hidden`, so the name has to come from `aria-label` (or\n  `aria-labelledby`). With neither, screen-reader users hear nothing. In\n  development the component logs a `console.warn` when the name is missing.\n- The name should describe the **action**, not the glyph: `aria-label=\"Delete row\"`,\n  not `aria-label=\"Trash icon\"`.\n- Variants mirror `Button`: `primary` for the single most important action,\n  `default` for secondary, `invisible` for tertiary/toolbar, `danger` for\n  destructive.\n- Sizes map to the control-height tokens (`small` 28 / `medium` 32 / `large` 40)\n  and the control is square, so it lines up with same-size inputs and buttons.\n- The whole control is a real `<button>`, so keyboard activation (Enter/Space) and\n  the `:focus-visible` ring come for free. Pass `disabled` as usual."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "Do — give it an action name and pass the icon via the `icon` prop:\n\n```tsx\n<IconButton icon={<TrashIcon />} variant=\"danger\" aria-label=\"Delete row\" onClick={remove} />\n```\n\nDon't — ship a nameless icon button (axe failure; the dev warning fires):\n\n```tsx\n// ❌ no accessible name — screen readers announce nothing\n<IconButton icon={<TrashIcon />} variant=\"danger\" onClick={remove} />\n```\n\nDon't — bake the label into the icon and leave the button unnamed:\n\n```tsx\n// ❌ the <span> text is aria-hidden with the icon; the button is still nameless\n<IconButton icon={<><TrashIcon /> Delete</>} />\n```\n\n**See also:** `Button` with `leadingIcon` when a label fits, `Tooltip` to reveal the name on hover; system guidelines `iconography` and `accessibility`."
+        }
+      ],
+      "contentHash": "da95e358c7a2e1ad71f20f4cb7ffd6276d39851cfe8a7e3ad15c7e0f7e61f129",
+      "bytes": 2312
+    },
+    {
+      "id": "icon",
+      "scope": "component",
+      "file": "icon.md",
+      "title": "Icon — usage guidelines",
+      "frontmatter": {
+        "component": "icon",
+        "related": [
+          "icon-button",
+          "button",
+          "empty-state"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "icon-button",
+        "button",
+        "empty-state"
+      ],
+      "sections": [
+        {
+          "heading": "Icon — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** to reinforce an action, status or object next to text, or as the only content of an\n`IconButton`. Icons are drawn from the curated tenet set (Lucide, ISC) exported from\n`tenet-ui/icons`; `generated/icons.json` is the searchable manifest."
+        },
+        {
+          "heading": "Sizes",
+          "level": 2,
+          "body": "- **16** (default) — inside controls: `Button` leading/trailing icons, `IconButton`, input\n  adornments, table-row actions, tag/label prefixes. Sits on the 14px body text line.\n- **20** — large controls (`size=\"large\"` buttons), list rows and navigation items with 16px text.\n- **24** — empty states, page/section headers, stat tiles, dialog titles. Never larger: for\n  illustrations use an image, not a stroked icon.\n- Do not set `width`/`height`/`viewBox` yourself; `size` owns geometry so every icon in a row lines\n  up. Stroke width is a constant 2 across sizes (Lucide's native weight)."
+        },
+        {
+          "heading": "Decorative vs meaningful — the `label` rule",
+          "level": 2,
+          "body": "- **Default is decorative.** An icon renders `aria-hidden=\"true\"`. This is right whenever the\n  meaning is already in adjacent text or in the control's name: `<Button leadingIcon={<PlusIcon />}>New\n  article</Button>`, a status word with a check next to it, a chevron on a disclosure.\n- **Pass `label` only when the icon stands alone.** A lone glyph in a table cell that carries\n  information no text does (`<PaperclipIcon label=\"Has attachments\" />`), a sole indicator in a\n  header. A *status* is never a lone icon: it is a word in a `Tag` (`<Tag variant=\"success\">Published</Tag>`). `label` sets\n  `role=\"img\"` + `aria-label`, so screen readers announce it. Name the **meaning**, not the glyph:\n  `label=\"Published\"`, not `label=\"Check circle\"`.\n- Never give an icon a `label` that duplicates visible text beside it — the name is read twice."
+        },
+        {
+          "heading": "Pairing with IconButton and Button",
+          "level": 2,
+          "body": "- In `IconButton` the accessible name goes on the **button** (`aria-label=\"Delete row\"`); the icon\n  stays decorative. `IconButton` already wraps the icon in an `aria-hidden` span, so do not add a\n  `label` to the glyph — the button would then have two competing names.\n- `Button`'s `leadingIcon`/`trailingIcon` slots are `aria-hidden` too; pass bare glyphs\n  (`<ChevronDownIcon />`) and let the label text speak.\n- Icon color is `currentColor`: it inherits the button/text token automatically. Do not set\n  `color` on the icon; set it on the parent (or pick a token variant of the parent)."
+        },
+        {
+          "heading": "Naming and imports",
+          "level": 2,
+          "body": "- Every glyph is `<Thing>Icon` from `tenet-ui/icons`: `import { SearchIcon, MoreHorizontalIcon }\n  from 'tenet-ui/icons'`. The tenet name is in `generated/icons.json` (`search` →\n  `SearchIcon`); the Lucide source name may differ (`more-horizontal` is Lucide's `ellipsis`).\n- **Never inline arbitrary SVG when an icon exists** in the set. Search `generated/icons.json` by\n  keyword first. If a glyph is genuinely missing, add it to `icons/manifest.json` and run\n  `node scripts/build-icons.mjs`; as a last resort wrap a one-off path in `<Icon>` so it still gets\n  the system's size, stroke and a11y defaults.\n- Do not add a runtime dependency on `lucide-react` or another icon package in product code; the\n  tenet set is the vocabulary the docs, catalog and MCP tools know about."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Button leadingIcon={<PlusIcon />}>New article</Button>` — decorative icon, text carries meaning.\n- ✅ `<IconButton icon={<TrashIcon />} variant=\"danger\" aria-label=\"Delete row\" />` — name on the button.\n- ✅ `<PaperclipIcon label=\"Has attachments\" size={16} />` alone in a table cell — meaningful, labelled.\n- ❌ `<CheckCircleIcon label=\"Published\" size={16} />` alone in a status cell — a status is a `Tag` word, not a glyph.\n- ❌ `<svg width=\"16\" height=\"16\"><path d=\"M…\" /></svg>` — inline SVG for a glyph that exists (`SearchIcon`).\n- ❌ `<IconButton icon={<TrashIcon label=\"Delete\" />} />` — name on the icon, button still nameless.\n- ❌ `<SearchIcon style={{ width: 18, color: '#c2410c' }} />` — off-scale size and a hardcoded color; use `size` and inherit the parent's token.\n\n**See also:** `IconButton` for an icon-only action, `Button` `leadingIcon` when a label fits, `Tag` for status words; system guidelines `iconography` (sizes, decorative vs meaningful, naming) and `accessibility`."
+        }
+      ],
+      "contentHash": "0c9f8b6996cbf7b1fa353d6ab93c25f2cf6506babc81cc2e133e40caee6677ea",
+      "bytes": 4362
+    },
+    {
+      "id": "label",
+      "scope": "component",
+      "file": "label.md",
+      "title": "Label — usage guidelines",
+      "frontmatter": {
+        "component": "label",
+        "related": [
+          "tag",
+          "badge"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "tag",
+        "badge"
+      ],
+      "sections": [
+        {
+          "heading": "Label — usage guidelines",
+          "level": 1,
+          "body": "> **Deprecated since 0.4.0 — use `Tag`.** `Tag` carries the same status variants (`success`, `danger`, `attention`, `muted`, `accent`, `default`) and is read-only when `onRemove` is absent. Replace `<Label variant=\"success\">Published</Label>` with `<Tag variant=\"success\">Published</Tag>`. `Label` keeps rendering (with a dev warning) until 0.5.0. The rules below describe the legacy behaviour.\n\n**When to use:** a small status / category pill attached to an item (e.g. `bug`, `triaged`, `ready`). Use `Label` instead of a hand-styled `<span>` so the color schemes stay owned by the design system."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Choose `variant` by **meaning**, not by color: `success` for positive/done, `danger` for problems, `accent` for emphasis, `muted`/`default` for neutral tags.\n- Do **not** compute your own fills, borders, or translucent backgrounds from a hex value — that is exactly the anti-pattern this component exists to remove. Map your data's category to a `variant`.\n- Keep label text short (one or two words). For long-form status, use text, not a Label.\n- `Label` is non-interactive. For a clickable tag, wrap or use a button/link, don't add click handlers that look like plain text."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Label variant=\"danger\">bug</Label>`\n- ✅ map data → variant: `const variant = issue.blocking ? 'danger' : 'muted'`\n- ❌ `<span style={{ background: 'rgba(207,34,46,.18)', color: '#ff8182', border: '1px solid rgba(207,34,46,.35)' }}>bug</span>` — hand-tuned translucent colors; reinvents the component."
+        }
+      ],
+      "contentHash": "6d32b99533bae3c137881ec3ad006f9465d2da6de620345df8f06cbbc9b68e73",
+      "bytes": 1621
+    },
+    {
+      "id": "link",
+      "scope": "component",
+      "file": "link.md",
+      "title": "Link — usage guidelines",
+      "frontmatter": {
+        "component": "link",
+        "related": [],
+        "updated": "2026-06-22"
+      },
+      "updated": "2026-06-22",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Link — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** inline navigation — sending the user to another page or resource within flowing text or alongside other content. For an action that *does* something (submit, open a dialog, delete) use a `Button`; for a button styled as a link use `Button` with the `invisible` variant. A link navigates; a button acts."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- It renders a real `<a>` and forwards its ref. Always give it descriptive link text (\"View billing settings\"), never \"click here\" or a bare URL — the text is the accessible name.\n- `underline` defaults to `'hover'`. Prefer `'always'` for links sitting inside a paragraph of body text so they're distinguishable without relying on color alone; `'none'` is for links that already have another affordance (e.g. card-wide links, nav rows).\n- `muted` swaps the accent color for the muted foreground (secondary/utility links). It still resolves to the accent color on hover for affordance.\n- Pass `external` for off-site links: it sets `target=\"_blank\"` + `rel=\"noopener noreferrer\"` and appends a visually-hidden \" (opens in new tab)\" so screen-reader users are warned. A small `↗` glyph is shown (`aria-hidden`).\n- The focus ring is a `:focus-visible` accent outline — don't suppress it."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Link href=\"/settings/billing\">View billing settings</Link>`\n- ✅ `<Link href=\"https://example.com\" external>Open the changelog</Link>`\n- ❌ `<Link href=\"https://x.com\" target=\"_blank\">x.com</Link>` — opens a new tab with no `rel` and no screen-reader warning; use `external` instead.\n- ❌ `<Link onClick={save}>Save</Link>` — that's an action, use a `Button`."
+        }
+      ],
+      "contentHash": "33d1fa8739fa16e05a41785e9b917ca2da51cd0143907e6695270c890b6292fd",
+      "bytes": 1701
+    },
+    {
+      "id": "menu",
+      "scope": "component",
+      "file": "menu.md",
+      "title": "Menu — usage guidelines",
+      "frontmatter": {
+        "component": "menu",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Menu — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** a list of **actions** triggered from a button (a row's \"⋯\" overflow, a \"New ▾\" split of choices). For picking a **value** from a list use `Select`; for navigation use links."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Pass a focusable `trigger` (a `Button`) — it's wired with `aria-haspopup=\"menu\"`, `aria-expanded`, and open/close handling. Each item runs its `onSelect` and the menu closes.\n- Give an `aria-label` describing the menu (e.g. \"Repository actions\"); otherwise it falls back to the trigger's text.\n- Keyboard + ARIA are handled: arrows move, Enter/Space invoke, Escape closes and returns focus to the trigger, click-outside closes. Don't rebuild this with a div of onClick rows.\n- Mark dangerous actions `destructive` (renders in the danger color); use a `{ type: 'separator' }` to group. Keep menus short — long lists belong in a `Select` or a dedicated page."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Menu aria-label=\"Row actions\" trigger={<IconButton icon={<MoreHorizontalIcon />} aria-label=\"Row actions\" />} items={[{label:'Edit',onSelect},{type:'separator'},{label:'Delete',onSelect,destructive:true}]} />`\n- ❌ Using a Menu to choose a value that should persist in a field — that's `Select`.\n- ❌ A non-focusable trigger (plain `<div>`).\n\n**See also:** `IconButton` as the overflow trigger, `Select` for values, `Popover` for arbitrary content."
+        }
+      ],
+      "contentHash": "36d04b30d56e2bc5211f611451fe14df98e3e8548a268a2a8149cc5089e074b6",
+      "bytes": 1432
+    },
+    {
+      "id": "number-input",
+      "scope": "component",
+      "file": "number-input.md",
+      "title": "NumberInput — usage guidelines",
+      "frontmatter": {
+        "component": "number-input",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "NumberInput — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** entering a bounded quantity — a count, a price, a limit, a percentage. For free-form text use `TextInput`; for picking from a fixed list use `Select`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Give it an accessible name via `FormControl.Label` or `aria-label`.\n- It reports a parsed `number | null` through `onChange` — **don't** re-parse a string. An empty field is `null`, not `0`.\n- Set `min` / `max` so the steppers and arrow keys clamp; set `step` to the natural increment (e.g. `5`, `0.1`).\n- Control it with `value` + `onChange`, or leave uncontrolled with `defaultValue`.\n- Use `size` / `fullWidth` from the scale (`block` is the deprecated 0.3.0 name and warns); use `invalid` for validation state.\n- **Never** use a raw `<input type=\"number\">` styled by hand — you lose the token chrome, the clamping, and the number-typed change handler."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<NumberInput aria-label=\"Quantity\" defaultValue={1} min={1} max={99} />`\n- ✅ controlled: `<NumberInput value={qty} onChange={setQty} min={0} step={5} />`\n- ❌ `<input type=\"number\" className=\"myfield\" />` — off-system, no `number | null` contract.\n- ❌ Treating the empty state as `0` — it is `null`; decide intent explicitly.\n\n**See also:** `FormControl`, `TextInput`; system guideline `forms`."
+        }
+      ],
+      "contentHash": "db93ae8429fed819e067dca7aaeaba7e2720a4280299f2c76f1cc740fb4c225d",
+      "bytes": 1371
+    },
+    {
+      "id": "pagination",
+      "scope": "component",
+      "file": "pagination.md",
+      "title": "Pagination — usage guidelines",
+      "frontmatter": {
+        "component": "pagination",
+        "related": [],
+        "updated": "2026-06-22"
+      },
+      "updated": "2026-06-22",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Pagination — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** moving through a large result set split into pages (a table, search results). For infinite streams prefer \"load more\"; for hierarchy use `Breadcrumbs`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- It's controlled: pass `page` (1-based) + `pageCount` and handle `onPageChange`. Keep `page` in sync with your data fetch.\n- Every control is a real `<button>`, so it's keyboard-operable; the current page is marked `aria-current=\"page\"` and Previous/Next disable at the ends. Don't reimplement with click-only `<span>`s.\n- Long ranges collapse with ellipses around `siblingCount` pages — tune `siblingCount`, don't render 42 buttons.\n- It's wrapped in a `<nav aria-label>`; give a distinct label if more than one nav is on the page."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Pagination page={page} pageCount={total} onPageChange={setPage} />`\n- ❌ Rendering all pages with no ellipsis for large counts.\n- ❌ Click-only page numbers with no `aria-current` and no keyboard support."
+        }
+      ],
+      "contentHash": "c8302dbdf7825e3c032d9d67666af328e6aec439560695e18ee08c0f2d0229c4",
+      "bytes": 1045
+    },
+    {
+      "id": "popover",
+      "scope": "component",
+      "file": "popover.md",
+      "title": "Popover — usage guidelines",
+      "frontmatter": {
+        "component": "popover",
+        "related": [],
+        "updated": "2026-06-22"
+      },
+      "updated": "2026-06-22",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Popover — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** a lightweight floating container anchored to a control — a filter panel, a small form, rich help, an account summary. It's **non-modal**: the page behind stays interactive. For a blocking task or confirmation (focus trap, scroll lock, dimmed background) use `Dialog`; for a plain text hint use `Tooltip`; for a list of actions use `Menu`; for picking a value use `Select`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Pass a focusable `trigger` (a `Button`). It's cloned and wired with `aria-haspopup=\"dialog\"`, `aria-expanded`, `aria-controls`, an onClick toggle, and a ref so focus returns to it on close. A non-focusable trigger (a plain `<div>`) strands keyboard users.\n- Give an `aria-label` — it names the `role=\"dialog\"` surface (it falls back to \"Popover\", which isn't descriptive).\n- Focus + keyboard are handled: on open focus moves into the surface (first focusable child, else the container); Escape closes and returns focus to the trigger; click-outside closes; and focus leaving the wrapper (Tab-out) closes it so it can't strand open behind the page.\n- It is **non-modal** (`aria-modal=\"false\"`): no focus trap, no scroll lock, no background `aria-hidden`. If you need any of those, you want `Dialog`, not a Popover with hacks bolted on.\n- Choose `placement` to keep the surface on-screen near the trigger (`bottom-start` default, plus `bottom-end`, `top-start`, `top-end`). Keep the content short — a popover is not a page."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Popover aria-label=\"Filters\" trigger={<Button>Filters ▾</Button>}><FilterForm /></Popover>`\n- ❌ `<Popover trigger={<div>Open</div>}>…</Popover>` — a non-focusable trigger; keyboard users can't reach it.\n- ❌ Reaching for a Popover for a destructive confirm that must block the flow — that's a `Dialog`.\n- ❌ Omitting `aria-label` — the dialog is then named only \"Popover\"."
+        }
+      ],
+      "contentHash": "d325a4fb73d3221cba172600ef00e56085522983675bd3281232c233a624833e",
+      "bytes": 1934
+    },
+    {
+      "id": "progress-bar",
+      "scope": "component",
+      "file": "progress-bar.md",
+      "title": "ProgressBar",
+      "frontmatter": {
+        "component": "progress-bar",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "ProgressBar",
+          "level": 1,
+          "body": "A thin, pill-shaped bar that communicates the progress of a task — a file upload,\na multi-step form, a background job."
+        },
+        {
+          "heading": "When to use",
+          "level": 2,
+          "body": "- Use **ProgressBar** when you can express progress as a fraction of a known total\n  (determinate) — pass `value` (and `max` if it isn't 100).\n- Use the **indeterminate** ProgressBar (omit `value`) when work is underway but its\n  duration is unknown.\n- Reach for **Spinner** instead when the indicator must be compact (inline, inside a\n  button) rather than a full-width bar."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- **Always give it an accessible name.** A progressbar has no intrinsic label, so pass\n  `aria-label` or `aria-labelledby`. Without one it is announced nameless — an axe failure.\n- `value` is clamped to `[0, max]`; you don't have to pre-clamp. `max` defaults to `100`.\n- Determinate bars expose `aria-valuenow` and a human-readable `aria-valuetext` (e.g. `\"42%\"`).\n  Indeterminate bars omit `aria-valuenow` and run an animated sweep.\n- The sweep respects `prefers-reduced-motion`: under reduced motion it becomes a calm\n  opacity pulse rather than a traveling bar.\n- Track is `bgColor-muted`; the fill uses the variant's emphasis token. Pick `variant`\n  for meaning (`success` when complete, `danger` for an at-risk quota), not decoration."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "✅ Determinate with a name and a real total:\n\n```tsx\n<ProgressBar value={file.uploaded} max={file.size} aria-label=\"Upload progress\" />\n```\n\n✅ Indeterminate while the duration is unknown:\n\n```tsx\n<ProgressBar aria-label=\"Loading report\" />\n```\n\n❌ No accessible name (announced nameless):\n\n```tsx\n<ProgressBar value={42} />\n```\n\n❌ Faking indeterminate with `value={0}` — that's a real, stalled 0%. Omit `value` instead.\n\n**See also:** `Spinner` and `Skeleton`; system guideline `data-display` (loading rules)."
+        }
+      ],
+      "contentHash": "afd122b4dc50be19248e58be69643a4c93c11e227f917baa65bebb0487f2d704",
+      "bytes": 1883
+    },
+    {
+      "id": "radio-group",
+      "scope": "component",
+      "file": "radio-group.md",
+      "title": "Radio & RadioGroup — usage guidelines",
+      "frontmatter": {
+        "component": "radio",
+        "related": [],
+        "updated": "2026-06-21"
+      },
+      "updated": "2026-06-21",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Radio & RadioGroup — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** choosing exactly one option from a small, visible set. Always use `Radio` inside a `RadioGroup` — never a lone radio or a styled `<div>`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- `RadioGroup` renders a `<fieldset>`/`<legend>` and shares the `name` + selection with its `Radio` children — don't set `name` on each radio by hand.\n- Give the group a `label`; give each `Radio` a `label` and a unique `value`. Add `caption` on the group or per radio for help text.\n- Control with `value` + `onChange(value)`, or leave uncontrolled with `defaultValue`.\n- The dot color comes from the accent token — **never** hardcode it."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅\n  ```tsx\n  <RadioGroup label=\"Visibility\" defaultValue=\"public\">\n    <Radio value=\"public\" label=\"Public\" />\n    <Radio value=\"private\" label=\"Private\" />\n  </RadioGroup>\n  ```\n- ❌ three `<input type=\"radio\">` with a hand-set `name` and separate `<label>`s — reinvents the group, easy to get a11y wrong."
+        }
+      ],
+      "contentHash": "bb62b45e838352da423bc1a001341e322ef438f0e9f246653b8242634e6e88b6",
+      "bytes": 1043
+    },
+    {
+      "id": "segmented-control",
+      "scope": "component",
+      "file": "segmented-control.md",
+      "title": "SegmentedControl — usage guidelines",
+      "frontmatter": {
+        "component": "segmented-control",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "SegmentedControl — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** switching between a few (2–5) mutually exclusive views or modes that take effect immediately — a List/Board/Timeline view toggle, a chart range. For many options or free text use `Select`; for on/off use `Switch`; for navigating peer content panes use `Tabs`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Give it an `aria-label` — it's an ARIA radiogroup and needs a group name.\n- Control with `value` + `onChange`, or uncontrolled with `defaultValue` (defaults to the first enabled segment).\n- Keep labels to one word where possible; the control is meant to be compact.\n- Keyboard is built in: arrows move and select (selection follows focus), Home/End jump, with a roving tab stop. Don't rebuild it from styled buttons.\n- Use `fullWidth` to stretch segments across the container (`block` is the deprecated 0.3.0 name and warns).\n- Don't exceed ~5 segments — past that, it gets cramped and a `Select` is clearer."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<SegmentedControl aria-label=\"View\" options={[{value:'list',label:'List'},{value:'board',label:'Board'}]} defaultValue=\"list\" />`\n- ❌ Using it for a long list of options, or for a binary on/off (use Switch).\n- ❌ Omitting `aria-label`.\n\n**See also:** `Tabs` for content panes, `Select` for long lists, `Switch` for on/off."
+        }
+      ],
+      "contentHash": "09236513bff85ad483383505d994d03f739898768c6c7b004a16ca5ab7b91300",
+      "bytes": 1367
+    },
+    {
+      "id": "select",
+      "scope": "component",
+      "file": "select.md",
+      "title": "Select — usage guidelines",
+      "frontmatter": {
+        "component": "select",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Select — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** choosing one option from a known list. `Select` is a fully accessible listbox combobox (keyboard, typeahead, `aria-activedescendant`) — not a native `<select>`. Use it inside a `FormControl`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Give it an accessible name via `FormControl.Label` or `aria-label`.\n- Pass choices as the `options` array (`{ value, label, disabled? }`); use `placeholder` for the unselected state.\n- Control it with `value` + `onChange(value)`, or leave uncontrolled with `defaultValue`. For form submission, pass `name` (it emits a hidden input).\n- Use `size` / `fullWidth` from the scale (`block` is the deprecated 0.3.0 name and warns); use `invalid` for validation state.\n- **Never** build a div-based dropdown by hand — getting the ARIA listbox + keyboard right is exactly what this component does for you."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Select options={[{ value: 'public', label: 'Public' }]} placeholder=\"Choose…\" />`\n- ✅ inside a form: `<FormControl><FormControl.Label>Visibility</FormControl.Label><Select options={…} /></FormControl>`\n- ❌ `<div className=\"dropdown\" onClick={…}>` — not keyboard-accessible, no roles, no typeahead.\n\n**See also:** `Menu` for actions, `RadioGroup` or `SegmentedControl` for a few visible options; system guideline `forms`."
+        }
+      ],
+      "contentHash": "156ce1b209235bb1257146e35c0715968ad0c59f97c01420166b387a433a1e7c",
+      "bytes": 1370
+    },
+    {
+      "id": "skeleton",
+      "scope": "component",
+      "file": "skeleton.md",
+      "title": "Skeleton — usage guidelines",
+      "frontmatter": {
+        "component": "skeleton",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Skeleton — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** as a placeholder for content whose *shape* you know while it loads (a card, an avatar + name, a few lines of copy). It reduces perceived wait and prevents layout shift versus a blank space. If you can't predict the layout, or the wait is short/indeterminate with no structure to mimic, use a Spinner instead. If you can show real progress, use a progress bar."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- **The skeleton is decorative.** It renders `aria-hidden=\"true\"`, so screen readers skip it. Announce the wait on the **surrounding region**, e.g. `aria-busy=\"true\"` on the container plus a visually-hidden status (or a `Spinner` with a `label`). Don't rely on the skeleton blocks to convey \"loading\" to assistive tech.\n- **Match the shape and size of the real content** so swapping in the loaded UI doesn't shift layout. Use `width`/`height` to size `rect`, and one `circle` for an avatar.\n- `width`/`height` are applied inline (number → px, string like `'60%'` → as-is). This is the one place inline `style` is correct — caller-driven dimensions aren't a token concern. All color, radius, and spacing stay on tokens.\n- `circle` is always a full-radius square: pass `width` and it mirrors to height; the `radius` prop is ignored for it.\n- The shimmer honors `prefers-reduced-motion` — it drops to a gentle opacity pulse — so you don't need to gate it yourself."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ Stack a few `text` lines of decreasing width to mimic a paragraph:\n  ```tsx\n  <div aria-busy=\"true\">\n    <span className=\"sr-only\">Loading article…</span>\n    <Skeleton variant=\"text\" />\n    <Skeleton variant=\"text\" width=\"80%\" />\n    <Skeleton variant=\"text\" width=\"60%\" />\n  </div>\n  ```\n- ✅ Avatar + name placeholder: `<Skeleton variant=\"circle\" width={48} />`\n- ❌ Relying on the skeleton alone for the loading announcement — it's `aria-hidden`, so this strands screen-reader users:\n  ```tsx\n  <Skeleton aria-label=\"Loading\" /> {/* hidden from AT — the label never reaches anyone */}\n  ```\n\n**See also:** `Spinner` and `ProgressBar` for other waits, `EmptyState` once data loads empty; system guideline `data-display` (loading rules)."
+        }
+      ],
+      "contentHash": "0ef7c85c7d5aaf78097d582d75dbe26af408d32a9a5da83468cc999dd9089c02",
+      "bytes": 2224
+    },
+    {
+      "id": "spinner",
+      "scope": "component",
+      "file": "spinner.md",
+      "title": "Spinner — usage guidelines",
+      "frontmatter": {
+        "component": "spinner",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Spinner — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** an indeterminate wait where you can't show progress (loading a panel, submitting). If you know the proportion done, use a progress bar instead; for content placeholders, prefer a skeleton."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- It renders `role=\"status\"` with a visually-hidden `label` — keep the label meaningful (\"Loading repositories\") so screen-reader users hear what's pending.\n- It inherits `currentColor`, so place it inside text of the right color (e.g. inside a Button it picks up the button text color) rather than restyling it.\n- Don't block the whole screen with a bare spinner for long waits — pair it with context or a skeleton."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Spinner label=\"Loading repositories\" />`\n- ✅ inside a button: `<Button disabled><Spinner size=\"small\" /> Saving…</Button>`\n- ❌ A spinning `<div>` with no role/label — invisible to assistive tech.\n\n**See also:** `Skeleton` and `ProgressBar`; system guideline `data-display` (loading rules)."
+        }
+      ],
+      "contentHash": "3a3a4968463dbd53c6300c8b5fa5f661d683a4d12931dc2be04015eeb87b46e5",
+      "bytes": 1052
+    },
+    {
+      "id": "stack",
+      "scope": "component",
+      "file": "stack.md",
+      "title": "Stack — usage guidelines",
+      "frontmatter": {
+        "component": "stack",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Stack — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** any time you place two or more elements next to or above each other with space between them. `Stack` is the design-system layout primitive — reach for it instead of writing `display: flex` with hardcoded gaps, and instead of reinventing a generic `Box`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Use `direction` for the axis and `gap` for spacing — `gap` values map to the `space` scale (`condensed`=8, `normal`=16, `spacious`=24). **Never** set a pixel gap or margins between Stack children.\n- Use `Stack.Item grow` for the child that should absorb extra space (e.g. a search field in a toolbar) rather than `flex: 1` inline.\n- Use `align` / `justify` for alignment; don't add wrapper `<div>`s just to center things.\n- `padding` (optional) also comes from the `space` scale.\n- `Stack` is one axis. For columns (tiles, side-by-side fields) use `Grid` with `columns` and `Grid.Item span`; it shares the same `gap` scale."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Stack direction=\"horizontal\" gap=\"condensed\" align=\"center\">…</Stack>`\n- ✅ `<Stack.Item grow><TextInput … /></Stack.Item>`\n- ❌ `<div style={{ display: 'flex', gap: 12 }}>` — raw flex, hardcoded gap.\n- ❌ A bespoke `Box` component that re-implements spacing with a custom `sx` prop.\n\n**See also:** `Grid` for columns and responsive layouts; system guideline `layout` (gap scale, breakpoints, Card vs plain section)."
+        }
+      ],
+      "contentHash": "a062958032402990bbed070b6d93d384e2faa0ce1ddcb6772c255177f9536862",
+      "bytes": 1450
+    },
+    {
+      "id": "switch",
+      "scope": "component",
+      "file": "switch.md",
+      "title": "Switch — usage guidelines",
+      "frontmatter": {
+        "component": "switch",
+        "related": [],
+        "updated": "2026-06-21"
+      },
+      "updated": "2026-06-21",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Switch — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** an immediate on/off setting that takes effect right away (e.g. \"Enable notifications\"). For a choice the user confirms later with a Save/Submit button, prefer `Checkbox`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Give it a label via the `label` prop (or an associated `aria-label`). A switch with no name is unusable on a screen reader.\n- It is a real `<input type=\"checkbox\" role=\"switch\">` — control it with `checked` + `onChange`, or leave it uncontrolled with `defaultChecked`.\n- Use `caption` for a one-line explanation; don't pile a paragraph next to a toggle.\n- Use `size=\"small\"` only in dense rows (e.g. a settings table). Default to `medium`.\n- **Never** build a toggle out of a `<div>` with an `onClick` — you lose the role, the checked state, and keyboard support."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Switch label=\"Enable notifications\" defaultChecked />`\n- ✅ controlled: `<Switch label=\"Dark mode\" checked={dark} onChange={e => setDark(e.target.checked)} />`\n- ❌ `<Switch>` with no label and no `aria-label`.\n- ❌ Using a Switch for a form value you submit on save — that's a `Checkbox`."
+        }
+      ],
+      "contentHash": "4ce0aabaff8b6f0e4a561b18d4c5dc461b08751656dd85bd0c071e7318ef7076",
+      "bytes": 1178
+    },
+    {
+      "id": "table",
+      "scope": "component",
+      "file": "table.md",
+      "title": "Table — usage guidelines",
+      "frontmatter": {
+        "component": "table",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Table — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** to present rows of structured, comparable data (repos, users, runs). Use the `Table` family — real `<table>` semantics — not a grid of styled `<div>`s."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Compose `Table.Head` → `Table.Row` → `Table.Header` for the header, and `Table.Body` → `Table.Row` → `Table.Cell` for data. Header cells are real `<th scope=\"col\">` for screen readers.\n- Wrap in `Table.Container` with `Table.Title` / `Table.Subtitle` when the table needs a heading or actions — don't hand-build a bordered header.\n- Use `density` (`condensed` | `normal` | `spacious`) for row height; never set row padding inline.\n- Use `align=\"end\"` on numeric columns (header **and** cells) so figures line up.\n- For sortable columns set `sortDirection` on the `Table.Header` (it renders the indicator and `aria-sort`) and handle `onClick`.\n- When the collection has zero records, render an `EmptyState` in place of the table; an empty filter result is one `Table.Cell` message inside the table.\n- **Never** hardcode borders, row striping, or padding — they come from `borderColor`, `bgColor`, and the `space` scale."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Table.Header align=\"end\" sortDirection=\"descending\">Stars</Table.Header>`\n- ❌ `<div className=\"row\" style={{ display: 'flex', borderBottom: '1px solid #d0d7de' }}>` — not a table, hardcoded border, no semantics.\n\n**See also:** `DataTable` when users sort, search, or filter; `EmptyState`; system guideline `data-display`."
+        }
+      ],
+      "contentHash": "038f1cb6250a826bd82acdb00bb3e9643feea2c5a00cab92bbdd3d4212f3d46b",
+      "bytes": 1555
+    },
+    {
+      "id": "tabs",
+      "scope": "component",
+      "file": "tabs.md",
+      "title": "Tabs — usage guidelines",
+      "frontmatter": {
+        "component": "tabs",
+        "related": [],
+        "updated": "2026-06-22"
+      },
+      "updated": "2026-06-22",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Tabs — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** switching between peer views of the same context without navigating away (an entity's Overview / Issues / Settings). For navigation between pages use links; for a small either/or use a SegmentedControl."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Compose `Tabs.List` (give it an `aria-label`) with `Tabs.Tab`s, and one `Tabs.Panel` per tab value. Tab `value` must match its Panel `value`.\n- Control it with `value` + `onChange`, or leave uncontrolled with `defaultValue`.\n- Keep tab labels short (one or two words). Don't overflow a dozen tabs — that's navigation, not tabs.\n- Keyboard and ARIA are handled: arrows move (selection follows focus), Home/End jump, roles + `aria-controls`/`aria-labelledby` are wired. **Don't** rebuild this with buttons that toggle `display:none` divs."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Tabs defaultValue=\"overview\"><Tabs.List aria-label=\"Sections\">…</Tabs.List><Tabs.Panel value=\"overview\">…</Tabs.Panel></Tabs>`\n- ❌ `<button onClick>` + conditionally rendered divs with no roles/keyboard.\n- ❌ Tabs as primary site navigation."
+        }
+      ],
+      "contentHash": "1eb7e62056b7d79b597f7013a6e40d6d237189190cb691fc14ae6c381831877f",
+      "bytes": 1131
+    },
+    {
+      "id": "tag",
+      "scope": "component",
+      "file": "tag.md",
+      "title": "Tag — usage guidelines",
+      "frontmatter": {
+        "component": "tag",
+        "related": [
+          "badge",
+          "label",
+          "text",
+          "empty-state"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "badge",
+        "label",
+        "text",
+        "empty-state"
+      ],
+      "sections": [
+        {
+          "heading": "Tag — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** a short word attached to an item. `Tag` is the system's one pill and has two modes:\n\n- **Read-only status or category** (no `onRemove`): `Published`, `In review`, `Draft`, `Culture`. Pick `variant` by meaning.\n- **Removable chip** (`onRemove` set): a user-applied token the user can dismiss — an active filter, a selected recipient, a keyword.\n\n**When to use a neighbour instead:**\n\n- For a **count** or presence dot (`3 unread`) use `Badge`. Badge is a number or a dot; Tag is a word.\n- For a **contextual message** with a sentence of text use `Banner`, not a long Tag.\n- If the chip's whole body should toggle a choice, use `SegmentedControl` or `Checkbox`, not a Tag with a click handler on the span.\n- `Label` (0.3.0 and earlier) is **deprecated**: it was a second pill with the same variants. Replace `<Label variant=\"success\">` with `<Tag variant=\"success\">`. The name is now free of the `FormControl.Label` collision."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Choose `variant` by **meaning**, never by colour: `success` for positive/done, `danger` for problems or blocked, `attention` for pending/needs review, `accent` for the active or selected token, `muted` for quiet neutrals (drafts, archived), `default` otherwise. Do not compute your own fills or borders from a hex value — that is the anti-pattern this component removes.\n- Map data to a variant once, in one place: `const variant = statusVariant[article.status]`.\n- **Tag is stateless.** Setting `onRemove` renders a real `<button>`, but Tag never removes itself — your handler must drop the item from the collection you render from.\n- The remove control is a real `<button>` so it is keyboard operable (Tab, then Enter/Space) with a `:focus-visible` ring. Never replace it with a clickable `<span>`.\n- The remove button is named automatically: `Remove ${text}` when `children` is a string. If `children` is not a plain string (icon + element), pass `removeLabel`.\n- `leadingIcon` and the ✕ glyph are decorative (`aria-hidden`); meaning comes from the text and, for removal, the button label. Use an icon from `tenet-ui/icons` at size 16.\n- Tag text is **normal-case, readable words** (sentence case, one or two words). Do not uppercase it and do not put a sentence in it.\n- A read-only Tag must not carry `onClick`; if a status needs to be actionable, put the action in a `Menu` or `Button` next to it."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Tag variant=\"success\">Published</Tag>` — read-only status word.\n- ✅ `<Tag variant=\"accent\" onRemove={() => setFilters((f) => f.filter((x) => x !== id))}>{name}</Tag>` — removable filter chip; the parent drops the item.\n- ✅ `<Tag leadingIcon={<UserIcon />} removeLabel=\"Remove Ada Lovelace\">Ada</Tag>` — named remove button when children are not a plain string.\n- ❌ `<Tag onRemove={() => {}}>Design</Tag>` — a no-op handler; the chip looks removable but nothing happens.\n- ❌ `<span className=\"pill\" style={{ background: 'rgba(79,111,58,.15)', color: '#3c5630' }}>Published</span>` — hand-tuned colours; reinvents the component.\n- ❌ `<Label variant=\"success\">Published</Label>` — deprecated; use `Tag`."
+        }
+      ],
+      "contentHash": "c3162a1f82ab2301c5b2d8754f92f22607859e9032508a1c7598504b1a9f3432",
+      "bytes": 3229
+    },
+    {
+      "id": "text-input",
+      "scope": "component",
+      "file": "text-input.md",
+      "title": "TextInput — usage guidelines",
+      "frontmatter": {
+        "component": "text-input",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "TextInput — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** any single-line text entry — search, email, name, filter. Use `TextInput` instead of a raw `<input>` so border, height, focus ring, and spacing stay on-system."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Always give the field an accessible name: an associated `<label>` or an `aria-label`. A placeholder is **not** a label.\n- Use `leadingVisual` / `trailingVisual` for icons (e.g. a search glyph) rather than absolutely-positioning your own.\n- Use `size` from the scale (`small` | `medium` | `large`); use `fullWidth` to fill the container width instead of inline `width: 100%` (`block` is the deprecated 0.3.0 name and warns).\n- Use `invalid` to signal validation errors — it sets `aria-invalid` and the danger border. Don't recolor the border by hand.\n- **Never** hardcode height, border, or colors — they come from `control.*`, `borderColor`, and `bgColor`/`fgColor` tokens."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<TextInput aria-label=\"Search all issues\" leadingVisual={<SearchIcon />} fullWidth />`\n- ❌ `<input style={{ height: 32, border: '1px solid #d0d7de', padding: '0 12px' }} />` — raw element, hardcoded chrome, no accessible name.\n\n**See also:** `FormControl` for the label, caption, and validation wiring; `SearchIcon` and friends from `tenet-ui/icons` for `leadingVisual`; system guideline `forms`."
+        }
+      ],
+      "contentHash": "0ee3ff2a1532f68152cdaae7a950e244b880841c5e68c0b6cb34c5e89058c465",
+      "bytes": 1391
+    },
+    {
+      "id": "text",
+      "scope": "component",
+      "file": "text.md",
+      "title": "Text — usage guidelines",
+      "frontmatter": {
+        "component": "text",
+        "related": [
+          "heading",
+          "empty-state",
+          "label"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "heading",
+        "empty-state",
+        "label"
+      ],
+      "sections": [
+        {
+          "heading": "Text — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** any run of body copy — paragraphs, descriptions, helper and validation messages, captions, table cell text, inline emphasis. `Text` is the body half of the typography system (`Heading` is the display half). Reach for it instead of a `<p>`/`<span>` with an inline `fontSize`/`color`. For a one-word status chip use `Tag`; for a form field's label use `FormControl.Label` (it wires the `htmlFor` and required marker for you)."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- `size` maps to the body scale: `small`=12, `medium`=14 (default), `large`=16. Don't go bigger — anything larger is a `Heading` (possibly with `as=\"p\"`).\n- `tone` is semantic, not decorative: `muted` for secondary copy, `success`/`danger`/`attention` for state and validation messages, `accent` sparingly for emphasis that matches the clay accent. Never pick a tone for its color; never convey a status by color alone — pair it with words or an icon.\n- `as` sets the element: `p` for block copy, `span` inline, `strong`/`em` for inline emphasis (they keep their native semantics; `weight` still controls the visual), `label` for a caption that names a control — pass `htmlFor` so it is associated.\n- `truncate` clips to a single line with an ellipsis; use it only where the full text is available elsewhere (a tooltip, the row's detail view).\n- `align` is logical (`start`/`end`), so it follows RTL. Centering is for empty states and cards, not for running paragraphs."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Text tone=\"muted\" size=\"small\">Last updated 3 minutes ago</Text>`\n- ✅ `<Text as=\"label\" htmlFor=\"email\" weight=\"medium\">Email</Text>` (outside `FormControl`)\n- ✅ `<Text tone=\"danger\">Enter a valid email address.</Text>` next to `aria-invalid` on the field.\n- ❌ `<p style={{ color: '#6e6049', fontSize: 13 }}>` — off-scale, off-token, untethered from dark mode.\n- ❌ `<Text tone=\"success\">Draft</Text>` for a table status — a `Tag` gives it the tint + hairline treatment and reads as a status.\n\n**See also:** `Heading` for text that structures the page, `Tag` for status words, `FormControl.Caption` and `FormControl.Validation` for field text; system guidelines `typography` and `color` (which `tone` sits on which surface)."
+        }
+      ],
+      "contentHash": "1b46fb331d4d76d9009f1abac719083f01d29b85da59a48b9e02b730ab2cc764",
+      "bytes": 2303
+    },
+    {
+      "id": "textarea",
+      "scope": "component",
+      "file": "textarea.md",
+      "title": "Textarea — usage guidelines",
+      "frontmatter": {
+        "component": "textarea",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Textarea — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** multi-line free text (descriptions, comments). Use `Textarea` inside a `FormControl`, not a raw `<textarea>`."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Give it an accessible name via `FormControl.Label` (or `aria-label`). A placeholder is not a label.\n- Use `fullWidth` to fill width (`block` is the deprecated 0.3.0 name and warns); use `rows` for initial height; let users resize vertically (`resize=\"vertical\"`, the default).\n- Use `invalid` for validation state — don't recolor the border by hand.\n- **Never** hardcode border, padding, or colors — they come from tokens."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<FormControl><FormControl.Label>Notes</FormControl.Label><Textarea fullWidth /></FormControl>`\n- ❌ `<textarea style={{ border: '1px solid #d0d7de', padding: 8 }} />` — raw element, hardcoded chrome.\n\n**See also:** `TextInput` for single-line entry; system guideline `forms`."
+        }
+      ],
+      "contentHash": "32f733879d3663d3180a7972c654442dd81124da0d17b1d73941b2a5a1ac8873",
+      "bytes": 963
+    },
+    {
+      "id": "toast",
+      "scope": "component",
+      "file": "toast.md",
+      "title": "Toast — usage guidelines",
+      "frontmatter": {
+        "component": "toast",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Toast — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** brief, transient, non-blocking feedback about something that just happened (\"Saved\", \"Copied\", \"Upload failed\"). For a message anchored to content use `Banner`; for something that must be acknowledged use `Dialog`."
+        },
+        {
+          "heading": "Setup",
+          "level": 2,
+          "body": "- Wrap your app once in `<ToastProvider>` (optionally set `duration` and `placement`). Call `const { toast } = useToast()` anywhere beneath it."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- Keep it short — a `title` plus one line of `message`. Toasts are glanceable, not a place for forms or long text.\n- Pick `variant` by meaning; `danger` is announced assertively (`role=\"alert\"`), the rest politely (`role=\"status\"`). The viewport is a labelled live region.\n- Let them auto-dismiss (default 5s); only set `duration: 0` for a message the user must dismiss, and always keep the manual dismiss button.\n- Never put critical, must-act information **only** in a toast — it disappears. Mirror it in a `Banner` or inline error.\n- Don't stack many at once; collapse repeats rather than flooding the corner."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `toast({ variant: 'success', title: 'Saved', message: 'Your changes are live.' })`\n- ✅ `<ToastProvider placement=\"bottom-right\"><App /></ToastProvider>`\n- ❌ A toast as the only record of a validation error the user must fix.\n- ❌ Long, interactive content inside a toast — use a Dialog.\n\n**See also:** `Banner` for persistent or anchored messages, `Dialog` for decisions, `FormControl.Validation` for field errors; system guideline `feedback` has the decision table."
+        }
+      ],
+      "contentHash": "2b7f75e48136581936d7bb0b2571d4f440ed502baf7366a0a30151486ec1a494",
+      "bytes": 1599
+    },
+    {
+      "id": "tooltip",
+      "scope": "component",
+      "file": "tooltip.md",
+      "title": "Tooltip — usage guidelines",
+      "frontmatter": {
+        "component": "tooltip",
+        "related": [],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [],
+      "sections": [
+        {
+          "heading": "Tooltip — usage guidelines",
+          "level": 1,
+          "body": "**When to use:** a brief text hint that supplements an already-labelled control (clarifying an icon button, explaining what an action does). Never the *only* place critical information lives."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "- The trigger must be a single **focusable** element (a button, link, or input) — the tooltip shows on hover **and** on keyboard focus, and Escape dismisses it. Don't wrap a bare `<div>`/`<span>` that can't receive focus.\n- Keep `content` short — a phrase, not a paragraph. For rich, interactive content use a popover/dialog.\n- The trigger is wired to the bubble via `aria-describedby`, so screen readers announce it. Don't duplicate the same text as a visible label and a tooltip.\n- The bubble color comes from the inverse surface tokens, so it stays high-contrast in light and dark — don't recolor it."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Tooltip content=\"Saves immediately\"><Button>Publish</Button></Tooltip>`\n- ✅ icon button: `<Tooltip content=\"Delete row\"><IconButton icon={<TrashIcon />} aria-label=\"Delete row\" /></Tooltip>`\n- ❌ `<Tooltip content=\"…\"><span>text</span></Tooltip>` — not focusable, keyboard users can't reach it.\n- ❌ Hiding must-have instructions behind hover only.\n\n**See also:** `Popover` for rich content, `IconButton` (the usual trigger); system guideline `iconography`."
+        }
+      ],
+      "contentHash": "e14d83079940347a2c60824ee47f32488a674741ba3c8e40fb8999f3649de702",
+      "bytes": 1395
+    },
+    {
+      "id": "accessibility",
+      "scope": "system",
+      "file": "system/accessibility.md",
+      "title": "Accessibility",
+      "frontmatter": {
+        "title": "Accessibility",
+        "component": "system",
+        "page": "accessibility",
+        "related": [
+          "color",
+          "iconography",
+          "forms",
+          "feedback",
+          "dialog",
+          "table",
+          "toast",
+          "icon-button",
+          "form-control"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "color",
+        "iconography",
+        "forms",
+        "feedback",
+        "dialog",
+        "table",
+        "toast",
+        "icon-button",
+        "form-control"
+      ],
+      "sections": [
+        {
+          "heading": "Accessibility",
+          "level": 1,
+          "body": "The components own roles, keyboard paths, focus rings, and announcements, so a screen built only from tenet-ui components and semantic tokens starts accessible. App code keeps it that way by naming every control, keeping the DOM order equal to the visual order, and not adding motion or colour outside the system. These are the checks an audit applies."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "1. Every interactive element has an accessible name: visible text children on `Button` and `Link`; `aria-label` on `IconButton`; `FormControl.Label` (or `aria-label`) on every field; `label` on `Checkbox`, `Switch`, `Radio`, `RadioGroup`, `Spinner`; `aria-label` on `Tabs.List`, `SegmentedControl`, `Menu`, `Popover`, `Calendar`, `ProgressBar`, and any second `Breadcrumbs` or `Pagination` on a page. A placeholder is not a name.\n2. Focus order equals visual order. Layout is done with `Stack` and `Grid` in reading order; `order`, `flex-direction: row-reverse`, or positive `tabIndex` are never used to rearrange what is on screen.\n3. Focus is visible. Every component ships a `:focus-visible` ring: a `--borderWidth-thick` outline in `--borderColor-accent-emphasis` on buttons, links, tabs, and choice controls, and `--borderColor-accent-emphasis` plus `--shadow-focus` on fields. App code never sets `outline: none` or overrides the ring.\n4. Text colour pairs come from the AA table in color.md. Text on the ochre solid is `--fgColor-onAttention`; `--fgColor-onEmphasis` is never placed on `--bgColor-emphasis` or `--bgColor-attention-emphasis`.\n5. Colour is never the only carrier of meaning. Status is a word (`Tag`), a message (`FormControl.Validation`, `Banner`), or an icon with `label` alongside text.\n6. Icons are decorative (`aria-hidden`) unless they are the only carrier of meaning, in which case they take `label` (`role=\"img\"`). An `IconButton`'s icon is always decorative because the button has `aria-label`. See iconography.md.\n7. Motion honours `prefers-reduced-motion`: `Spinner`, `Skeleton`, `ProgressBar`, `Toast`, `Tooltip`, and `Accordion` reduce or drop their animation under it. App code adds no `animation` or `transition` of its own, and any motion it must add is wrapped in `@media (prefers-reduced-motion: no-preference)`.\n8. `Dialog` is the only modal. It traps Tab and Shift+Tab, moves focus in on open, returns focus to the trigger on close, locks body scroll, closes on Escape and backdrop, and sets `aria-hidden` on the rest of the page (except the `Toast` layer). Its `title` is required because it is the dialog's name; `description` is wired as `aria-describedby`. App code never builds a fixed-position overlay.\n9. `Popover`, `Menu`, `Select`, `DatePicker`, and `Tooltip` are non-modal and portal to `document.body`. Their `trigger` must be a focusable element (a `Button` or `IconButton`), never a `<div>` or `<span>`.\n10. Tables are real tables. `Table.Header` renders `<th scope=\"col\">`; a sortable header sets `sortDirection` so the sort control is a real `<button>` and `aria-sort` reflects `ascending` or `descending` (omitted when `none`). Rows are never rebuilt from `<div>`s.\n11. Forms are wired through `FormControl`: it links the label with `htmlFor`, the caption and validation with `aria-describedby`, and sets `aria-invalid` and `required`. App code never assigns these attributes by hand, and never clobbers a component's `aria-describedby` (components merge a caller's value).\n12. Announcements: `Toast` renders into a labelled `role=\"region\"` live area; a danger toast or `Banner variant=\"danger\"` is `role=\"alert\"`, the other variants are `role=\"status\"`. `Spinner` is `role=\"status\"` with a hidden `label`. `Skeleton` is `aria-hidden`, so the surrounding container carries `aria-busy=\"true\"` and a hidden status text. Roles are never overridden to make a message louder.\n13. Headings form an outline: one `Heading level={1}` per page, ranks in order, `as` used to keep rank honest when size differs. Landmarks are not duplicated without distinct labels.\n14. `Link` navigates and `Button` acts; a `Link` never has an `onClick` that performs an action, and a `Button` never navigates. `Link external` adds `rel`, `target`, and a hidden \"(opens in new tab)\".\n15. Touch and pointer targets come from `size`: `medium` (32px) is the default control height, `small` (28px) is for dense rows only, and `large` (40px) is for primary actions on touch-first layouts. Controls are never shrunk below `small`."
+        },
+        {
+          "heading": "Keyboard contracts",
+          "level": 2,
+          "body": "| Family | Components | Keyboard the component provides |\n|---|---|---|\n| Action | `Button`, `IconButton`, `Link` | Tab; Enter (and Space for buttons) activates |\n| Field | `TextInput`, `Textarea`, `NumberInput`, `DatePicker` | Native editing; `NumberInput` arrows step within `min`/`max`; `DatePicker` opens on Enter/Space, Escape closes and refocuses |\n| Choice | `Checkbox`, `Switch`, `RadioGroup`, `SegmentedControl` | Space toggles; arrows move within a radio group or segmented control (selection follows focus), Home/End jump |\n| Listbox | `Select` | Up/Down (skip disabled, wrap), Home/End, typeahead, Enter/Space select, Escape and Tab close |\n| Menu | `Menu` | Up/Down, Home/End, Enter/Space invoke, Escape closes and returns focus to the trigger, Tab closes |\n| Tabs | `Tabs` | Left/Right move and select, Home/End jump, Tab enters the panel |\n| Disclosure | `Accordion` | Enter/Space toggle, Up/Down/Home/End move between headers |\n| Overlay | `Dialog`, `Popover`, `Tooltip` | Escape closes; `Dialog` traps Tab; `Popover` closes when focus leaves; `Tooltip` shows on focus |\n| Grid | `Calendar` | Arrows move by day, Home/End by week edge, PageUp/PageDown by month, Enter/Space select |\n| Navigation | `Breadcrumbs`, `Pagination`, `Table.Header` (sortable) | Real links and buttons; Tab and Enter |"
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<IconButton icon={<TrashIcon />} aria-label=\"Delete story\" />`\n- ✅ `<FormControl required><FormControl.Label>Email</FormControl.Label><TextInput type=\"email\" /><FormControl.Validation variant=\"error\">Enter a valid email address.</FormControl.Validation></FormControl>` (name, required, and error all wired by the control)\n- ✅ `<Tabs.List aria-label=\"Story sections\">` and `<Menu aria-label=\"Story actions\" trigger={<IconButton icon={<MoreHorizontalIcon />} aria-label=\"Story actions\" />} items={items} />`\n- ✅ `<Table.Header align=\"end\" sortDirection={sort.dir} onClick={toggleSort}>Views</Table.Header>` (a real sort button with `aria-sort`)\n- ✅ `<div aria-busy=\"true\"><span className=\"sr-only\">Loading stories</span><Skeleton variant=\"text\" /></div>` (the container announces; `sr-only` is the app's visually hidden utility)\n- ❌ `<div onClick={open} className=\"button\">Open</div>` (no role, no keyboard, no name)\n- ❌ `<Button style={{ outline: 'none' }}>` (focus ring removed)\n- ❌ `<Stack direction=\"horizontal\" style={{ flexDirection: 'row-reverse' }}>` (visual order no longer matches focus order)\n- ❌ `<Tooltip content=\"Delete\"><span>🗑</span></Tooltip>` (a non-focusable trigger; keyboard users never see the tooltip)\n- ❌ `<div style={{ position: 'fixed', inset: 0 }}>…</div>` as a modal (no trap, no scroll lock, no Escape, no restore; use `Dialog`)\n- ❌ `<div className=\"card\" style={{ transition: 'transform .3s' }} />` with no reduced-motion guard (motion that ignores the user's setting)"
+        }
+      ],
+      "contentHash": "06f01e3792a0c632d9b1be0b6a10d15c1714ddb06004295e6731ca32d06fb72c",
+      "bytes": 7499
+    },
+    {
+      "id": "color",
+      "scope": "system",
+      "file": "system/color.md",
+      "title": "Color",
+      "frontmatter": {
+        "title": "Color",
+        "component": "system",
+        "page": "color",
+        "related": [
+          "typography",
+          "accessibility",
+          "button",
+          "tag",
+          "badge",
+          "banner",
+          "card"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "typography",
+        "accessibility",
+        "button",
+        "tag",
+        "badge",
+        "banner",
+        "card"
+      ],
+      "sections": [
+        {
+          "heading": "Color",
+          "level": 1,
+          "body": "Editorial Ink has one accent (clay, terracotta) and three status hues (olive success, brick danger, ochre attention) on warm paper neutrals. App code never touches a hue directly: it picks a semantic token or a component `variant`, and the token flips between `data-color-mode=\"light\"` and `data-color-mode=\"dark\"` on `<html>`. Every pair listed here passes WCAG AA in both themes; any pairing not listed here is unverified and an audit should flag it."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "1. App code uses only semantic tokens: `--fgColor-*`, `--bgColor-*`, `--borderColor-*`. It never references a `--base-color-*` primitive (`neutral`, `clay`, `olive`, `brick`, `ochre`, `white`, `black`) and never writes a hex, `rgb()`, or `hsl()` literal for a colour.\n2. Text on surfaces: `--fgColor-default` and `--fgColor-muted` are the only body-text colours. They sit on `--bgColor-default`, `--bgColor-muted`, `--bgColor-inset`, or a soft `--bgColor-<status>-muted` tint. They are never placed on a solid `-emphasis` background.\n3. Status text (`--fgColor-accent`, `--fgColor-success`, `--fgColor-danger`, `--fgColor-attention`) sits on the three neutral surfaces or on its own soft tint (`--bgColor-<status>-muted`, matched by meaning). It is never placed on a solid `-emphasis` background.\n4. `--fgColor-onEmphasis` (white) is used only on `--bgColor-accent-emphasis`, `--bgColor-success-emphasis`, and `--bgColor-danger-emphasis`. It is never used on `--bgColor-emphasis` and never on `--bgColor-attention-emphasis`.\n5. The ochre attention solid takes dark text: text on `--bgColor-attention-emphasis` is always `--fgColor-onAttention`. White on ochre fails AA.\n6. Text on `--bgColor-emphasis` (the ink surface) is `--bgColor-default`, not `--fgColor-onEmphasis`. The two tokens are designed as inverses per theme, so the pair stays high-contrast in both modes. `Tooltip` owns this pattern; do not rebuild it.\n7. Soft tints come in pairs: a `--bgColor-<status>-muted` fill always takes its matching `--borderColor-<status>-muted` hairline and `--fgColor-<status>` text. Never compute a translucent fill (`rgba(...)`, `color-mix(...)`, or `opacity` on a status colour) to fake a tint.\n8. The accent appears once per surface as an action: exactly one `Button` or `IconButton` with `variant=\"primary\"` per page, dialog, card, or toolbar. `Link` text and `Tag variant=\"accent\"` (a selected or active token) are the only other accent uses.\n9. Status colours carry status meaning only: `success` means done, passing, or published; `danger` means failed, blocked, or destructive; `attention` means a warning or something that needs action. Categories, teams, and brands are never coloured with a status variant; use `default` or `muted`.\n10. `Banner` and `Toast` variants are chosen by meaning, not by the colour they produce: `info` (clay), `success` (olive), `warning` (ochre), `danger` (brick).\n11. Surfaces nest inward: the page is `--bgColor-inset`, a `Card variant=\"default\"` on it is `--bgColor-default`, and a recessed strip inside that is `Card variant=\"muted\"` (`--bgColor-muted`). A default surface is not placed on another default surface without a `--borderColor-default` edge.\n12. Borders: `--borderColor-default` for control outlines and card edges, `--borderColor-muted` for row and list separators. `--borderColor-accent-emphasis` is the focus and selected-state colour and is applied only by components.\n13. Colour is never the only signal. A status is a coloured word (`Tag`), a coloured message (`FormControl.Validation`, `Banner`), or an icon plus text, never a bare coloured dot with no name.\n14. Theming is not branched in JavaScript. Code never reads `data-color-mode` to pick a colour; it uses the token and lets the theme resolve it."
+        },
+        {
+          "heading": "AA pairs",
+          "level": 2,
+          "body": "Pairs that pass AA for normal text in both themes. The machine-readable form is `$extensions.tenet.contrast` on each `fgColor` token in `tokens/tokens.json` (`aa` and `aaLarge` lists per theme); a pair must be in the `aa` list of both themes to appear here.\n\n| Foreground token | Allowed backgrounds |\n|---|---|\n| `--fgColor-default` | `--bgColor-default`, `--bgColor-muted`, `--bgColor-inset`, any `--bgColor-<status>-muted` tint |\n| `--fgColor-muted` | `--bgColor-default`, `--bgColor-muted`, `--bgColor-inset`, any `--bgColor-<status>-muted` tint |\n| `--fgColor-accent` | the three neutral surfaces, `--bgColor-accent-muted` |\n| `--fgColor-success` | the three neutral surfaces, `--bgColor-success-muted` |\n| `--fgColor-danger` | the three neutral surfaces, `--bgColor-danger-muted` |\n| `--fgColor-attention` | the three neutral surfaces, `--bgColor-attention-muted` |\n| `--fgColor-onEmphasis` | `--bgColor-accent-emphasis`, `--bgColor-success-emphasis`, `--bgColor-danger-emphasis` only |\n| `--fgColor-onAttention` | `--bgColor-attention-emphasis` only |\n| `--bgColor-default` (as text) | `--bgColor-emphasis` only (the inverse pair) |"
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Text tone=\"muted\" size=\"small\">Updated 3 minutes ago</Text>` (secondary copy through the token, not a literal)\n- ✅ `<Tag variant=\"success\">Published</Tag>` (status word gets the tint, hairline, and text tokens as a set)\n- ✅ `<Stack direction=\"horizontal\" gap=\"condensed\"><Button variant=\"invisible\">Cancel</Button><Button variant=\"primary\">Save changes</Button></Stack>` (one accent action)\n- ❌ `<span style={{ color: '#6e6049' }}>Updated</span>` (a `neutral.650` literal; breaks in dark mode)\n- ❌ `<span style={{ background: 'var(--bgColor-attention-emphasis)', color: 'var(--fgColor-onEmphasis)' }}>Pending</span>` (white on ochre fails AA; the text token is `--fgColor-onAttention`)\n- ❌ `<div style={{ background: 'rgba(194, 80, 46, 0.12)' }}>` (a computed tint; use `--bgColor-accent-muted` or `Tag variant=\"accent\"`)\n- ❌ `<Button variant=\"primary\">Save</Button><Button variant=\"primary\">Publish</Button>` (two accents on one surface)\n- ❌ `<Tag variant=\"danger\">Design</Tag>` (a team name coloured as a failure)"
+        }
+      ],
+      "contentHash": "92f5f575b8d44cb0331c806bb53fa854ed4ab3d35dda7eb209b68608d14a130c",
+      "bytes": 6085
+    },
+    {
+      "id": "content",
+      "scope": "system",
+      "file": "system/content.md",
+      "title": "Content",
+      "frontmatter": {
+        "title": "Content",
+        "component": "system",
+        "page": "content",
+        "related": [
+          "typography",
+          "forms",
+          "feedback",
+          "empty-state",
+          "button",
+          "tag",
+          "heading"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "typography",
+        "forms",
+        "feedback",
+        "empty-state",
+        "button",
+        "tag",
+        "heading"
+      ],
+      "sections": [
+        {
+          "heading": "Content",
+          "level": 1,
+          "body": "Editorial Ink reads like a newsroom, not a dashboard: plain sentences, sentence case, verbs on buttons, and no exclamation marks. These rules are the defaults an agent uses when it writes UI text into a plan, and the checks an audit applies to labels, headings, and messages."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "1. Sentence case everywhere: headings (`Heading`), button labels (`Button`, `IconButton` `aria-label`), field labels (`FormControl.Label`), tags (`Tag`), tab labels, menu items, table headers, and dialog titles. Only the first word and proper nouns are capitalised: \"Recent stories\", \"Save changes\", \"Publish date\". Title Case and ALL CAPS are never written in app code; the tracked-caps look of `Table.Header` is applied by the component, not by the text, and `Tag` text stays sentence case (\"In review\", not \"IN REVIEW\").\n2. Button labels are verbs that name the outcome: \"Save changes\", \"Create story\", \"Send invite\", \"Add author\", \"Export CSV\". \"Submit\", \"OK\", \"Yes\", \"No\", \"Click here\", and \"Continue\" without an object are never labels. A label is one to three words.\n3. Destructive actions name the object, in the dialog title and on the button: `title=\"Delete article?\"` with `<Button variant=\"danger\">Delete article</Button>`. \"Are you sure?\" and \"Confirm\" are not titles or labels. The cancelling action is \"Cancel\" or \"Keep article\".\n4. Empty-state copy follows one pattern: `title` names what is empty in three to five words (\"No stories yet\", \"No authors match\"); `description` says why it is empty or what to do, in one sentence (\"Stories you draft or import appear here.\"); the `action` label is the verb that fills it (\"Create story\"). No exclamation marks, no \"Oops\".\n5. Error messages say what happened, then how to fix it, in one or two sentences: \"Enter a valid email address.\" \"The image is larger than 10 MB. Choose a smaller file.\" \"Could not save the story. Try again in a few minutes.\" They never blame the user (\"You entered an invalid email\"), never use jargon or codes alone (\"Error 422\"), and never apologise (\"Sorry!\").\n6. Success and status copy states the fact in past or present tense: \"Story published\", \"Changes saved\", \"3 stories imported\". No exclamation marks, no \"Success!\", no \"Awesome\".\n7. No exclamation marks anywhere in UI text: not in toasts, banners, empty states, headings, or captions.\n8. Help text (`FormControl.Caption`) is one sentence that adds information the label does not: what the value is used for, a constraint, or a format. It never repeats the label and never starts with \"Please\".\n9. Placeholders are examples of format only (\"name@example.com\", \"12 Sep 2026\"), never instructions (\"Enter your email\") and never the label.\n10. Tags and statuses are one or two words, sentence case: \"Published\", \"In review\", \"Needs edit\". Not \"PUBLISHED\", not \"published\", not \"This story has been published\".\n11. Dates: formatted with `Intl.DateTimeFormat` in the user's locale (`Calendar` and `DatePicker` take `locale`), never hand-assembled. Recent events use relative time in a muted caption (\"3 minutes ago\", \"Yesterday\") and switch to an absolute date after about a week (\"12 Sep 2026\"). Absolute dates spell the month (\"12 Sep 2026\", \"September 12, 2026\"), never all-numeric (\"09/12/2026\"), so day and month cannot be confused. Times include a zone when readers may be elsewhere (\"14:00 UTC\").\n12. Numbers: formatted with `Intl.NumberFormat` in the user's locale (thousands separators, \"12,480\"); large counts abbreviate only in `Badge` (`max`, \"99+\") and in summary tiles (\"1.2M\" with the exact value in a `Tooltip` or caption). Numeric columns are right-aligned with `align=\"end\"`. Units follow the number with a space (\"10 MB\", \"3 min\").\n13. Product and proper nouns keep their own capitalisation (\"tenet-ui\", \"GitHub\", \"Storybook\", \"Newsroom\" when it is the product name) and are otherwise the only capitals inside a sentence-case string. Generic features are lower case (\"the dashboard\", \"a story\", \"your drafts\").\n14. People are addressed as \"you\"; the product does not refer to itself as \"we\" or \"I\". Copy uses contractions where natural (\"can't\", \"you're\") and avoids idioms that do not translate.\n15. Links describe their destination (\"View billing settings\", \"Open the changelog\"), never \"here\" or a bare URL. `Link external` adds the new-tab warning; the text does not need to say \"(opens in new tab)\"."
+        },
+        {
+          "heading": "Patterns",
+          "level": 2,
+          "body": "| Slot | Pattern | Example |\n|---|---|---|\n| Page title | noun or noun phrase | \"Stories\", \"Author settings\" |\n| Primary button | verb + object | \"Create story\", \"Save changes\" |\n| Destructive button | verb + object | \"Delete article\", \"Remove author\" |\n| Cancel button | \"Cancel\" or \"Keep <object>\" | \"Cancel\", \"Keep draft\" |\n| Empty-state title | \"No <things> yet\" or \"No <things> match\" | \"No stories yet\" |\n| Empty-state description | why, or what to do | \"Stories you draft or import appear here.\" |\n| Field error | what happened, how to fix | \"Enter a date after today.\" |\n| Server error banner | `title` = what failed; body = why and next step | \"Could not publish\" / \"The image is larger than 10 MB. Choose a smaller file.\" |\n| Success toast | `title` = fact; `message` = consequence | \"Story published\" / \"Readers can see it now.\" |\n| Status tag | one or two words | \"In review\" |"
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Button variant=\"primary\">Create story</Button>`\n- ✅ `<Dialog title=\"Delete article?\" description=\"Readers will lose access immediately.\" footer={<><Button variant=\"invisible\">Cancel</Button><Button variant=\"danger\">Delete article</Button></>} />`\n- ✅ `<EmptyState title=\"No stories yet\" description=\"Stories you draft or import appear here.\" action={<Button variant=\"primary\">Create story</Button>} />`\n- ✅ `<FormControl.Validation variant=\"error\">Enter a valid email address.</FormControl.Validation>`\n- ✅ `toast({ variant: 'success', title: 'Changes saved', message: 'The story updates for readers within a minute.' })`\n- ✅ `<Text tone=\"muted\" size=\"small\">{new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(story.publishedAt)}</Text>`\n- ❌ `<Button variant=\"primary\">Submit</Button>` (not a verb that names the outcome)\n- ❌ `<Heading level={2}>Recent Stories</Heading>` (Title Case)\n- ❌ `<Dialog title=\"Are you sure?\" footer={<Button variant=\"danger\">Confirm</Button>} />` (neither names the object)\n- ❌ `<EmptyState title=\"Oops! Nothing here\" description=\"Looks like you haven't added anything yet!\" />` (exclamation marks, no named object, no next step)\n- ❌ `<FormControl.Validation variant=\"error\">Invalid input</FormControl.Validation>` (no cause, no fix)\n- ❌ `<Tag variant=\"success\">PUBLISHED</Tag>` (caps written into the text; the component owns the style)\n- ❌ `<Text>{story.publishedAt.toLocaleDateString()}</Text>` rendering \"9/12/2026\" (all-numeric, ambiguous order)"
+        }
+      ],
+      "contentHash": "b7d680d19c595541d4883413fb85d34749b21d9f9e42880c930228dd34eda5ec",
+      "bytes": 6960
+    },
+    {
+      "id": "data-display",
+      "scope": "system",
+      "file": "system/data-display.md",
+      "title": "Data display",
+      "frontmatter": {
+        "title": "Data display",
+        "component": "system",
+        "page": "data-display",
+        "related": [
+          "table",
+          "data-table",
+          "badge",
+          "tag",
+          "empty-state",
+          "avatar",
+          "skeleton",
+          "spinner",
+          "progress-bar",
+          "pagination",
+          "label"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "table",
+        "data-table",
+        "badge",
+        "tag",
+        "empty-state",
+        "avatar",
+        "skeleton",
+        "spinner",
+        "progress-bar",
+        "pagination",
+        "label"
+      ],
+      "sections": [
+        {
+          "heading": "Data display",
+          "level": 1,
+          "body": "Records, statuses, counts, and loading states each have one component. This page settles the pairs that get confused: `Table` against `DataTable`, `Badge` against `Tag`, the deprecated `Label`, and when a collection shows an `EmptyState` instead of an empty table. It also fixes how loading is shown."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "1. `Table` is for static, hand-composed markup: `Table.Container`, `Table.Title`, `Table.Subtitle`, `Table.Actions`, then `Table.Head`, `Table.Body`, `Table.Row`, `Table.Header`, `Table.Cell`. Use it when the layout is bespoke (grouped rows, custom toolbars, server-driven paging) or the data does not change.\n2. `DataTable` is for a list of records the user sorts, searches, or filters client-side. It takes `columns` and `data`, and builds the toolbar, sort buttons, and filter dropdowns. If the code around a `Table` starts holding sort or filter state, it should be a `DataTable`.\n3. In a `DataTable` column, `accessor` returns the raw value used for sorting and filtering; `cell` is display only. Sorting never runs on rendered output.\n4. Numeric columns use `align=\"end\"` on both `Table.Header` and `Table.Cell`. A sortable `Table.Header` sets `sortDirection` (`ascending`, `descending`, `none`) and handles `onClick`; the component renders a real button and `aria-sort`.\n5. Paged data uses `Pagination` below the table with `page`, `pageCount`, `onPageChange`. Row density comes from `density` (`condensed`, `normal`, `spacious`), never from cell padding.\n6. `Badge` is a count or a dot attached to something else (unread count on a nav item, a presence dot on an avatar). It shows `count` (collapsing past `max`, default `99+`) or `dot`. A `Badge` never contains a word.\n7. `Tag` is a word. `Tag` without `onRemove` is a read-only status or category pill (`<Tag variant=\"success\">Published</Tag>`); `Tag` with `onRemove` is a removable chip (an active filter, a recipient). `variant` is `default`, `accent`, `success`, `danger`, `attention`, or `muted`, chosen by meaning.\n8. `Label` is deprecated since 0.4.0. New code uses `Tag` for status pills; existing `<Label variant=\"…\">` maps one-to-one to `<Tag variant=\"…\">`.\n9. Status colours on a `Tag` mean status: `success` for published or passing, `danger` for failed or blocked, `attention` for needs review. Categories and teams use `default` or `muted`. A status is always a word, never a bare coloured dot.\n10. `EmptyState` renders when a collection has zero records. Its `title` names what is empty (\"No stories yet\"); its `description` says why or what to do next (\"Stories you draft or import appear here.\"); `action` is at most one `Button variant=\"primary\"`; `secondaryAction` is an optional `Button variant=\"invisible\"` or `Link`; `icon` is optional and decorative (no `label`). `headingLevel` (`2`, `3`, `4`) sets the title's rank to fit the page outline; `size=\"large\"` is for a whole-page or first-run state, `medium` (default) for an empty region inside a page.\n11. An empty search or filter result does not replace the table. The table, its toolbar, and the active filters stay on screen, and the message goes through `DataTable` `emptyText` (default \"No matching rows.\"): either a sentence (\"No stories match these filters.\") or, when the user needs a way out, a compact `EmptyState` with `headingLevel={4}` whose title echoes the query and whose `action` is \"Clear filters\". A hand-composed `Table` renders one `Table.Cell` with the same kind of content. A full-size `EmptyState` in place of the table is only for zero records (rule 10).\n12. `Avatar` always receives `name`; it produces the initials fallback and the accessible name. `shape=\"circle\"` is for people, `shape=\"rounded\"` for organisations and repositories. Sizes come from `size`, never from width and height overrides.\n13. Loading a layout whose shape is known uses `Skeleton` blocks matching the final content, inside a container with `aria-busy=\"true\"` and a visually hidden status text. `Skeleton` is `aria-hidden` on its own.\n14. A short indeterminate wait with no shape to mimic uses `Spinner` with a meaningful `label` (\"Loading stories\"). A measurable job uses `ProgressBar` with `value`, `max`, and `aria-label`; an unknown-duration job uses `ProgressBar` without `value`.\n15. Skeletons and spinners are never shown at the same time for the same region, and neither replaces an `EmptyState` once the data has loaded empty."
+        },
+        {
+          "heading": "Which one",
+          "level": 2,
+          "body": "| Need | Component |\n|---|---|\n| Rows that never re-sort in the browser | `Table` |\n| Rows the user sorts, searches, or filters | `DataTable` |\n| A number or a dot on another control | `Badge` |\n| A status or category word | `Tag` (no `onRemove`) |\n| A user-removable token | `Tag` with `onRemove` |\n| A status pill in 0.3.0 code | `Label`, deprecated; migrate to `Tag` |\n| Zero records in a collection | `EmptyState` |\n| A filter that matches nothing | `DataTable` `emptyText` (a sentence, or a compact `EmptyState headingLevel={4}`) |\n| Known layout still loading | `Skeleton` |\n| Unknown wait, compact | `Spinner` |\n| Measurable job | `ProgressBar` |"
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<DataTable columns={cols} data={stories} title=\"Stories\" rowKey={(s) => s.id} />` with `{ id: 'status', header: 'Status', accessor: (s) => s.status, filterable: true, cell: (s) => <Tag variant={s.status === 'published' ? 'success' : 'muted'}>{s.statusLabel}</Tag> }`\n- ✅ `<Badge variant=\"danger\" count={unread} />` next to an `aria-label` that includes the count (\"Inbox, 3 unread\")\n- ✅ `stories.length === 0 ? <EmptyState icon={<InboxIcon size={24} />} title=\"No stories yet\" description=\"Stories you draft or import appear here.\" action={<Button variant=\"primary\" onClick={create}>Create story</Button>} /> : <DataTable … />`\n- ✅ `<div aria-busy=\"true\"><Skeleton variant=\"text\" /><Skeleton variant=\"text\" width=\"80%\" /></div>` while a card body loads\n- ❌ `<Badge variant=\"success\">Published</Badge>` (a word in a badge; use `Tag`)\n- ❌ `<Tag variant=\"accent\">3</Tag>` (a count in a tag; use `Badge`)\n- ❌ `<Label variant=\"danger\">failing</Label>` in new code (deprecated; `<Tag variant=\"danger\">Failing</Tag>`)\n- ❌ `filtered.length === 0 ? <EmptyState title=\"No results\" /> : <DataTable … />` (replacing the table and its filters when a search returns nothing; the table stays and `emptyText` speaks)\n- ❌ `<EmptyState title=\"Nothing here\" action={<Button>Import</Button>} secondaryAction={<Button variant=\"primary\">Create</Button>} />` (title does not name what is empty; two primary-looking actions)\n- ❌ A `<div>` of flex rows with hardcoded borders standing in for a table (no `<table>` semantics; use `Table` or `DataTable`)"
+        }
+      ],
+      "contentHash": "01d87572cbad99b53316bd52c1a595c66d3110126c528a3d449aaafc25ec2ae7",
+      "bytes": 6844
+    },
+    {
+      "id": "feedback",
+      "scope": "system",
+      "file": "system/feedback.md",
+      "title": "Feedback",
+      "frontmatter": {
+        "title": "Feedback",
+        "component": "system",
+        "page": "feedback",
+        "related": [
+          "banner",
+          "toast",
+          "dialog",
+          "form-control",
+          "spinner",
+          "skeleton",
+          "progress-bar",
+          "empty-state",
+          "forms"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "banner",
+        "toast",
+        "dialog",
+        "form-control",
+        "spinner",
+        "skeleton",
+        "progress-bar",
+        "empty-state",
+        "forms"
+      ],
+      "sections": [
+        {
+          "heading": "Feedback",
+          "level": 1,
+          "body": "Four mechanisms report outcomes to the user: inline `FormControl.Validation`, `Banner`, `Toast`, and `Dialog`. Each answers a different combination of four questions: how long the message persists, whether it blocks, what it is about, and who caused it. Pick by those answers, never by how prominent the message should feel."
+        },
+        {
+          "heading": "The decision table",
+          "level": 2,
+          "body": "| Mechanism | Persists | Blocks | Scope | Initiated by | Use for |\n|---|---|---|---|---|---|\n| `FormControl.Validation variant=\"error\"` | until the field is fixed | no | one field | the user's input | a field that fails validation |\n| `Banner` | until the condition clears or the user dismisses | no | a page, section, or form | system state or a server response | form-level and server errors, quota and maintenance notices, a page-level warning |\n| `Toast` via `useToast` | transient, auto-dismisses (default 5s) | no | the whole app, about an action that just finished | the user's own action | \"Saved\", \"Copied\", \"Story published\", a background failure with a retry elsewhere |\n| `Dialog` | until the user decides | yes, modal | one decision | the user's action, needing confirmation or input | destructive confirmations, unsaved-changes prompts, a short focused form |"
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "1. Decide with three questions in order. Is it about one field? Then `FormControl.Validation`. Does the user have to decide something before continuing? Then `Dialog`. Otherwise: does it stay relevant while the user looks at this page? Then `Banner`; if it is about an action that just completed and needs no follow-up, `Toast`.\n2. A field error is always inline `FormControl.Validation` on that field. It is never a `Banner`, never a `Toast`, never a `Dialog`.\n3. A form-level or server error is a `Banner variant=\"danger\"` above the fields inside the form. It is not dismissible (`onDismiss` is omitted) while the error still needs fixing.\n4. A `Toast` confirms success of a completed action. It never carries information the user must act on: an error that blocks the user's task is a `Banner` or a `FormControl.Validation`, and a decision is a `Dialog`. A danger toast is acceptable only for a background failure that the user can recover from elsewhere.\n5. A `Dialog` is used only when the user must decide or supply something before the flow continues. A status message (\"Saved\") is never a dialog. A destructive confirmation names the object in its `title` (\"Delete article?\") and its confirming button (`<Button variant=\"danger\">Delete article</Button>`).\n6. One channel per event. A saved form gets a toast, or a success banner, not both. A failed request gets one banner, not a banner and a toast.\n7. `variant` is chosen by meaning: `success` for done, `danger` for failed or destructive, `warning` (`Banner`) for something needing attention, `info` for neutral notices. `Banner variant=\"danger\"` and a danger toast are announced assertively (`role=\"alert\"`); the others politely (`role=\"status\"`). Roles are never overridden.\n8. A `Banner` gets `onDismiss` only when the message is non-critical (an announcement, a tip). A dismissed critical banner cannot be recovered by the user.\n9. Empty results are not feedback. Zero records is an `EmptyState`; a filter that hides every row keeps the table and speaks through `DataTable` `emptyText`. Neither is a `Banner`. See data-display.md.\n10. Loading is not feedback about an outcome. A known layout loads behind `Skeleton`; an indeterminate short wait shows `Spinner` with a `label`; a measurable job shows `ProgressBar` with `aria-label`. See data-display.md.\n11. `Tooltip` is a hint about a control, not a feedback channel. It never reports an outcome or an error.\n12. Feedback copy states what happened and, for errors, what to do next, in sentence case without exclamation marks: `title=\"Could not publish\"`, body \"The image is larger than 10 MB. Choose a smaller file.\" See content.md."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<FormControl.Validation variant=\"error\">Enter a valid email address.</FormControl.Validation>` (one field, inline)\n- ✅ `<Banner variant=\"danger\" title=\"Could not save the story\">The server rejected the request. Try again in a few minutes.</Banner>` (form-level, persistent, not dismissible)\n- ✅ `toast({ variant: 'success', title: 'Story published', message: 'Readers can see it now.' })` (transient confirmation of the user's own action)\n- ✅ `<Dialog open={open} onClose={close} title=\"Delete article?\" description=\"Readers will lose access immediately.\" footer={<><Button variant=\"invisible\" onClick={close}>Cancel</Button><Button variant=\"danger\" onClick={confirm}>Delete article</Button></>} />` (a decision that blocks)\n- ✅ `<Banner variant=\"info\" title=\"Scheduled maintenance\" onDismiss={hide}>Publishing pauses on Sunday from 02:00 to 03:00 UTC.</Banner>` (non-critical notice, so dismissible)\n- ❌ `toast({ variant: 'danger', message: 'Headline is required' })` (a field error in a toast; it disappears and is not tied to the field)\n- ❌ `<Dialog title=\"Saved\" …>` (a status message as a modal)\n- ❌ `<Banner variant=\"danger\" title=\"Could not save\" onDismiss={hide}>` while the form still cannot be saved (a dismissible blocking error)\n- ❌ Calling `toast({ variant: 'success', … })` and rendering `<Banner variant=\"success\">` for the same save (two channels for one event)\n- ❌ `<Banner variant=\"info\" title=\"No stories yet\">` (an empty collection is an `EmptyState`)"
+        }
+      ],
+      "contentHash": "a6efc6a21586e8bea51374de92f552b789bedb2a0c60877ebe7280122a72e189",
+      "bytes": 5589
+    },
+    {
+      "id": "forms",
+      "scope": "system",
+      "file": "system/forms.md",
+      "title": "Forms",
+      "frontmatter": {
+        "title": "Forms",
+        "component": "system",
+        "page": "forms",
+        "related": [
+          "form-control",
+          "text-input",
+          "textarea",
+          "number-input",
+          "select",
+          "date-picker",
+          "checkbox",
+          "radio-group",
+          "switch",
+          "button",
+          "feedback"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "form-control",
+        "text-input",
+        "textarea",
+        "number-input",
+        "select",
+        "date-picker",
+        "checkbox",
+        "radio-group",
+        "switch",
+        "button",
+        "feedback"
+      ],
+      "sections": [
+        {
+          "heading": "Forms",
+          "level": 1,
+          "body": "A form is a `Stack` of `FormControl`s, each wrapping one field, followed by one row of actions with a single primary button. `FormControl` wires the id, `htmlFor`, `aria-describedby`, `aria-invalid`, `required`, and `disabled` between its label, field, caption, and validation, so app code never sets those by hand."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "1. Every text-like field (`TextInput`, `Textarea`, `NumberInput`, `Select`, `DatePicker`) is wrapped in a `FormControl` containing, in this order: `FormControl.Label`, the field, an optional `FormControl.Caption`, an optional `FormControl.Validation`.\n2. One field per `FormControl`. Two inputs that belong together (a min and a max) are two `FormControl`s side by side in a `Grid`, not one control with two fields.\n3. `Checkbox`, `Switch`, and `RadioGroup` carry their own `label` (and `caption`) and are not wrapped in a `FormControl`. `RadioGroup` renders the `<fieldset>`/`<legend>`; `Radio` children each have a `label` and a unique `value`.\n4. The label is always visible. `FormControl.Label visuallyHidden` is allowed only for a single search-style field whose purpose is obvious from a `leadingVisual` icon and `placeholder`, such as a toolbar search. A form with two or more fields shows every label.\n5. A placeholder is never the label and never the help text. `placeholder` shows an example of the expected format only (`\"name@example.com\"`). Instructions go in `FormControl.Caption`.\n6. Required fields are marked with `required` on the `FormControl`. It propagates `required` to the field and renders the marker on the label. Required is never signalled by text alone (\"(required)\") or by colour alone, and optional fields are not marked.\n7. A field-level error is `FormControl.Validation variant=\"error\"` inside that field's `FormControl`. It sets the field to invalid (`aria-invalid`, danger border) and is announced through `aria-describedby`. Field errors never appear in a `Banner` or a `Toast`.\n8. A form-level or server error (the request failed, the combination of fields is invalid) is a `Banner variant=\"danger\"` placed above the fields inside the form. Known field errors from the server are still mirrored into each field's `FormControl.Validation`.\n9. Validation text says what happened and how to fix it in one sentence, sentence case, no exclamation mark: \"Enter a valid email address.\" (see content.md). `variant=\"success\"` confirms a field only when confirmation carries information (a username is available), not after every valid keystroke.\n10. Errors are shown on submit or on blur after the user has left the field, not on the first keystroke. The submit button stays enabled; validation runs and the first invalid field receives focus.\n11. Field widths come from layout, not from the field. A field fills its column with `fullWidth` inside a `Stack.Item` or `Grid.Item`. Short values (`NumberInput`, `DatePicker`, a postcode) sit in a narrower `Grid.Item span` rather than stretching full width. Pixel widths are never set on a field. (`block` is the deprecated 0.3.0 name for `fullWidth`; it still works with a warning.)\n12. Fields are stacked in a `<Stack gap=\"normal\">`. Related groups get a `Heading level={3}` (or `level={4}`) above their own `Stack`; a form is never split into one `Card` per field.\n13. Actions sit in one `<Stack direction=\"horizontal\" gap=\"condensed\">` after the fields. Exactly one `Button variant=\"primary\"` per form; the cancel or back action is `variant=\"invisible\"` or `variant=\"default\"`. In a `Dialog`, actions go in `footer` with the primary action last.\n14. Button labels are verbs that name the outcome: \"Save changes\", \"Create story\", \"Send invite\". \"Submit\", \"OK\", and \"Yes\" are not labels. A destructive submit is `variant=\"danger\"` and names the object: \"Delete article\".\n15. The form is a native `<form onSubmit>`; every field has a `name` so posting and autofill work. `Select` and `DatePicker` emit hidden inputs for `name`.\n16. While submitting, the primary button is `disabled` and shows a `Spinner size=\"small\"` with a present-tense label (\"Saving…\"); fields are not hidden or replaced."
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅\n  ```tsx\n  <form onSubmit={submit}>\n    <Stack gap=\"normal\">\n      {serverError && <Banner variant=\"danger\" title=\"Could not save the story\">{serverError}</Banner>}\n      <FormControl required>\n        <FormControl.Label>Headline</FormControl.Label>\n        <TextInput name=\"headline\" fullWidth />\n        <FormControl.Caption>Shown in search results and social previews.</FormControl.Caption>\n        {errors.headline && <FormControl.Validation variant=\"error\">{errors.headline}</FormControl.Validation>}\n      </FormControl>\n      <Grid columns={{ base: 1, sm: 2 }} gap=\"normal\">\n        <FormControl>\n          <FormControl.Label>Section</FormControl.Label>\n          <Select name=\"section\" options={sections} placeholder=\"Choose a section\" fullWidth />\n        </FormControl>\n        <FormControl>\n          <FormControl.Label>Publish date</FormControl.Label>\n          <DatePicker name=\"publishAt\" fullWidth />\n        </FormControl>\n      </Grid>\n      <Checkbox name=\"notify\" label=\"Notify subscribers\" caption=\"Sends the daily digest early.\" />\n      <Stack direction=\"horizontal\" gap=\"condensed\">\n        <Button variant=\"invisible\" type=\"button\" onClick={cancel}>Cancel</Button>\n        <Button variant=\"primary\" type=\"submit\">Save changes</Button>\n      </Stack>\n    </Stack>\n  </form>\n  ```\n- ✅ `<FormControl><FormControl.Label visuallyHidden>Search stories</FormControl.Label><TextInput leadingVisual={<SearchIcon />} placeholder=\"Search stories\" /></FormControl>` (the one case for a hidden label)\n- ❌ `<TextInput placeholder=\"Headline\" />` with no `FormControl.Label` (placeholder as label; disappears on input, no accessible name)\n- ❌ `<FormControl.Caption>Required</FormControl.Caption>` (required by text; use `required` on the `FormControl`)\n- ❌ `toast({ variant: 'danger', message: 'Headline is required' })` for a field error (the error must sit on the field as `FormControl.Validation`)\n- ❌ `<label>Email</label><input style={{ border: '1px solid #ddd2bf' }} />` (raw elements, label not associated, hardcoded chrome)\n- ❌ `<Button variant=\"primary\">Submit</Button><Button variant=\"primary\">Save draft</Button>` (two primaries; \"Submit\" is not a label)\n- ❌ `<TextInput style={{ width: 280 }} />` (pixel width; size the `Grid.Item`, use `fullWidth`)"
+        }
+      ],
+      "contentHash": "0b1df9bab1510d248df5f52e32b83741eb512677d57e593d3064895f903e2617",
+      "bytes": 6613
+    },
+    {
+      "id": "iconography",
+      "scope": "system",
+      "file": "system/iconography.md",
+      "title": "Iconography",
+      "frontmatter": {
+        "title": "Iconography",
+        "component": "system",
+        "page": "iconography",
+        "related": [
+          "icon",
+          "icon-button",
+          "button",
+          "text-input",
+          "empty-state",
+          "banner",
+          "accessibility"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "icon",
+        "icon-button",
+        "button",
+        "text-input",
+        "empty-state",
+        "banner",
+        "accessibility"
+      ],
+      "sections": [
+        {
+          "heading": "Iconography",
+          "level": 1,
+          "body": "The icon set is part of the package: `import { SearchIcon } from 'tenet-ui/icons'`. Every icon is a React component named `<Thing>Icon`, drawn in `currentColor`, sized `16`, `20`, or `24`, and decorative by default. Meaning comes from the text or control next to an icon, or from its `label` when it stands alone."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "1. Icons come from `tenet-ui/icons` and are named `<Thing>Icon` in PascalCase (`SearchIcon`, `TrashIcon`, `PlusIcon`). The manifest at `generated/icons.json` lists every name with its keywords; an icon that is not in it does not exist in the system.\n2. Arbitrary inline `<svg>` is not written in app code when an icon with that meaning exists in the set. When no icon exists, the gap is a request to add one to `icons/manifest.json`; a one-off `<svg>` in the meantime still follows rules 3, 5, and 6.\n3. `size` is `16`, `20`, or `24`. `16` is for icons inline with text and inside controls (`Button` `leadingIcon`, `TextInput` `leadingVisual`, `Tag` `leadingIcon`, `Menu` items, table cells). `20` is for large controls, list rows, and standalone `IconButton`s in toolbars that sit apart from text. `24` is for `EmptyState` `icon`, `Banner` `icon`, and page headers. Nothing else sizes an icon.\n4. An icon is decorative by default: it renders `aria-hidden=\"true\"` and screen readers skip it. It stays decorative whenever visible text or an accessible name already carries its meaning: next to a label, inside a named `IconButton`, inside a `Button` with children.\n5. An icon is meaningful only when it is the sole carrier of information and that information is not a status (a paperclip marking that a row has attachments, a trend arrow beside a bare number). Then it gets `label`, which sets `role=\"img\"` and `aria-label`. The label names the meaning, not the drawing: `label=\"Has attachments\"`, not `label=\"Paperclip\"`. A status is a word in a `Tag` (rule 12).\n6. `IconButton` always has `aria-label` (or `aria-labelledby`) describing the action (\"Delete row\", not \"Trash\"). Its `icon` stays decorative; passing `label` to the icon inside an `IconButton` would double-announce.\n7. A `Button` with an icon and text keeps the icon decorative; the text is the name. Text is preferred to an icon-only control wherever there is room.\n8. Icons take colour from `currentColor`. Colour comes from the parent (`Text tone=\"danger\"`, a `Button` variant), never from a `fill`, `stroke`, or `color` literal on the icon. An icon is never coloured with a status hue unless the status meaning applies (see color.md).\n9. Icons align to the text baseline through the component that hosts them (`Button`, `TextInput`, `Tag`, `EmptyState`). App code does not nudge icons with margins or `vertical-align`.\n10. One icon per concept across the app: search is always `SearchIcon`, add is always `PlusIcon`, delete is always `TrashIcon`. Two different glyphs for the same action is a defect.\n11. Emoji are not icons. A `Menu` trigger, a `Tooltip` example, or a button never uses `⋯`, `🗑`, or `✕` as its glyph; it uses the set.\n12. An icon never replaces a status word. A coloured check in a table cell is `<Tag variant=\"success\">Published</Tag>`, not a lone `CheckIcon`."
+        },
+        {
+          "heading": "Sizes",
+          "level": 2,
+          "body": "| `size` | Where |\n|---|---|\n| `16` | `Button` `leadingIcon`/`trailingIcon`, `TextInput` `leadingVisual`/`trailingVisual`, `Tag` `leadingIcon`, `Menu` items, inline with `Text` |\n| `20` | `size=\"large\"` controls, list rows, standalone `IconButton`s in toolbars |\n| `24` | `EmptyState` `icon`, `Banner` `icon`, page and dialog headers |"
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `import { SearchIcon, TrashIcon } from 'tenet-ui/icons'`\n- ✅ `<Button leadingIcon={<PlusIcon />}>Create story</Button>` (decorative icon, text is the name)\n- ✅ `<IconButton icon={<TrashIcon size={20} />} variant=\"danger\" aria-label=\"Delete story\" onClick={remove} />` (named action, decorative icon)\n- ✅ `<TextInput aria-label=\"Search stories\" leadingVisual={<SearchIcon />} />` (16 inside a control)\n- ✅ `<EmptyState icon={<InboxIcon size={24} />} title=\"No stories yet\" description=\"Stories you draft or import appear here.\" />`\n- ✅ `<Text tone=\"danger\"><AlertTriangleIcon label=\"Warning\" /> 3 stories failed to import</Text>` only when the icon adds information the text lacks; otherwise omit `label`\n- ❌ `<svg viewBox=\"0 0 24 24\"><path d=\"M21 21l-4.35-4.35…\" /></svg>` (hand-inlined search glyph; `SearchIcon` exists)\n- ❌ `<IconButton icon={<TrashIcon />} onClick={remove} />` (no accessible name)\n- ❌ `<IconButton icon={<TrashIcon label=\"Delete\" />} aria-label=\"Delete\" />` (double announcement; the icon stays decorative)\n- ❌ `<TrashIcon style={{ color: '#a8341f' }} />` (a `brick.500` literal; wrap in `Text tone=\"danger\"` or use the `danger` variant of the host)\n- ❌ `<SearchIcon size={18} />` (off the 16/20/24 scale)\n- ❌ `<Button>🗑 Delete</Button>` (an emoji standing in for `TrashIcon`)"
+        }
+      ],
+      "contentHash": "1708d909a797f02d2fabbd003a6667610b91c9554025791ab96c6873bc8a1517",
+      "bytes": 5058
+    },
+    {
+      "id": "layout",
+      "scope": "system",
+      "file": "system/layout.md",
+      "title": "Layout",
+      "frontmatter": {
+        "title": "Layout",
+        "component": "system",
+        "page": "layout",
+        "related": [
+          "stack",
+          "grid",
+          "card",
+          "divider",
+          "typography"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "stack",
+        "grid",
+        "card",
+        "divider",
+        "typography"
+      ],
+      "sections": [
+        {
+          "heading": "Layout",
+          "level": 1,
+          "body": "Layout in tenet-ui is composed from two primitives, `Stack` (one axis) and `Grid` (columns), plus the space scale. Margins between siblings do not exist in app code; the parent's `gap` owns the rhythm. This page also settles the recurring question of when a block of content is a `Card` and when it is a plain section."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "1. Any two siblings with space between them sit inside a `Stack` (one axis) or a `Grid` (columns). App code never sets `margin`, `padding`, `display: flex`, or `display: grid` on its own wrappers to space children.\n2. `gap` is the same scale everywhere: `none` (0), `condensed` (`--space-2`, 8px), `normal` (`--space-4`, 16px), `spacious` (`--space-5`, 24px). `Stack` `gap`, `Grid` `gap` and `rowGap`, and `Stack` `padding` map exactly to these values. `Card` `padding` uses the same four names but its `condensed` step is `--space-3` (12px), because a card edge needs more inset than a gap between siblings.\n3. The space scale is `--space-1` (4), `--space-2` (8), `--space-3` (12), `--space-4` (16), `--space-5` (24), `--space-6` (32). Nothing is spaced by a value off this scale.\n4. Default rhythm: `gap=\"condensed\"` between controls in a toolbar or a button row; `gap=\"normal\"` between fields and between items in a list; `gap=\"spacious\"` between page sections.\n5. `Stack` is vertical by default; `direction=\"horizontal\"` is for toolbars, button rows, and label-plus-value pairs. `Stack.Item grow` is the one child that absorbs remaining width (a search field in a toolbar). `wrap` is on for horizontal stacks of chips or tags.\n6. `Grid` is for columns. `columns` is a number or a responsive object `{ base, sm, md, lg }`; `Grid.Item span` spans columns. Mobile first: `base` applies below `--breakpoint-sm` and each key applies from its breakpoint up.\n7. Breakpoints are `--breakpoint-sm` (640px), `--breakpoint-md` (960px), `--breakpoint-lg` (1280px). Prefer the responsive `columns` object over media queries. A CSS `@media` rule cannot read `var()`, so when an app must write one it uses the same pixel value with a comment naming the token.\n8. Container widths: page content is capped at `--breakpoint-lg` (1280px) and centered. A form or a reading column is capped at `--breakpoint-sm` (640px), which keeps `Text` at 60 to 75 characters per line. `Dialog` width comes from its `size` (`small`, `medium`, `large`), never from an override.\n9. Card or plain section, the decision test: content is a `Card` when it is a discrete, self-contained object that would still make sense lifted out of the page on its own (a summary tile with one number, a settings group with its own save action, a list container, a pinned item). Content is a plain section (`Heading` plus `Stack`) when it flows with the page and only makes sense in sequence with what is above and below it (a page section, a form's fields, prose). If removing the border would lose nothing, it is a section.\n10. Corollaries of the test: a `Card` never contains another `Card`; a page is never a single full-width `Card` wrapping everything; summary tiles in a `Grid` are `Card`s; the fields of one form are a `Stack`, not one `Card` per field.\n11. `Card` `padding=\"none\"` when the children own their padding (`Table.Container`, a list whose rows are padded). Otherwise `padding=\"normal\"` (default) or `condensed` for dense tiles.\n12. `Divider` marks a boundary that means something (menu groups, an \"or\" between choices). Vertical rhythm comes from `gap`, never from stacked dividers or empty elements.\n13. Fields fill their column with `fullWidth` inside a `Grid.Item` or `Stack.Item`. Widths are never set in pixels on a field.\n14. Alignment uses `Stack` `align` and `justify`; there are no wrapper `<div>`s added only to center or right-align a child."
+        },
+        {
+          "heading": "Page skeleton",
+          "level": 2,
+          "body": "| Layer | Component | Gap |\n|---|---|---|\n| Page | `<Stack gap=\"spacious\">` | sections |\n| Section | `<Heading level={2}>` + `<Stack gap=\"normal\">` | items |\n| Tiles | `<Grid columns={{ base: 1, sm: 2, lg: 4 }} gap=\"normal\">` of `Card` | tiles |\n| Toolbar | `<Stack direction=\"horizontal\" gap=\"condensed\" align=\"center\">` | controls |\n| Form | `<Stack gap=\"normal\">` of `FormControl` | fields |"
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Grid columns={{ base: 1, sm: 2, lg: 4 }} gap=\"normal\"><Card padding=\"condensed\">…</Card></Grid>` (tiles are discrete objects, so they are cards)\n- ✅ `<Stack gap=\"spacious\"><Heading level={2}>Recent stories</Heading><Table.Container>…</Table.Container></Stack>` (a page section flows with the page, so it has no card)\n- ✅ `<Stack direction=\"horizontal\" gap=\"condensed\" align=\"center\"><Stack.Item grow><TextInput aria-label=\"Search stories\" fullWidth /></Stack.Item><Button>Filters</Button></Stack>` (toolbar rhythm from gap, growth from Stack.Item)\n- ✅ `<Card padding=\"none\"><Table.Container>…</Table.Container></Card>` (a list container whose child owns its padding)\n- ❌ `<div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>` (raw flex, off-scale gap, margin between siblings)\n- ❌ `<Card><Card>…</Card></Card>` (nested cards; the inner one is a section)\n- ❌ `<Card><Heading level={1}>Newsroom</Heading>…entire page…</Card>` (a page is not a card)\n- ❌ `<TextInput style={{ width: 320 }} />` (pixel width on a field; use `fullWidth` in a sized `Grid.Item`)"
+        }
+      ],
+      "contentHash": "180a2784b6d0e2358ef530c5f36d3ed494e0bc05a207437f70d08970e967b3ff",
+      "bytes": 5414
+    },
+    {
+      "id": "typography",
+      "scope": "system",
+      "file": "system/typography.md",
+      "title": "Typography",
+      "frontmatter": {
+        "title": "Typography",
+        "component": "system",
+        "page": "typography",
+        "related": [
+          "heading",
+          "text",
+          "content",
+          "layout",
+          "color"
+        ],
+        "updated": "2026-09-12"
+      },
+      "updated": "2026-09-12",
+      "related": [
+        "heading",
+        "text",
+        "content",
+        "layout",
+        "color"
+      ],
+      "sections": [
+        {
+          "heading": "Typography",
+          "level": 1,
+          "body": "Two families do the work: a serif display face for headings and a humanist sans for everything else, with a monospace reserved for counts and code. The type scale is six sizes (`--fontSize-0` to `--fontSize-5`) and two line heights. App code reaches the scale only through `Heading` and `Text`; it never sets `font-family`, `font-size`, or `line-height` itself."
+        },
+        {
+          "heading": "Rules",
+          "level": 2,
+          "body": "1. `--fontFamily-display` (serif) is for headings only, and it reaches the page only through `Heading`. Components that own a title slot (`Dialog` `title`, `Table.Title`, `EmptyState` `title`) apply it internally. App code never sets a serif on any other element.\n2. `--fontFamily-body` (humanist sans) is the default for body copy, controls, labels, and table cells. `Text` and every control apply it; app code does not restate it.\n3. `--fontFamily-mono` is for counts, identifiers, hashes, and code. `Badge` applies it to counts. In app code it appears only on `<code>` or `<pre>` content, never on prose or labels.\n4. The size scale is the only set of font sizes on screen. Each step has a job (see the table); nothing is set to a size between steps.\n5. `Heading` `level` maps 1 to 4 onto `--fontSize-5` (36), `--fontSize-4` (28), `--fontSize-3` (20), `--fontSize-2` (16). `Text` `size` maps `small`, `medium`, `large` onto `--fontSize-0` (12), `--fontSize-1` (14), `--fontSize-2` (16). Nothing in app code is larger than `--fontSize-5`.\n6. `Heading` uses `--lineHeight-tight` (1.2); `Text` and body copy use `--lineHeight-default` (1.5). Single-line controls are tight. App code does not set `line-height`.\n7. Body paragraphs run 60 to 75 characters per line. Line length is controlled with layout (`Grid` `columns`, `Grid.Item` `span`, a capped container), never by shrinking the font.\n8. `Heading` is for text that structures the page (page title, section, card, dialog). `Text` is for everything else (copy, captions, descriptions, cell content, inline emphasis). If a piece of text is not a section title it is `Text`, even when it is prominent (use `weight=\"semibold\"`).\n9. One `level={1}` per page. Heading ranks follow reading order without skipping. When the visual size and the document rank differ, keep the rank honest with `as` (`<Heading level={3} as=\"h2\">`).\n10. Raw `<h1>` to `<h6>` never appear in app code; they are `Heading`. A raw `<p>` or `<span>` is acceptable only when it carries no styling at all; anything styled is `Text`.\n11. Weight comes through the `weight` prop of `Text`: `normal` (`--fontWeight-normal`, 400), `medium` (`--fontWeight-medium`, 500), `semibold` (`--fontWeight-semibold`, 600). `Heading` is semibold by itself (`level={4}` is medium). `--fontWeight-bold` (700) is reserved for component internals (`Banner` and `Toast` titles) and is never set by app code. Bold is not used for emphasis inside running copy; `Text as=\"strong\"` or `weight=\"medium\"` marks a label or a value.\n12. `truncate` (on `Heading` and `Text`) is for single-line overflow in constrained cells and cards where the full text is reachable elsewhere. It is never applied to error messages, validation text, or a page title.\n13. Uppercase and tracked type (`--letterSpacing-tag`) belong to component internals: `Table.Header` and a `Divider` with a text child. `Tag` text is sentence case, not caps. App code never sets `text-transform` or `letter-spacing`.\n14. All headings, labels, and buttons are sentence case (see content.md)."
+        },
+        {
+          "heading": "The scale",
+          "level": 2,
+          "body": "| Token | Size | Used for |\n|---|---|---|\n| `--fontSize-0` | 12px | `Text size=\"small\"`: captions, timestamps, `FormControl.Caption`, `FormControl.Validation`, `Tag size=\"small\"`, `Badge`, `Table.Header` |\n| `--fontSize-1` | 14px | `Text size=\"medium\"` (default): body copy, control text, `Table.Cell`, `Tag size=\"medium\"`, menu items |\n| `--fontSize-2` | 16px | `Text size=\"large\"`: lead paragraphs; `Heading level={4}`: card and group titles |\n| `--fontSize-3` | 20px | `Heading level={3}`: section titles, `Table.Title`, `Dialog` title |\n| `--fontSize-4` | 28px | `Heading level={2}`: major page sections |\n| `--fontSize-5` | 36px | `Heading level={1}`: the page title, one per page |"
+        },
+        {
+          "heading": "Do / Don't",
+          "level": 2,
+          "body": "- ✅ `<Heading level={1}>Newsroom</Heading>` then `<Heading level={2}>Recent stories</Heading>` (ranks in order, sizes from the scale)\n- ✅ `<Heading level={3} as=\"h2\">Filters</Heading>` (a smaller look without lying about the outline)\n- ✅ `<Text as=\"p\" size=\"large\">Every story in one place, from pitch to publish.</Text>` (a lead paragraph on the body scale)\n- ✅ `<Text tone=\"muted\" size=\"small\">Edited by Ada Lovelace</Text>` (caption on the smallest step)\n- ❌ `<h1 className=\"page-title\" style={{ fontFamily: 'Georgia', fontSize: 34 }}>Newsroom</h1>` (raw heading, off-scale size, hardcoded family)\n- ❌ `<p style={{ fontSize: 13, lineHeight: 1.4 }}>` (a size between steps and a line height that is not a token)\n- ❌ `<Text size=\"large\" weight=\"semibold\">Recent stories</Text>` as a section title (a section title is a `Heading`)\n- ❌ `<Heading level={1}>Total</Heading>` inside every summary card (multiple level-1 headings; card titles are `level={4}`)"
+        }
+      ],
+      "contentHash": "94c66e3c9a576e926b59d62406f47e153bcbbe8d0c706edc8a3ccf059599b300",
+      "bytes": 5256
+    }
+  ],
+  "llms": {
+    "url": "https://tenet-ui.pages.dev/llms.txt",
+    "indexHash": "f12652bde6ba4f0c2e3b78488d25f0f61dd7988b73f83e58a48c2ad61505116e",
+    "fullHash": "788c82743b444a73d24a5b6d871baf3aa9856cc78f69833a22f08ecb86f994c3",
+    "fullBytes": 345862,
+    "pageCount": 57,
+    "file": "llms-full.txt"
+  }
+}

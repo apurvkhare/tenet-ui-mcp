@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Snapshot index parses and every listed version exists
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const idx = JSON.parse(fs.readFileSync("snapshots/index.json", "utf8"));
+            for (const [v, e] of Object.entries(idx.versions)) {
+              const m = JSON.parse(fs.readFileSync(`snapshots/${e.dir}/manifest.json`, "utf8"));
+              if (m.version !== v) throw new Error(`${v}: manifest says ${m.version}`);
+              for (const f of m.files) if (!fs.existsSync(`snapshots/${e.dir}/${f}`)) throw new Error(`${v}: missing ${f}`);
+            }
+            console.log(`ok: ${Object.keys(idx.versions).length} snapshot(s), latest ${idx.latest}`);
+          '

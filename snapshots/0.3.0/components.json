@@ -1,0 +1,2802 @@
+{
+  "schemaVersion": 1,
+  "package": "tenet-ui",
+  "version": "0.3.0",
+  "components": [
+    {
+      "id": "accordion",
+      "name": "Accordion",
+      "exportName": "Accordion",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet accordion — stacked disclosure sections. Each item is a header `<button aria-expanded>`\ncontrolling a labelled region. `type=\"single\"` keeps one open (collapsible), `multiple` allows\nmany. Headers are arrow-key navigable (Up/Down/Home/End). Controlled or uncontrolled.",
+      "propsType": "AccordionProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "type",
+          "type": "'single' | 'multiple'",
+          "required": false,
+          "description": "`single` allows one open item (collapsible); `multiple` allows many.",
+          "typeRef": "AccordionType"
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "required": false,
+          "description": "Controlled set of open item values."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "required": false,
+          "description": "Uncontrolled initial open item values."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string[]) => void",
+          "required": false,
+          "description": "Called with the new set of open values."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-accordion--single"
+        },
+        {
+          "id": "components-accordion--multiple"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "avatar",
+      "name": "Avatar",
+      "exportName": "Avatar",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet avatar — an image, or initials derived from `name` when there is no image (or it fails to\nload). Always pass `name`: it drives the initials and the accessible label, so an avatar is never\nan unlabelled blob to assistive tech.",
+      "propsType": "AvatarProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLSpanElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "name": "src",
+          "type": "string",
+          "required": false,
+          "description": "Image URL. When omitted (or it fails to load), initials from `name` are shown."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "description": "Person/entity name — used for initials and as the accessible label."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large' | 'xlarge'",
+          "required": false,
+          "description": "Size from the scale.",
+          "typeRef": "AvatarSize"
+        },
+        {
+          "name": "shape",
+          "type": "'circle' | 'rounded'",
+          "required": false,
+          "description": "Circle (people) or rounded square (orgs/repos).",
+          "typeRef": "AvatarShape"
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-avatar--initials"
+        },
+        {
+          "id": "components-avatar--image"
+        },
+        {
+          "id": "components-avatar--org"
+        },
+        {
+          "id": "components-avatar--large"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "badge",
+      "name": "Badge",
+      "exportName": "Badge",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet badge — a small count or status dot, typically anchored to an icon or nav item. Use it for\nquantities (\"3 unread\") or presence dots. For a labelled status word (passing/failing) use\n`Label` instead.",
+      "propsType": "BadgeProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'accent' | 'success' | 'danger' | 'attention'",
+          "required": false,
+          "description": "Semantic color scheme.",
+          "typeRef": "BadgeVariant"
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "required": false,
+          "description": "Numeric count. Rendered with a `max+` overflow when above `max`."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "description": "Overflow threshold for `count` (e.g. 99 -> \"99+\")."
+        },
+        {
+          "name": "dot",
+          "type": "boolean",
+          "required": false,
+          "description": "Render a bare status dot (no text)."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Custom content (overrides count)."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-badge--count"
+        },
+        {
+          "id": "components-badge--overflow"
+        },
+        {
+          "id": "components-badge--dot"
+        },
+        {
+          "id": "components-badge--default"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "banner",
+      "name": "Banner",
+      "exportName": "Banner",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet banner — an inline, contextual message tied to the content it sits near (form error,\npage-level notice). Colors come from the semantic tint tokens. For transient, floating messages\nuse a toast instead; for a status word on a row, use `Label`.",
+      "propsType": "BannerProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'title'>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'info' | 'success' | 'warning' | 'danger'",
+          "required": false,
+          "description": "Semantic tone. Pick by meaning, not color.",
+          "typeRef": "BannerVariant"
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional bold lead-in line."
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Replace the default leading icon."
+        },
+        {
+          "name": "hideIcon",
+          "type": "boolean",
+          "required": false,
+          "description": "Hide the leading icon entirely."
+        },
+        {
+          "name": "onDismiss",
+          "type": "() => void",
+          "required": false,
+          "description": "When provided, renders a dismiss button that calls this."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Body content."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-banner--info"
+        },
+        {
+          "id": "components-banner--success"
+        },
+        {
+          "id": "components-banner--warning"
+        },
+        {
+          "id": "components-banner--danger"
+        },
+        {
+          "id": "components-banner--dismissible"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "breadcrumbs",
+      "name": "Breadcrumbs",
+      "exportName": "Breadcrumbs",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet breadcrumbs — the path from the root to the current page. Renders a `<nav>` landmark with\nan ordered list; the last item is the current page (`aria-current=\"page\"`, not a link). Pass an\n`aria-label` so multiple navs on a page are distinguishable.",
+      "propsType": "BreadcrumbsProps",
+      "refType": "HTMLElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "BreadcrumbItem[]",
+          "required": true,
+          "description": "Ordered trail, root first. The last item is treated as the current page."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the nav landmark."
+        },
+        {
+          "name": "separator",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Separator glyph between items."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-breadcrumbs--default"
+        },
+        {
+          "id": "components-breadcrumbs--chevron-separator"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "button",
+      "name": "Button",
+      "exportName": "Button",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet action button. Use `variant=\"primary\"` for the single most important action on a\nsurface, `default` for secondary actions, `invisible` for tertiary, and `danger` for\ndestructive actions. All styling comes from design tokens — never hardcode colors or spacing.",
+      "propsType": "ButtonProps",
+      "refType": "HTMLButtonElement",
+      "extends": [
+        "ButtonHTMLAttributes<HTMLButtonElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'primary' | 'danger' | 'invisible'",
+          "required": false,
+          "description": "Visual style of the button. Use `primary` for the single most important action per surface.",
+          "typeRef": "ButtonVariant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / padding scale.",
+          "typeRef": "ButtonSize"
+        },
+        {
+          "name": "leadingIcon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Icon rendered before the label."
+        },
+        {
+          "name": "trailingIcon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Icon rendered after the label."
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the button to fill the available width."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Button label."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-button--default"
+        },
+        {
+          "id": "components-button--primary"
+        },
+        {
+          "id": "components-button--danger"
+        },
+        {
+          "id": "components-button--invisible"
+        },
+        {
+          "id": "components-button--sizes"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "calendar",
+      "name": "Calendar",
+      "exportName": "Calendar",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet calendar — a month-grid date picker surface. Full keyboard support (arrows move by day/\nweek, Home/End jump within the week, PageUp/PageDown change month, Enter/Space select), a roving\ntab stop, and the ARIA grid pattern. Use it inline, or let `DatePicker` host it in a popover.",
+      "propsType": "CalendarProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "value",
+          "type": "Date | null",
+          "required": false,
+          "description": "Controlled selected date (null = nothing selected)."
+        },
+        {
+          "name": "defaultValue",
+          "type": "Date | null",
+          "required": false,
+          "description": "Uncontrolled initial selected date."
+        },
+        {
+          "name": "onChange",
+          "type": "(date: Date) => void",
+          "required": false,
+          "description": "Called with the chosen date."
+        },
+        {
+          "name": "month",
+          "type": "Date",
+          "required": false,
+          "description": "Controlled visible month (any day within the month)."
+        },
+        {
+          "name": "defaultMonth",
+          "type": "Date",
+          "required": false,
+          "description": "Uncontrolled initial visible month. Defaults to the selected date's month, else today."
+        },
+        {
+          "name": "onMonthChange",
+          "type": "(month: Date) => void",
+          "required": false,
+          "description": "Called when the visible month changes (nav buttons / keyboard paging)."
+        },
+        {
+          "name": "min",
+          "type": "Date",
+          "required": false,
+          "description": "Earliest selectable day (inclusive)."
+        },
+        {
+          "name": "max",
+          "type": "Date",
+          "required": false,
+          "description": "Latest selectable day (inclusive)."
+        },
+        {
+          "name": "weekStartsOn",
+          "type": "0 | 1",
+          "required": false,
+          "description": "First day of the week: 0 = Sunday (default), 1 = Monday.",
+          "typeRef": "WeekStart"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "BCP-47 locale for month / weekday formatting. Defaults to the runtime locale."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-calendar--default"
+        },
+        {
+          "id": "components-calendar--with-selection"
+        },
+        {
+          "id": "components-calendar--monday-start"
+        },
+        {
+          "id": "components-calendar--with-range"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "card",
+      "name": "Card",
+      "exportName": "Card",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet surface container — a bordered, rounded panel for grouping content (the design-system\nway to make a \"box\"). Border, radius, background and elevation all come from tokens; never\nhand-roll a styled `<div>` with hardcoded border/shadow values.",
+      "propsType": "CardProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'muted'",
+          "required": false,
+          "description": "Surface style. `default` sits on the page; `muted` is a recessed/secondary surface.",
+          "typeRef": "CardVariant"
+        },
+        {
+          "name": "padding",
+          "type": "'none' | 'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Inner padding, from the `space` scale.",
+          "typeRef": "CardPadding"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-card--default"
+        },
+        {
+          "id": "components-card--muted"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "checkbox",
+      "name": "Checkbox",
+      "exportName": "Checkbox",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet checkbox. A real `<input type=\"checkbox\">` tinted with the accent token, with an\nassociated label and optional caption — use it instead of a styled `<div>` toggle. Supports an\n`indeterminate` (mixed) state for \"select all\" parents.",
+      "propsType": "CheckboxProps",
+      "refType": "HTMLInputElement",
+      "extends": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>"
+      ],
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Visible label rendered next to the box."
+        },
+        {
+          "name": "caption",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional helper text under the label."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field as invalid (sets `aria-invalid`)."
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "required": false,
+          "description": "Tri-state \"partially checked\" visual (mixed); also sets `aria-checked=\"mixed\"`."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-checkbox--default"
+        },
+        {
+          "id": "components-checkbox--with-caption"
+        },
+        {
+          "id": "components-checkbox--checked"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "data-table",
+      "name": "DataTable",
+      "exportName": "DataTable",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet data table. A higher-level table driven by `columns` + `data`: optional global search,\nper-column dropdown filters, and client-side sort — all built on the `Table` primitives and\nthe `TextInput` / `Select` fields, so it stays on-system. For a fully custom layout, drop down\nto `Table.*` directly.",
+      "propsType": "DataTableProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "columns",
+          "type": "DataTableColumn<Row>[]",
+          "required": true,
+          "description": "Column definitions, left to right."
+        },
+        {
+          "name": "data",
+          "type": "Row[]",
+          "required": true,
+          "description": "The rows to render."
+        },
+        {
+          "name": "rowKey",
+          "type": "(row: Row, index: number) => string | number",
+          "required": false,
+          "description": "Stable React key for a row. Defaults to the row index."
+        },
+        {
+          "name": "searchable",
+          "type": "boolean",
+          "required": false,
+          "description": "Show the global search box."
+        },
+        {
+          "name": "searchPlaceholder",
+          "type": "string",
+          "required": false,
+          "description": "Placeholder for the global search box."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional surface title (rendered in a `Table.Container`)."
+        },
+        {
+          "name": "subtitle",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional surface subtitle."
+        },
+        {
+          "name": "actions",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Actions rendered at the top-right of the toolbar (e.g. a \"New\" button)."
+        },
+        {
+          "name": "density",
+          "type": "'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Row height / cell padding scale.",
+          "typeRef": "TableDensity"
+        },
+        {
+          "name": "emptyText",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Message shown when no rows match the active filters."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-datatable--default"
+        },
+        {
+          "id": "components-datatable--search-only"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "date-picker",
+      "name": "DatePicker",
+      "exportName": "DatePicker",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet date picker — a token-styled field that opens a `Calendar` popover. Selecting a day (mouse\nor keyboard) commits the value and closes the menu; Escape closes; clicking outside closes. The\ntrigger carries the ARIA combobox/dialog wiring, the Calendar carries the grid + keyboard model.\nControlled or uncontrolled, FormControl-compatible, and emits a hidden yyyy-mm-dd input when\ngiven a `name`. Always give it an accessible name via FormControl or `aria-label`.",
+      "propsType": "DatePickerProps",
+      "refType": "HTMLButtonElement",
+      "extends": [],
+      "props": [
+        {
+          "name": "value",
+          "type": "Date | null",
+          "required": false,
+          "description": "Controlled selected date (null = empty)."
+        },
+        {
+          "name": "defaultValue",
+          "type": "Date | null",
+          "required": false,
+          "description": "Uncontrolled initial selected date."
+        },
+        {
+          "name": "onChange",
+          "type": "(date: Date) => void",
+          "required": false,
+          "description": "Called with the chosen date."
+        },
+        {
+          "name": "min",
+          "type": "Date",
+          "required": false,
+          "description": "Earliest selectable day (inclusive)."
+        },
+        {
+          "name": "max",
+          "type": "Date",
+          "required": false,
+          "description": "Latest selectable day (inclusive)."
+        },
+        {
+          "name": "weekStartsOn",
+          "type": "0 | 1",
+          "required": false,
+          "description": "First day of the week: 0 = Sunday (default), 1 = Monday.",
+          "typeRef": "WeekStart"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "BCP-47 locale for the displayed date + calendar. Defaults to the runtime locale."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Text shown in the trigger when no date is selected."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "DatePickerSize"
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the trigger to fill the available width."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Invalid state (danger border + aria-invalid)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Disable the control."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Required (sets aria-required; pairs with FormControl)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Form field name — emits a hidden input (yyyy-mm-dd) so the value submits with a form."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Id applied to the trigger (FormControl sets this automatically)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-datepicker--default"
+        },
+        {
+          "id": "components-datepicker--with-value"
+        },
+        {
+          "id": "components-datepicker--with-range"
+        },
+        {
+          "id": "components-datepicker--disabled"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "dialog",
+      "name": "Dialog",
+      "exportName": "Dialog",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet dialog — a modal overlay rendered in a portal. Handles the things hand-rolled modals get\nwrong: focus moves in on open and is restored on close, Tab is trapped inside, Escape and the\nbackdrop close it, body scroll is locked, and it's wired as `role=\"dialog\" aria-modal` with the\ntitle/description as its accessible name. Reach for it for focused tasks and confirmations.",
+      "propsType": "DialogProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "description": "Whether the dialog is open."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "required": true,
+          "description": "Called when the user requests close (Escape, backdrop, close button)."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Accessible title — also the visible heading."
+        },
+        {
+          "name": "description",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional supporting description under the title."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Width from the scale.",
+          "typeRef": "DialogSize"
+        },
+        {
+          "name": "footer",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Footer actions (e.g. Cancel / Confirm buttons)."
+        },
+        {
+          "name": "closeOnBackdrop",
+          "type": "boolean",
+          "required": false,
+          "description": "Allow closing by clicking the backdrop."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Body content."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-dialog--default"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "divider",
+      "name": "Divider",
+      "exportName": "Divider",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet divider — a hairline separator. Vertical or horizontal; horizontal optionally carries a\ncentered label (\"OR\"). Exposes `role=\"separator\"` with the right orientation so it's a real\nlandmark, not a styled border.",
+      "propsType": "DividerProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "orientation",
+          "type": "'horizontal' | 'vertical'",
+          "required": false,
+          "description": "Layout direction.",
+          "typeRef": "DividerOrientation"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional centered label (horizontal only)."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-divider--horizontal"
+        },
+        {
+          "id": "components-divider--labelled"
+        },
+        {
+          "id": "components-divider--vertical"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "form-control",
+      "name": "FormControl",
+      "exportName": "FormControl",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "",
+      "propsType": "FormControlProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Override the generated id shared by the label and field."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Marks the field required (asterisk on the label + `required` on the input)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Disables the field."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Force the invalid state. Otherwise inferred from a `FormControl.Validation variant=\"error\"`."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [
+        {
+          "id": "form-control-label",
+          "name": "FormControl.Label",
+          "kind": "component",
+          "propsType": "FormControlLabelProps",
+          "props": [
+            {
+              "name": "visuallyHidden",
+              "type": "boolean",
+              "required": false,
+              "description": "Visually hide the label but keep it for screen readers."
+            },
+            {
+              "name": "required",
+              "type": "boolean",
+              "required": false,
+              "description": "Injected by FormControl — renders the required asterisk."
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": "Field label. Rendered by FormControl with `htmlFor` + required state wired automatically."
+        },
+        {
+          "id": "form-control-caption",
+          "name": "FormControl.Caption",
+          "kind": "component",
+          "propsType": "FormControlCaptionProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": "Helper text below the field, associated via `aria-describedby`."
+        },
+        {
+          "id": "form-control-validation",
+          "name": "FormControl.Validation",
+          "kind": "component",
+          "propsType": "FormControlValidationProps",
+          "props": [
+            {
+              "name": "variant",
+              "type": "'error' | 'success'",
+              "required": false,
+              "description": "Tone of the message. `error` also drives the field's invalid state.",
+              "typeRef": "ValidationVariant"
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": "Validation message. `variant=\"error\"` also flips the field to its invalid state."
+        }
+      ],
+      "stories": [
+        {
+          "id": "components-formcontrol--text-field"
+        },
+        {
+          "id": "components-formcontrol--required-with-caption"
+        },
+        {
+          "id": "components-formcontrol--with-error"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "icon-button",
+      "name": "IconButton",
+      "exportName": "IconButton",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet icon-only button — a square control whose only visible content is an icon. Use it for\ncompact actions in toolbars, table rows, and dialog corners where a text label won't fit. For\nanything with room for a label, prefer `Button` (a labelled button is always clearer).\n\nBecause there is no visible text, an IconButton MUST be given an accessible name via `aria-label`\n(or `aria-labelledby`) — otherwise screen-reader users hear nothing. The icon itself is rendered\n`aria-hidden`, so the name has to come from the prop.",
+      "propsType": "IconButtonProps",
+      "refType": "HTMLButtonElement",
+      "extends": [
+        "ButtonHTMLAttributes<HTMLButtonElement>"
+      ],
+      "props": [
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "required": true,
+          "description": "The icon to render. This is the only visible content, so the button must also have an accessible name."
+        },
+        {
+          "name": "variant",
+          "type": "'default' | 'primary' | 'danger' | 'invisible'",
+          "required": false,
+          "description": "Visual style of the button. Use `primary` for the single most important action per surface.",
+          "typeRef": "IconButtonVariant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Square control size (height = width), mapped to the control-height tokens.",
+          "typeRef": "IconButtonSize"
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-iconbutton--default"
+        },
+        {
+          "id": "components-iconbutton--primary"
+        },
+        {
+          "id": "components-iconbutton--danger"
+        },
+        {
+          "id": "components-iconbutton--invisible"
+        },
+        {
+          "id": "components-iconbutton--sizes"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "label",
+      "name": "Label",
+      "exportName": "Label",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet status label / pill. Choose a `variant` by meaning (success, danger, accent) — the colors\nare owned by the design system, so consumers never compute their own fills or borders. This is\nthe on-system replacement for a hand-styled `<span>` with hardcoded translucent colors.",
+      "propsType": "LabelProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'accent' | 'success' | 'danger' | 'attention' | 'muted'",
+          "required": false,
+          "description": "Semantic color scheme. Pick by meaning (success/danger/accent), not by raw color.",
+          "typeRef": "LabelVariant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Label size.",
+          "typeRef": "LabelSize"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-label--default"
+        },
+        {
+          "id": "components-label--variants"
+        },
+        {
+          "id": "components-label--sizes"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "link",
+      "name": "Link",
+      "exportName": "Link",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet link — an inline navigational anchor. Renders a real `<a>` (forwards its ref) so it keeps\nnative keyboard + activation behavior; style it with `muted` and `underline` instead of writing\nraw anchor CSS. Always give it meaningful link text (not \"click here\"). For an off-site link pass\n`external` so it opens in a new tab AND warns screen-reader users it does so.",
+      "propsType": "LinkProps",
+      "refType": "HTMLAnchorElement",
+      "extends": [
+        "AnchorHTMLAttributes<HTMLAnchorElement>"
+      ],
+      "props": [
+        {
+          "name": "muted",
+          "type": "boolean",
+          "required": false,
+          "description": "Use the muted foreground color instead of the accent color."
+        },
+        {
+          "name": "underline",
+          "type": "'hover' | 'always' | 'none'",
+          "required": false,
+          "description": "When the underline is shown.",
+          "typeRef": "LinkUnderline"
+        },
+        {
+          "name": "external",
+          "type": "boolean",
+          "required": false,
+          "description": "Marks the link as leading off-site: sets `target=\"_blank\"` +\n`rel=\"noopener noreferrer\"` and appends a visually-hidden \" (opens in new tab)\"\nwarning for screen-reader users."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-link--default"
+        },
+        {
+          "id": "components-link--muted"
+        },
+        {
+          "id": "components-link--always-underlined"
+        },
+        {
+          "id": "components-link--no-underline"
+        },
+        {
+          "id": "components-link--external"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "menu",
+      "name": "Menu",
+      "exportName": "Menu",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet action menu — a button that opens a popover list of actions (ARIA menu pattern). Arrow keys\nmove, Enter/Space invoke, Escape closes and returns focus to the trigger, click-outside closes.\nItems run their `onSelect` and the menu closes. Distinct from `Select`, which picks a value.",
+      "propsType": "MenuProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "trigger",
+          "type": "ReactElement",
+          "required": true,
+          "description": "The trigger element (e.g. a Button). It is wired with the menu's aria + click handling."
+        },
+        {
+          "name": "items",
+          "type": "MenuItem[]",
+          "required": true,
+          "description": "The actions to show."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the menu."
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'end'",
+          "required": false,
+          "description": "Menu alignment relative to the trigger."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-menu--default"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "number-input",
+      "name": "NumberInput",
+      "exportName": "NumberInput",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet number field. A text input constrained to numbers, with +/- steppers and arrow-key\nstepping that respect `min` / `max` / `step`. Reports a parsed `number | null` (not a string)\nvia `onChange`, so callers never re-parse. Always give it an accessible name.",
+      "propsType": "NumberInputProps",
+      "refType": "HTMLInputElement",
+      "extends": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange'>"
+      ],
+      "props": [
+        {
+          "name": "value",
+          "type": "number | null",
+          "required": false,
+          "description": "Controlled value. Use `null`/`undefined` for an empty field."
+        },
+        {
+          "name": "defaultValue",
+          "type": "number | null",
+          "required": false,
+          "description": "Uncontrolled initial value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: number | null) => void",
+          "required": false,
+          "description": "Called with the parsed numeric value (or `null` when the field is cleared)."
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "required": false,
+          "description": "Smallest allowed value. Stepping/clamping respects it."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "description": "Largest allowed value. Stepping/clamping respects it."
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "required": false,
+          "description": "Increment applied by the steppers and arrow keys."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "NumberInputSize"
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the field to fill the available width."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field as invalid (sets `aria-invalid` and a danger border)."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-numberinput--default"
+        },
+        {
+          "id": "components-numberinput--with-range"
+        },
+        {
+          "id": "components-numberinput--empty"
+        },
+        {
+          "id": "components-numberinput--disabled"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "pagination",
+      "name": "Pagination",
+      "exportName": "Pagination",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet pagination — navigate a paged result set. Renders a `<nav>` landmark of real `<button>`s\n(keyboard-operable by construction), marks the current page with `aria-current=\"page\"`, and\ndisables Previous/Next at the ends. Long ranges collapse with ellipses around a window of pages.",
+      "propsType": "PaginationProps",
+      "refType": "HTMLElement",
+      "extends": [],
+      "props": [
+        {
+          "name": "page",
+          "type": "number",
+          "required": true,
+          "description": "Current page (1-based)."
+        },
+        {
+          "name": "pageCount",
+          "type": "number",
+          "required": true,
+          "description": "Total number of pages."
+        },
+        {
+          "name": "onPageChange",
+          "type": "(page: number) => void",
+          "required": true,
+          "description": "Called with the requested page when the user navigates."
+        },
+        {
+          "name": "siblingCount",
+          "type": "number",
+          "required": false,
+          "description": "How many page numbers to show around the current page."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the nav landmark."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-pagination--default"
+        },
+        {
+          "id": "components-pagination--many-pages"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "popover",
+      "name": "Popover",
+      "exportName": "Popover",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet popover — a generic floating container anchored to a trigger (the ARIA non-modal dialog\npattern). On open, focus moves into the surface; Escape closes and returns focus to the trigger;\nclicking outside closes; and focus leaving the wrapper (Tab-out) closes it so it can't strand\nopen behind the page. This is **non-modal**: it does not trap focus, lock scroll, or hide the\nbackground — reach for `Dialog` when you need those. Always give it an accessible name via\n`aria-label`.",
+      "propsType": "PopoverProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "trigger",
+          "type": "ReactElement",
+          "required": true,
+          "description": "The trigger element (e.g. a Button). It is cloned and wired with\n`aria-haspopup=\"dialog\"`, `aria-expanded`, `aria-controls`, an onClick toggle,\nand a ref so focus can be restored to it on close."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "The floating content rendered inside the popover surface."
+        },
+        {
+          "name": "placement",
+          "type": "'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'",
+          "required": false,
+          "description": "Where the surface is anchored relative to the trigger.",
+          "typeRef": "PopoverPlacement"
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the popover dialog (falls back to \"Popover\")."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-popover--default"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "progress-bar",
+      "name": "ProgressBar",
+      "exportName": "ProgressBar",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet progress bar — a `role=\"progressbar\"` feedback indicator for the progress of a task.\n\nDeterminate (a `value` is given): shows a fixed fill and reports `aria-valuenow` plus a readable\n`aria-valuetext` (e.g. \"42%\"). Omit `value` for an INDETERMINATE bar (unknown duration) that runs\nan animated sweep and omits `aria-valuenow`.\n\nThe one rule people get wrong: a progressbar has no inherent label, so you MUST pass an accessible\nname via `aria-label` or `aria-labelledby` — otherwise screen readers announce it nameless.",
+      "propsType": "ProgressBarProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "value",
+          "type": "number",
+          "required": false,
+          "description": "Current progress, from 0 to `max`. Values are clamped into range.\nOmit (or pass `undefined`) for an INDETERMINATE bar that shows an\nanimated sweep instead of a fixed fill."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "description": "Upper bound of the scale. Defaults to 100."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Track/fill height from the size scale. Defaults to 'medium'.",
+          "typeRef": "ProgressBarSize"
+        },
+        {
+          "name": "variant",
+          "type": "'accent' | 'success' | 'danger'",
+          "required": false,
+          "description": "Fill color, mapped to the matching emphasis token. Defaults to 'accent'.",
+          "typeRef": "ProgressBarVariant"
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-progressbar--default"
+        },
+        {
+          "id": "components-progressbar--indeterminate"
+        },
+        {
+          "id": "components-progressbar--variants"
+        },
+        {
+          "id": "components-progressbar--small"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "radio-group",
+      "name": "RadioGroup",
+      "exportName": "RadioGroup",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet radio group. Renders a `<fieldset>`/`<legend>` and shares `name` + selection with its\n`Radio` children via context — so grouping and accessibility are correct without prop drilling.",
+      "propsType": "RadioGroupProps",
+      "refType": "HTMLFieldSetElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLFieldSetElement>, 'onChange'>"
+      ],
+      "props": [
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Shared form field name. Auto-generated if omitted."
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Group label (rendered as a fieldset legend)."
+        },
+        {
+          "name": "caption",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional helper text for the whole group."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Controlled selected value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Uncontrolled initial selected value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Called with the newly selected value."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the group required (asterisk on the legend)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Disable every radio in the group."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Radio children."
+        }
+      ],
+      "subcomponents": [
+        {
+          "id": "radio",
+          "name": "Radio",
+          "kind": "component",
+          "exportName": "Radio",
+          "propsType": "RadioProps",
+          "props": [
+            {
+              "name": "value",
+              "type": "string",
+              "required": true,
+              "description": "The value submitted when this radio is selected (required)."
+            },
+            {
+              "name": "label",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Visible label rendered next to the control."
+            },
+            {
+              "name": "caption",
+              "type": "ReactNode",
+              "required": false,
+              "description": "Optional helper text under the label."
+            }
+          ],
+          "description": "Tenet radio. A real `<input type=\"radio\">` tinted with the accent token. Use inside a\n`RadioGroup`, which wires the shared `name` and selection for you."
+        }
+      ],
+      "stories": [
+        {
+          "id": "components-radiogroup--default"
+        },
+        {
+          "id": "components-radiogroup--with-captions"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "segmented-control",
+      "name": "SegmentedControl",
+      "exportName": "SegmentedControl",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet segmented control — a compact single-choice switch between a few options (a view toggle,\na filter mode). Implemented as an ARIA radiogroup: arrow keys move and select (selection follows\nfocus), with a roving tab stop. For many options or free text use `Select`; for on/off use `Switch`.",
+      "propsType": "SegmentedControlProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'>"
+      ],
+      "props": [
+        {
+          "name": "options",
+          "type": "SegmentedControlOption[]",
+          "required": true,
+          "description": "The segments to choose from."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Controlled selected value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Uncontrolled initial value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Called with the newly selected value."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "SegmentedControlSize"
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch segments to fill the available width."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the group (required for screen readers)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-segmentedcontrol--default"
+        },
+        {
+          "id": "components-segmentedcontrol--small"
+        },
+        {
+          "id": "components-segmentedcontrol--with-disabled-segment"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "select",
+      "name": "Select",
+      "exportName": "Select",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet select — a real ARIA listbox combobox (not a native `<select>`). Styled menu, full\nkeyboard support (↑/↓/Home/End/Enter/Esc), typeahead, `aria-activedescendant`, click-outside,\ncontrolled or uncontrolled. Token-styled, theme-aware, and FormControl-compatible. Always give\nit an accessible name via FormControl or `aria-label`.",
+      "propsType": "SelectProps",
+      "refType": "HTMLButtonElement",
+      "extends": [
+        "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'value' | 'defaultValue'>"
+      ],
+      "props": [
+        {
+          "name": "options",
+          "type": "SelectOption[]",
+          "required": true,
+          "description": "The options to choose from."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Controlled selected value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Uncontrolled initial value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Called with the newly selected value."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Text shown when nothing is selected."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "SelectSize"
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch to fill the available width."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Invalid state (danger border + aria-invalid)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Disable the control."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Required (sets aria-required; pairs with FormControl)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Form field name — emits a hidden input so the value submits with a form."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Id applied to the trigger (FormControl sets this automatically)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-select--default"
+        },
+        {
+          "id": "components-select--with-placeholder"
+        },
+        {
+          "id": "components-select--with-disabled-option"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "exportName": "Skeleton",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet skeleton — a decorative loading placeholder that shimmers while content streams in.\nIt is `aria-hidden`: announce the wait on the surrounding region with `aria-busy=\"true\"`\n(and a visually-hidden status / Spinner label), not on each skeleton block.\nUse `text` for lines of copy, `circle` for an avatar, `rect` for a media/card block.",
+      "propsType": "SkeletonProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'text' | 'rect' | 'circle'",
+          "required": false,
+          "description": "Shape of the placeholder. `text` mimics a line of copy, `rect` a block, `circle` an avatar/icon.",
+          "typeRef": "SkeletonVariant"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Width applied inline (number → px, string → as-is, e.g. '60%')."
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Height applied inline (number → px, string → as-is). For `circle` it mirrors width."
+        },
+        {
+          "name": "radius",
+          "type": "'small' | 'medium' | 'large' | 'full'",
+          "required": false,
+          "description": "Corner radius token. `circle` always renders as `full` regardless of this prop.",
+          "typeRef": "SkeletonRadius"
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-skeleton--default"
+        },
+        {
+          "id": "components-skeleton--text"
+        },
+        {
+          "id": "components-skeleton--rect"
+        },
+        {
+          "id": "components-skeleton--circle"
+        },
+        {
+          "id": "components-skeleton--card"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "spinner",
+      "name": "Spinner",
+      "exportName": "Spinner",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet spinner — an indeterminate loading indicator. Renders `role=\"status\"` with a visually\nhidden label so screen readers announce the loading state. Inherits `currentColor`, so it tints\nto whatever text color it sits in.",
+      "propsType": "SpinnerProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Size from the scale.",
+          "typeRef": "SpinnerSize"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible label announced to assistive tech (visually hidden)."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-spinner--default"
+        },
+        {
+          "id": "components-spinner--small"
+        },
+        {
+          "id": "components-spinner--large"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "stack",
+      "name": "Stack",
+      "exportName": "Stack",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "",
+      "propsType": "StackProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "direction",
+          "type": "'horizontal' | 'vertical'",
+          "required": false,
+          "description": "Main-axis direction.",
+          "typeRef": "StackDirection"
+        },
+        {
+          "name": "gap",
+          "type": "'none' | 'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Space between children, from the `space` scale (condensed=8, normal=16, spacious=24).",
+          "typeRef": "StackGap"
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'center' | 'end' | 'stretch'",
+          "required": false,
+          "description": "Cross-axis alignment (maps to `align-items`).",
+          "typeRef": "StackAlign"
+        },
+        {
+          "name": "justify",
+          "type": "'start' | 'center' | 'end' | 'between'",
+          "required": false,
+          "description": "Main-axis distribution (maps to `justify-content`).",
+          "typeRef": "StackJustify"
+        },
+        {
+          "name": "wrap",
+          "type": "boolean",
+          "required": false,
+          "description": "Allow children to wrap onto multiple lines."
+        },
+        {
+          "name": "padding",
+          "type": "'none' | 'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Inner padding, from the `space` scale.",
+          "typeRef": "StackPadding"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [
+        {
+          "id": "stack-item",
+          "name": "Stack.Item",
+          "kind": "component",
+          "propsType": "StackItemProps",
+          "props": [
+            {
+              "name": "grow",
+              "type": "boolean",
+              "required": false,
+              "description": "Grow to fill the available space along the main axis."
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        }
+      ],
+      "stories": [
+        {
+          "id": "components-stack--vertical"
+        },
+        {
+          "id": "components-stack--horizontal"
+        },
+        {
+          "id": "components-stack--toolbar"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "switch",
+      "name": "Switch",
+      "exportName": "Switch",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet switch. A real `<input type=\"checkbox\" role=\"switch\">` styled as a sliding toggle —\nuse it for an immediate on/off setting (not for a value you submit on a separate save).\nKeyboard + screen-reader behaviour comes from the native input; the track/knob are CSS.",
+      "propsType": "SwitchProps",
+      "refType": "HTMLInputElement",
+      "extends": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>"
+      ],
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Visible label rendered next to the switch."
+        },
+        {
+          "name": "caption",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional helper text under the label."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Control track / knob scale.",
+          "typeRef": "SwitchSize"
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field as invalid (sets `aria-invalid` and a danger border)."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-switch--default"
+        },
+        {
+          "id": "components-switch--on"
+        },
+        {
+          "id": "components-switch--with-caption"
+        },
+        {
+          "id": "components-switch--small"
+        },
+        {
+          "id": "components-switch--disabled"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "exportName": "Table",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "",
+      "propsType": "TableProps",
+      "refType": "HTMLTableElement",
+      "extends": [
+        "TableHTMLAttributes<HTMLTableElement>"
+      ],
+      "props": [
+        {
+          "name": "density",
+          "type": "'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Row height / cell padding scale.",
+          "typeRef": "TableDensity"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [
+        {
+          "id": "table-container",
+          "name": "Table.Container",
+          "kind": "component",
+          "propsType": "TableContainerProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "table-title",
+          "name": "Table.Title",
+          "kind": "component",
+          "propsType": "TableTitleProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "table-subtitle",
+          "name": "Table.Subtitle",
+          "kind": "component",
+          "propsType": "TableSubtitleProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "table-actions",
+          "name": "Table.Actions",
+          "kind": "component",
+          "propsType": "TableActionsProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "table-head",
+          "name": "Table.Head",
+          "kind": "component",
+          "propsType": "TableSectionProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "table-body",
+          "name": "Table.Body",
+          "kind": "component",
+          "propsType": "TableSectionProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "table-row",
+          "name": "Table.Row",
+          "kind": "component",
+          "propsType": "TableRowProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "table-header",
+          "name": "Table.Header",
+          "kind": "component",
+          "propsType": "TableHeaderProps",
+          "props": [
+            {
+              "name": "align",
+              "type": "'start' | 'center' | 'end'",
+              "required": false,
+              "description": "Text alignment within the header cell.",
+              "typeRef": "CellAlign"
+            },
+            {
+              "name": "sortDirection",
+              "type": "'ascending' | 'descending' | 'none'",
+              "required": false,
+              "description": "When set, renders a sort indicator and exposes `aria-sort`. Combine with `onClick`.",
+              "typeRef": "SortDirection"
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "id": "table-cell",
+          "name": "Table.Cell",
+          "kind": "component",
+          "propsType": "TableCellProps",
+          "props": [
+            {
+              "name": "align",
+              "type": "'start' | 'center' | 'end'",
+              "required": false,
+              "description": "Text alignment within the cell.",
+              "typeRef": "CellAlign"
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        }
+      ],
+      "stories": [
+        {
+          "id": "components-table--basic"
+        },
+        {
+          "id": "components-table--in-container"
+        },
+        {
+          "id": "components-table--sortable"
+        },
+        {
+          "id": "components-table--densities"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "tabs",
+      "name": "Tabs",
+      "exportName": "Tabs",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet tabs — a controlled or uncontrolled tab set following the ARIA tabs pattern. Compose\n`Tabs.List` + `Tabs.Tab` with matching `Tabs.Panel`s. Arrow keys move between tabs (selection\nfollows focus), Home/End jump to the ends; roles, ids and `aria-controls`/`aria-labelledby` are\nwired for you.",
+      "propsType": "TabsProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Controlled active tab value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Uncontrolled initial active tab value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Called when the active tab changes."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-tabs--default"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "tag",
+      "name": "Tag",
+      "exportName": "Tag",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet Tag — a removable chip for filter tokens and multi-select selections. Use it for\nuser-applied tokens the user can dismiss (e.g. active filters, selected recipients). For a\nnon-interactive status pill (passing/failing), use `Label` instead; for a count/dot, use `Badge`.\n\nThe one rule people get wrong: Tag is stateless. Setting `onRemove` renders a real <button>, but\nthe parent owns the collection — your handler must drop the item, Tag won't remove itself.",
+      "propsType": "TagProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'accent'",
+          "required": false,
+          "description": "Semantic color scheme. Pick by meaning (accent for the active/selected token), not by raw color.",
+          "typeRef": "TagVariant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Tag size.",
+          "typeRef": "TagSize"
+        },
+        {
+          "name": "leadingIcon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional leading icon rendered before the label; decorative (aria-hidden)."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "The tag label content."
+        },
+        {
+          "name": "onRemove",
+          "type": "() => void",
+          "required": false,
+          "description": "When provided, renders a real remove button. Wire it to drop the tag from your collection.\nTag does not remove itself — it has no internal state."
+        },
+        {
+          "name": "removeLabel",
+          "type": "string",
+          "required": false,
+          "description": "Accessible label for the remove button when `children` is not a plain string.\nFalls back to the string children, otherwise \"Remove\"."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-tag--default"
+        },
+        {
+          "id": "components-tag--variants"
+        },
+        {
+          "id": "components-tag--sizes"
+        },
+        {
+          "id": "components-tag--removable"
+        },
+        {
+          "id": "components-tag--with-icon"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "text-input",
+      "name": "TextInput",
+      "exportName": "TextInput",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet text field. Renders a real, accessible `<input>` wrapped with token-based chrome —\nuse this instead of a raw `<input>` so border, height, spacing and focus styling stay on-system.\nAlways pass an accessible name via `aria-label` or an associated `<label>`.",
+      "propsType": "TextInputProps",
+      "refType": "HTMLInputElement",
+      "extends": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>"
+      ],
+      "props": [
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "TextInputSize"
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the field to fill the available width."
+        },
+        {
+          "name": "leadingVisual",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Element rendered before the input (e.g. a search icon)."
+        },
+        {
+          "name": "trailingVisual",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Element rendered after the input."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field as invalid (sets `aria-invalid` and a danger border)."
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-textinput--default"
+        },
+        {
+          "id": "components-textinput--with-leading-visual"
+        },
+        {
+          "id": "components-textinput--invalid"
+        },
+        {
+          "id": "components-textinput--sizes"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "textarea",
+      "name": "Textarea",
+      "exportName": "Textarea",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet multi-line text field. A real, accessible `<textarea>` with token-based chrome — use it\ninstead of a raw `<textarea>`. Always give it an accessible name via FormControl or `aria-label`.",
+      "propsType": "TextareaProps",
+      "refType": "HTMLTextAreaElement",
+      "extends": [
+        "Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'>"
+      ],
+      "props": [
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch to fill the available width."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field invalid (sets aria-invalid and a danger border)."
+        },
+        {
+          "name": "resize",
+          "type": "'none' | 'vertical' | 'horizontal' | 'both'",
+          "required": false,
+          "description": "Which directions the user may resize.",
+          "typeRef": "TextareaResize"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Padding / font scale — matches TextInput so fields line up in a form.",
+          "typeRef": "TextareaSize"
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-textarea--default"
+        },
+        {
+          "id": "components-textarea--invalid"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "toast-provider",
+      "name": "ToastProvider",
+      "exportName": "ToastProvider",
+      "kind": "component",
+      "status": "unlisted",
+      "a11yReviewed": false,
+      "importPath": "tenet-ui",
+      "description": "Tenet toast provider — mounts a portalled, live-region viewport and exposes `useToast()` to any\ndescendant. Toasts auto-dismiss (configurable), can be dismissed manually, and are announced to\nassistive tech (danger = assertive alert, others = polite status). Use toasts for transient,\nnon-blocking feedback; for inline contextual messages use `Banner`, for blocking flows `Dialog`.",
+      "propsType": "ToastProviderProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "description": "Default auto-dismiss duration (ms) when an individual toast doesn't set one."
+        },
+        {
+          "name": "placement",
+          "type": "'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'",
+          "required": false,
+          "description": "Viewport corner."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "none"
+      }
+    },
+    {
+      "id": "tooltip",
+      "name": "Tooltip",
+      "exportName": "Tooltip",
+      "kind": "component",
+      "status": "stable",
+      "a11yReviewed": true,
+      "importPath": "tenet-ui",
+      "description": "Tenet tooltip — a small text hint shown on hover and on keyboard focus (not hover-only, so it's\nreachable without a mouse). The trigger is described by the tooltip via `aria-describedby` (merged\nwith any the caller already set, not replaced); the bubble stays mounted so that association is\nalways valid. The bubble renders in a portal and is positioned to the viewport, so it can't be\nclipped by an `overflow:hidden` ancestor or run off the screen near an edge. The trigger must be a\nsingle focusable element. Never put essential-only info in a tooltip.",
+      "propsType": "TooltipProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "content",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Tooltip text/content."
+        },
+        {
+          "name": "placement",
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "required": false,
+          "description": "Side of the trigger to render on.",
+          "typeRef": "TooltipPlacement"
+        },
+        {
+          "name": "children",
+          "type": "ReactElement",
+          "required": true,
+          "description": "The single trigger element (must be focusable for keyboard users)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "stories": [
+        {
+          "id": "components-tooltip--default"
+        },
+        {
+          "id": "components-tooltip--bottom"
+        }
+      ],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "package-catalog"
+      }
+    },
+    {
+      "id": "use-toast",
+      "name": "useToast",
+      "exportName": "useToast",
+      "kind": "hook",
+      "status": "stable",
+      "a11yReviewed": false,
+      "importPath": "tenet-ui",
+      "description": "Hook to show toasts. Must be used under a `ToastProvider`.\n  const { toast } = useToast();\n  toast({ variant: 'success', title: 'Saved', message: 'Your changes are live.' });",
+      "extends": [],
+      "props": [],
+      "subcomponents": [],
+      "stories": [],
+      "related": [],
+      "provenance": {
+        "props": "d.ts",
+        "curation": "none"
+      }
+    }
+  ]
+}

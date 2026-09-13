@@ -1,0 +1,3284 @@
+{
+  "entry": "/Users/apurvkhare/Developer/repos/tenet-ui-mcp/.tmp/packages/0.4.0/dist/index.d.ts",
+  "typescript": "5.9.3",
+  "components": [
+    {
+      "name": "Accordion",
+      "kind": "component",
+      "description": "Tenet accordion — stacked disclosure sections. Each item is a header `<button aria-expanded>`\ncontrolling a labelled region. `type=\"single\"` keeps one open (collapsible), `multiple` allows\nmany. Headers are arrow-key navigable (Up/Down/Home/End). Controlled or uncontrolled.",
+      "propsType": "AccordionProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "type",
+          "type": "'single' | 'multiple'",
+          "required": false,
+          "description": "`single` allows one open item (collapsible); `multiple` allows many.",
+          "typeRef": "AccordionType"
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "required": false,
+          "description": "Controlled set of open item values."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "required": false,
+          "description": "Uncontrolled initial open item values.",
+          "default": "[]"
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string[]) => void",
+          "required": false,
+          "description": "Called with the new set of open values."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "returnType": "react_jsx_runtime.JSX.Element",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Avatar",
+      "kind": "component",
+      "description": "Tenet avatar — an image, or initials derived from `name` when there is no image (or it fails to\nload). Always pass `name`: it drives the initials and the accessible label, so an avatar is never\nan unlabelled blob to assistive tech.",
+      "propsType": "AvatarProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLSpanElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "name": "src",
+          "type": "string",
+          "required": false,
+          "description": "Image URL. When omitted (or it fails to load), initials from `name` are shown."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "description": "Person/entity name — used for initials and as the accessible label."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large' | 'xlarge'",
+          "required": false,
+          "description": "Size from the scale.",
+          "typeRef": "AvatarSize"
+        },
+        {
+          "name": "shape",
+          "type": "'circle' | 'rounded'",
+          "required": false,
+          "description": "Circle (people) or rounded square (orgs/repos).",
+          "typeRef": "AvatarShape"
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Badge",
+      "kind": "component",
+      "description": "Tenet badge — a small count or status dot, typically anchored to an icon or nav item. Use it for\nquantities (\"3 unread\") or presence dots. For a labelled status word (passing/failing) use\n`Label` instead.",
+      "propsType": "BadgeProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'accent' | 'success' | 'danger' | 'attention'",
+          "required": false,
+          "description": "Semantic color scheme.",
+          "typeRef": "BadgeVariant"
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "required": false,
+          "description": "Numeric count. Rendered with a `max+` overflow when above `max`."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "description": "Overflow threshold for `count` (e.g. 99 -> \"99+\")."
+        },
+        {
+          "name": "dot",
+          "type": "boolean",
+          "required": false,
+          "description": "Render a bare status dot (no text)."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Custom content (overrides count)."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Banner",
+      "kind": "component",
+      "description": "Tenet banner — an inline, contextual message tied to the content it sits near (form error,\npage-level notice). Colors come from the semantic tint tokens. For transient, floating messages\nuse a toast instead; for a status word on a row, use `Label`.",
+      "propsType": "BannerProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'title'>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'info' | 'success' | 'warning' | 'danger'",
+          "required": false,
+          "description": "Semantic tone. Pick by meaning, not color.",
+          "typeRef": "BannerVariant"
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional bold lead-in line."
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Replace the default leading icon.",
+          "default": "per variant"
+        },
+        {
+          "name": "hideIcon",
+          "type": "boolean",
+          "required": false,
+          "description": "Hide the leading icon entirely."
+        },
+        {
+          "name": "onDismiss",
+          "type": "() => void",
+          "required": false,
+          "description": "When provided, renders a dismiss button that calls this."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Body content."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Breadcrumbs",
+      "kind": "component",
+      "description": "Tenet breadcrumbs — the path from the root to the current page. Renders a `<nav>` landmark with\nan ordered list; the last item is the current page (`aria-current=\"page\"`, not a link). Pass an\n`aria-label` so multiple navs on a page are distinguishable.",
+      "propsType": "BreadcrumbsProps",
+      "refType": "HTMLElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLElement>, 'children'>"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "BreadcrumbItem[]",
+          "required": true,
+          "description": "Ordered trail, root first. The last item is treated as the current page."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the nav landmark.",
+          "default": "Breadcrumb"
+        },
+        {
+          "name": "separator",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Separator glyph between items."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Button",
+      "kind": "component",
+      "description": "Tenet action button. Use `variant=\"primary\"` for the single most important action on a\nsurface, `default` for secondary actions, `invisible` for tertiary, and `danger` for\ndestructive actions. All styling comes from design tokens — never hardcode colors or spacing.",
+      "propsType": "ButtonProps",
+      "refType": "HTMLButtonElement",
+      "extends": [
+        "ButtonHTMLAttributes<HTMLButtonElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'primary' | 'danger' | 'invisible'",
+          "required": false,
+          "description": "Visual style of the button. Use `primary` for the single most important action per surface.",
+          "typeRef": "ButtonVariant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / padding scale.",
+          "typeRef": "ButtonSize"
+        },
+        {
+          "name": "leadingIcon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Icon rendered before the label."
+        },
+        {
+          "name": "trailingIcon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Icon rendered after the label."
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the button to fill the available width."
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the button to fill the available width.",
+          "deprecated": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Button label."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Calendar",
+      "kind": "component",
+      "description": "Tenet calendar — a month-grid date picker surface. Full keyboard support (arrows move by day/\nweek, Home/End jump within the week, PageUp/PageDown change month, Enter/Space select), a roving\ntab stop, and the ARIA grid pattern. Use it inline, or let `DatePicker` host it in a popover.",
+      "propsType": "CalendarProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "value",
+          "type": "Date | null",
+          "required": false,
+          "description": "Controlled selected date (null = nothing selected)."
+        },
+        {
+          "name": "defaultValue",
+          "type": "Date | null",
+          "required": false,
+          "description": "Uncontrolled initial selected date."
+        },
+        {
+          "name": "onChange",
+          "type": "(date: Date) => void",
+          "required": false,
+          "description": "Called with the chosen date."
+        },
+        {
+          "name": "month",
+          "type": "Date",
+          "required": false,
+          "description": "Controlled visible month (any day within the month)."
+        },
+        {
+          "name": "defaultMonth",
+          "type": "Date",
+          "required": false,
+          "description": "Uncontrolled initial visible month. Defaults to the selected date's month, else today.",
+          "default": "selected | today"
+        },
+        {
+          "name": "onMonthChange",
+          "type": "(month: Date) => void",
+          "required": false,
+          "description": "Called when the visible month changes (nav buttons / keyboard paging)."
+        },
+        {
+          "name": "min",
+          "type": "Date",
+          "required": false,
+          "description": "Earliest selectable day (inclusive)."
+        },
+        {
+          "name": "max",
+          "type": "Date",
+          "required": false,
+          "description": "Latest selectable day (inclusive)."
+        },
+        {
+          "name": "weekStartsOn",
+          "type": "0 | 1",
+          "required": false,
+          "description": "First day of the week: 0 = Sunday (default), 1 = Monday.",
+          "typeRef": "WeekStart"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "BCP-47 locale for month / weekday formatting. Defaults to the runtime locale.",
+          "default": "runtime locale"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "returnType": "react_jsx_runtime.JSX.Element",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Card",
+      "kind": "component",
+      "description": "Tenet surface container — a bordered, rounded panel for grouping content (the design-system\nway to make a \"box\"). Border, radius, background and elevation all come from tokens; never\nhand-roll a styled `<div>` with hardcoded border/shadow values.",
+      "propsType": "CardProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'muted'",
+          "required": false,
+          "description": "Surface style. `default` sits on the page; `muted` is a recessed/secondary surface.",
+          "typeRef": "CardVariant"
+        },
+        {
+          "name": "padding",
+          "type": "'none' | 'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Inner padding, from the `space` scale.",
+          "typeRef": "CardPadding"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Checkbox",
+      "kind": "component",
+      "description": "Tenet checkbox. A real `<input type=\"checkbox\">` tinted with the accent token, with an\nassociated label and optional caption — use it instead of a styled `<div>` toggle. Supports an\n`indeterminate` (mixed) state for \"select all\" parents.",
+      "propsType": "CheckboxProps",
+      "refType": "HTMLInputElement",
+      "extends": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>"
+      ],
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Visible label rendered next to the box."
+        },
+        {
+          "name": "caption",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional helper text under the label."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field as invalid (sets `aria-invalid`)."
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "required": false,
+          "description": "Tri-state \"partially checked\" visual (mixed); also sets `aria-checked=\"mixed\"`."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DataTable",
+      "kind": "component",
+      "description": "Tenet data table. A higher-level table driven by `columns` + `data`: optional global search,\nper-column dropdown filters, and client-side sort — all built on the `Table` primitives and\nthe `TextInput` / `Select` fields, so it stays on-system. For a fully custom layout, drop down\nto `Table.*` directly.",
+      "propsType": "DataTableProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "columns",
+          "type": "DataTableColumn<Row>[]",
+          "required": true,
+          "description": "Column definitions, left to right."
+        },
+        {
+          "name": "data",
+          "type": "Row[]",
+          "required": true,
+          "description": "The rows to render."
+        },
+        {
+          "name": "rowKey",
+          "type": "(row: Row, index: number) => string | number",
+          "required": false,
+          "description": "Stable React key for a row. Defaults to the row index.",
+          "default": "index"
+        },
+        {
+          "name": "searchable",
+          "type": "boolean",
+          "required": false,
+          "description": "Show the global search box."
+        },
+        {
+          "name": "searchPlaceholder",
+          "type": "string",
+          "required": false,
+          "description": "Placeholder for the global search box."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional surface title (rendered in a `Table.Container`)."
+        },
+        {
+          "name": "subtitle",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional surface subtitle."
+        },
+        {
+          "name": "actions",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Actions rendered at the top-right of the toolbar (e.g. a \"New\" button)."
+        },
+        {
+          "name": "density",
+          "type": "'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Row height / cell padding scale.",
+          "typeRef": "TableDensity"
+        },
+        {
+          "name": "emptyText",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Message shown when no rows match the active filters."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "returnType": "react_jsx_runtime.JSX.Element",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DatePicker",
+      "kind": "component",
+      "description": "Tenet date picker — a token-styled field that opens a `Calendar` popover. Selecting a day (mouse\nor keyboard) commits the value and closes the menu; Escape closes; clicking outside closes. The\ntrigger carries the ARIA combobox/dialog wiring, the Calendar carries the grid + keyboard model.\nControlled or uncontrolled, FormControl-compatible, and emits a hidden yyyy-mm-dd input when\ngiven a `name`. Always give it an accessible name via FormControl or `aria-label`.",
+      "propsType": "DatePickerProps",
+      "refType": "HTMLButtonElement",
+      "extends": [],
+      "props": [
+        {
+          "name": "value",
+          "type": "Date | null",
+          "required": false,
+          "description": "Controlled selected date (null = empty)."
+        },
+        {
+          "name": "defaultValue",
+          "type": "Date | null",
+          "required": false,
+          "description": "Uncontrolled initial selected date."
+        },
+        {
+          "name": "onChange",
+          "type": "(date: Date) => void",
+          "required": false,
+          "description": "Called with the chosen date."
+        },
+        {
+          "name": "min",
+          "type": "Date",
+          "required": false,
+          "description": "Earliest selectable day (inclusive)."
+        },
+        {
+          "name": "max",
+          "type": "Date",
+          "required": false,
+          "description": "Latest selectable day (inclusive)."
+        },
+        {
+          "name": "weekStartsOn",
+          "type": "0 | 1",
+          "required": false,
+          "description": "First day of the week: 0 = Sunday (default), 1 = Monday.",
+          "typeRef": "WeekStart"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "BCP-47 locale for the displayed date + calendar. Defaults to the runtime locale.",
+          "default": "runtime locale"
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Text shown in the trigger when no date is selected."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "DatePickerSize"
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the trigger to fill the available width."
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the trigger to fill the available width.",
+          "deprecated": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Invalid state (danger border + aria-invalid)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Disable the control."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Required (sets aria-required; pairs with FormControl)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Form field name — emits a hidden input (yyyy-mm-dd) so the value submits with a form."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Id applied to the trigger (FormControl sets this automatically)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Dialog",
+      "kind": "component",
+      "description": "Tenet dialog — a modal overlay rendered in a portal. Handles the things hand-rolled modals get\nwrong: focus moves in on open and is restored on close, Tab is trapped inside, Escape and the\nbackdrop close it, body scroll is locked, and it's wired as `role=\"dialog\" aria-modal` with the\ntitle/description as its accessible name. Reach for it for focused tasks and confirmations.",
+      "propsType": "DialogProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "description": "Whether the dialog is open."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "required": true,
+          "description": "Called when the user requests close (Escape, backdrop, close button)."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Accessible title — also the visible heading."
+        },
+        {
+          "name": "description",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional supporting description under the title."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Width from the scale.",
+          "typeRef": "DialogSize"
+        },
+        {
+          "name": "footer",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Footer actions (e.g. Cancel / Confirm buttons)."
+        },
+        {
+          "name": "closeOnBackdrop",
+          "type": "boolean",
+          "required": false,
+          "description": "Allow closing by clicking the backdrop."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Body content."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "returnType": "react.ReactPortal | null",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Divider",
+      "kind": "component",
+      "description": "Tenet divider — a hairline separator. Vertical or horizontal; horizontal optionally carries a\ncentered label (\"OR\"). Exposes `role=\"separator\"` with the right orientation so it's a real\nlandmark, not a styled border.",
+      "propsType": "DividerProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "orientation",
+          "type": "'horizontal' | 'vertical'",
+          "required": false,
+          "description": "Layout direction.",
+          "typeRef": "DividerOrientation"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional centered label (horizontal only)."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "EmptyState",
+      "kind": "component",
+      "description": "Tenet empty state — what a table, list, search or inbox shows when it has nothing to show. A centered\nheadline, an optional explanation, a decorative icon and up to two next-step actions, composed from\n`Heading`, `Text` and `Stack`. Use it instead of an improvised centered `<div>`; keep the title\nspecific (\"No results for 'budget'\") and make `action` the one thing that fixes the emptiness.\n`headingLevel` sets the title's rank in the outline; its visual size follows `size`.",
+      "propsType": "EmptyStateProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'title'>"
+      ],
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "description": "Short, specific headline — say what is empty (\"No stories yet\"), not just \"Nothing here\"."
+        },
+        {
+          "name": "description",
+          "type": "ReactNode",
+          "required": false,
+          "description": "One or two sentences: why it is empty and what to do next. Inline content (rendered in a muted `Text`)."
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Decorative illustration or icon; wrapped `aria-hidden` — the title carries the meaning."
+        },
+        {
+          "name": "action",
+          "type": "ReactNode",
+          "required": false,
+          "description": "The primary next step, usually a `Button variant=\"primary\"`."
+        },
+        {
+          "name": "secondaryAction",
+          "type": "ReactNode",
+          "required": false,
+          "description": "An optional secondary step next to `action` (a default/invisible `Button` or a `Link`)."
+        },
+        {
+          "name": "size",
+          "type": "'medium' | 'large'",
+          "required": false,
+          "description": "Overall scale: `medium` for a region inside a page, `large` for a whole-page/first-run state.",
+          "typeRef": "EmptyStateSize"
+        },
+        {
+          "name": "headingLevel",
+          "type": "2 | 3 | 4",
+          "required": false,
+          "description": "Semantic heading rank of the title (`h2`/`h3`/`h4`) so it fits the surrounding outline. The visual\nsize follows `size`, not this prop.",
+          "typeRef": "EmptyStateHeadingLevel"
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "FormControl",
+      "kind": "component",
+      "description": "",
+      "propsType": "FormControlProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Override the generated id shared by the label and field."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Marks the field required (asterisk on the label + `required` on the input)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Disables the field."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Force the invalid state. Otherwise inferred from a `FormControl.Validation variant=\"error\"`."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [
+        {
+          "name": "FormControl.Label",
+          "kind": "component",
+          "propsType": "FormControlLabelProps",
+          "props": [
+            {
+              "name": "visuallyHidden",
+              "type": "boolean",
+              "required": false,
+              "description": "Visually hide the label but keep it for screen readers."
+            },
+            {
+              "name": "required",
+              "type": "boolean",
+              "required": false,
+              "description": "Injected by FormControl — renders the required asterisk."
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": "Field label. Rendered by FormControl with `htmlFor` + required state wired automatically."
+        },
+        {
+          "name": "FormControl.Caption",
+          "kind": "component",
+          "propsType": "FormControlCaptionProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": "Helper text below the field, associated via `aria-describedby`."
+        },
+        {
+          "name": "FormControl.Validation",
+          "kind": "component",
+          "propsType": "FormControlValidationProps",
+          "props": [
+            {
+              "name": "variant",
+              "type": "'error' | 'success'",
+              "required": false,
+              "description": "Tone of the message. `error` also drives the field's invalid state.",
+              "typeRef": "ValidationVariant"
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": "Validation message. `variant=\"error\"` also flips the field to its invalid state."
+        }
+      ],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Grid",
+      "kind": "component",
+      "description": "",
+      "propsType": "GridProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "columns",
+          "type": "GridResponsiveValue",
+          "required": false,
+          "description": "Number of equal-width columns, either fixed or per breakpoint, e.g. `{ base: 1, sm: 2, lg: 4 }`.\nEach column is `minmax(0, 1fr)` so long content can't blow the track out.",
+          "typeRef": "GridResponsiveValue"
+        },
+        {
+          "name": "gap",
+          "type": "'none' | 'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Space between rows and columns, from the `space` scale (condensed=8, normal=16, spacious=24).",
+          "typeRef": "GridGap"
+        },
+        {
+          "name": "rowGap",
+          "type": "'none' | 'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Overrides the row spacing only, from the same scale; defaults to `gap`.",
+          "typeRef": "GridGap"
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'center' | 'end' | 'stretch'",
+          "required": false,
+          "description": "Block-axis alignment of items within their row (maps to `align-items`).",
+          "typeRef": "GridAlign"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [
+        {
+          "name": "Grid.Item",
+          "kind": "component",
+          "propsType": "GridItemProps",
+          "props": [
+            {
+              "name": "span",
+              "type": "GridResponsiveValue",
+              "required": false,
+              "description": "Number of columns this item spans (`grid-column: span N`), fixed or per breakpoint.",
+              "typeRef": "GridResponsiveValue"
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        }
+      ],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Heading",
+      "kind": "component",
+      "description": "Tenet heading — the display (serif) type scale with correct document semantics. `level` drives the\nSIZE and the default element; `as` overrides the ELEMENT when semantics and size must differ (one\n`h1` per page, then `h2`… in order — pick the look with `level`, never skip heading ranks for looks).\nUse this instead of a raw `<h1 style={…}>`; body copy belongs in `Text`.",
+      "propsType": "HeadingProps",
+      "refType": "HTMLHeadingElement",
+      "extends": [
+        "HTMLAttributes<HTMLHeadingElement>"
+      ],
+      "props": [
+        {
+          "name": "level",
+          "type": "1 | 2 | 3 | 4",
+          "required": false,
+          "description": "Visual size on the type scale: 1 → `fontSize-5` (36), 2 → `fontSize-4` (28), 3 → `fontSize-3` (20),\n4 → `fontSize-2` (16). Also picks the default element (`h1`…`h4`).",
+          "typeRef": "HeadingLevel"
+        },
+        {
+          "name": "as",
+          "type": "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'div' | 'span'",
+          "required": false,
+          "description": "Element to render, so document semantics and visual size can differ (e.g. a level-1 look on an `h2`\nin a page that already has an `h1`).",
+          "typeRef": "HeadingElement",
+          "default": "`h${level}`"
+        },
+        {
+          "name": "truncate",
+          "type": "boolean",
+          "required": false,
+          "description": "Clip overflowing text to a single line with an ellipsis."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Heading text."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Icon",
+      "kind": "component",
+      "description": "Tenet icon primitive — the `<svg>` shell every glyph in `tenet-ui/icons` renders through. It fixes\nthe geometry (24×24 grid scaled to `size`), the Lucide stroke style (`currentColor`, round caps and\njoins, stroke width 2) and the accessibility default: decorative (`aria-hidden`) unless you pass a\n`label`, in which case it becomes `role=\"img\"` with that name.\n\nPrefer the named glyphs (`<SearchIcon />`) over composing `Icon` directly; reach for `Icon` only to\nwrap a one-off glyph that is not yet in the set. Color is inherited from the parent's `color`, so\nicons follow the token the surrounding text uses.\n\nStroke width is a constant 2 (Lucide's native weight) rather than thinned per size: the glyphs were\ndrawn for it, it scales optically with `size` (1.33px at 16, 2px at 24) and it matches what designers\nsee in Lucide's Figma library. Override `strokeWidth` per instance if a surface truly needs lighter.",
+      "propsType": "IconProps",
+      "refType": "SVGSVGElement",
+      "extends": [
+        "Omit<SVGAttributes<SVGSVGElement>, 'children' | 'width' | 'height' | 'viewBox'>"
+      ],
+      "props": [
+        {
+          "name": "size",
+          "type": "16 | 20 | 24",
+          "required": false,
+          "description": "Rendered width and height in pixels. `16` sits on the text line inside controls (Button,\nIconButton, inputs); `20` for large controls and list rows; `24` for empty states, page headers\nand stat tiles.",
+          "typeRef": "IconSize"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name. Set it ONLY when the icon carries meaning on its own (no adjacent text names\nit). When set the SVG gets `role=\"img\"` and `aria-label`; when absent the icon is decorative\n(`aria-hidden=\"true\"`) and the surrounding control must carry the name."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "The glyph: SVG shape nodes (`<path>`, `<circle>`, …) drawn on Lucide's 24×24 grid. Consumers\nnormally render a named glyph from `tenet-ui/icons` (`<SearchIcon />`) which supplies this."
+        }
+      ],
+      "subcomponents": [],
+      "file": "Icon-CmPZjl_z.d.ts"
+    },
+    {
+      "name": "IconButton",
+      "kind": "component",
+      "description": "Tenet icon-only button — a square control whose only visible content is an icon. Use it for\ncompact actions in toolbars, table rows, and dialog corners where a text label won't fit. For\nanything with room for a label, prefer `Button` (a labelled button is always clearer).\n\nBecause there is no visible text, an IconButton MUST be given an accessible name via `aria-label`\n(or `aria-labelledby`) — otherwise screen-reader users hear nothing. The icon itself is rendered\n`aria-hidden`, so the name has to come from the prop.",
+      "propsType": "IconButtonProps",
+      "refType": "HTMLButtonElement",
+      "extends": [
+        "ButtonHTMLAttributes<HTMLButtonElement>"
+      ],
+      "props": [
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "required": true,
+          "description": "The icon to render. This is the only visible content, so the button must also have an accessible name."
+        },
+        {
+          "name": "variant",
+          "type": "'default' | 'primary' | 'danger' | 'invisible'",
+          "required": false,
+          "description": "Visual style of the button. Use `primary` for the single most important action per surface.",
+          "typeRef": "IconButtonVariant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Square control size (height = width), mapped to the control-height tokens.",
+          "typeRef": "IconButtonSize"
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Label",
+      "kind": "component",
+      "description": "Tenet status label / pill. Choose a `variant` by meaning (success, danger, accent) — the colors\nare owned by the design system, so consumers never compute their own fills or borders. This is\nthe on-system replacement for a hand-styled `<span>` with hardcoded translucent colors.",
+      "propsType": "LabelProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'accent' | 'success' | 'danger' | 'attention' | 'muted'",
+          "required": false,
+          "description": "Semantic color scheme. Pick by meaning (success/danger/accent), not by raw color.",
+          "typeRef": "LabelVariant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Label size.",
+          "typeRef": "LabelSize"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Link",
+      "kind": "component",
+      "description": "Tenet link — an inline navigational anchor. Renders a real `<a>` (forwards its ref) so it keeps\nnative keyboard + activation behavior; style it with `muted` and `underline` instead of writing\nraw anchor CSS. Always give it meaningful link text (not \"click here\"). For an off-site link pass\n`external` so it opens in a new tab AND warns screen-reader users it does so.",
+      "propsType": "LinkProps",
+      "refType": "HTMLAnchorElement",
+      "extends": [
+        "AnchorHTMLAttributes<HTMLAnchorElement>"
+      ],
+      "props": [
+        {
+          "name": "muted",
+          "type": "boolean",
+          "required": false,
+          "description": "Use the muted foreground color instead of the accent color."
+        },
+        {
+          "name": "underline",
+          "type": "'hover' | 'always' | 'none'",
+          "required": false,
+          "description": "When the underline is shown.",
+          "typeRef": "LinkUnderline"
+        },
+        {
+          "name": "external",
+          "type": "boolean",
+          "required": false,
+          "description": "Marks the link as leading off-site: sets `target=\"_blank\"` +\n`rel=\"noopener noreferrer\"` and appends a visually-hidden \" (opens in new tab)\"\nwarning for screen-reader users."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Menu",
+      "kind": "component",
+      "description": "Tenet action menu — a button that opens a popover list of actions (ARIA menu pattern). Arrow keys\nmove, Enter/Space invoke, Escape closes and returns focus to the trigger, click-outside closes.\nItems run their `onSelect` and the menu closes. Distinct from `Select`, which picks a value.",
+      "propsType": "MenuProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "trigger",
+          "type": "ReactElement",
+          "required": true,
+          "description": "The trigger element (e.g. a Button). It is wired with the menu's aria + click handling."
+        },
+        {
+          "name": "items",
+          "type": "MenuItem[]",
+          "required": true,
+          "description": "The actions to show."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the menu.",
+          "default": "trigger label"
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'end'",
+          "required": false,
+          "description": "Menu alignment relative to the trigger."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "returnType": "react_jsx_runtime.JSX.Element",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "NumberInput",
+      "kind": "component",
+      "description": "Tenet number field. A text input constrained to numbers, with +/- steppers and arrow-key\nstepping that respect `min` / `max` / `step`. Reports a parsed `number | null` (not a string)\nvia `onChange`, so callers never re-parse. Always give it an accessible name.",
+      "propsType": "NumberInputProps",
+      "refType": "HTMLInputElement",
+      "extends": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange'>"
+      ],
+      "props": [
+        {
+          "name": "value",
+          "type": "number | null",
+          "required": false,
+          "description": "Controlled value. Use `null`/`undefined` for an empty field."
+        },
+        {
+          "name": "defaultValue",
+          "type": "number | null",
+          "required": false,
+          "description": "Uncontrolled initial value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: number | null) => void",
+          "required": false,
+          "description": "Called with the parsed numeric value (or `null` when the field is cleared)."
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "required": false,
+          "description": "Smallest allowed value. Stepping/clamping respects it."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "description": "Largest allowed value. Stepping/clamping respects it."
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "required": false,
+          "description": "Increment applied by the steppers and arrow keys."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "NumberInputSize"
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the field to fill the available width."
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the field to fill the available width.",
+          "deprecated": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field as invalid (sets `aria-invalid` and a danger border)."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Pagination",
+      "kind": "component",
+      "description": "Tenet pagination — navigate a paged result set. Renders a `<nav>` landmark of real `<button>`s\n(keyboard-operable by construction), marks the current page with `aria-current=\"page\"`, and\ndisables Previous/Next at the ends. Long ranges collapse with ellipses around a window of pages.",
+      "propsType": "PaginationProps",
+      "refType": "HTMLElement",
+      "extends": [],
+      "props": [
+        {
+          "name": "page",
+          "type": "number",
+          "required": true,
+          "description": "Current page (1-based)."
+        },
+        {
+          "name": "pageCount",
+          "type": "number",
+          "required": true,
+          "description": "Total number of pages."
+        },
+        {
+          "name": "onPageChange",
+          "type": "(page: number) => void",
+          "required": true,
+          "description": "Called with the requested page when the user navigates."
+        },
+        {
+          "name": "siblingCount",
+          "type": "number",
+          "required": false,
+          "description": "How many page numbers to show around the current page."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the nav landmark.",
+          "default": "Pagination"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Popover",
+      "kind": "component",
+      "description": "Tenet popover — a generic floating container anchored to a trigger (the ARIA non-modal dialog\npattern). On open, focus moves into the surface; Escape closes and returns focus to the trigger;\nclicking outside closes; and focus leaving the wrapper (Tab-out) closes it so it can't strand\nopen behind the page. This is **non-modal**: it does not trap focus, lock scroll, or hide the\nbackground — reach for `Dialog` when you need those. Always give it an accessible name via\n`aria-label`.",
+      "propsType": "PopoverProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "trigger",
+          "type": "ReactElement",
+          "required": true,
+          "description": "The trigger element (e.g. a Button). It is cloned and wired with\n`aria-haspopup=\"dialog\"`, `aria-expanded`, `aria-controls`, an onClick toggle,\nand a ref so focus can be restored to it on close."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "description": "The floating content rendered inside the popover surface."
+        },
+        {
+          "name": "placement",
+          "type": "'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'",
+          "required": false,
+          "description": "Where the surface is anchored relative to the trigger.",
+          "typeRef": "PopoverPlacement"
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the popover dialog (falls back to \"Popover\").",
+          "default": "Popover"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "returnType": "react_jsx_runtime.JSX.Element",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ProgressBar",
+      "kind": "component",
+      "description": "Tenet progress bar — a `role=\"progressbar\"` feedback indicator for the progress of a task.\n\nDeterminate (a `value` is given): shows a fixed fill and reports `aria-valuenow` plus a readable\n`aria-valuetext` (e.g. \"42%\"). Omit `value` for an INDETERMINATE bar (unknown duration) that runs\nan animated sweep and omits `aria-valuenow`.\n\nThe one rule people get wrong: a progressbar has no inherent label, so you MUST pass an accessible\nname via `aria-label` or `aria-labelledby` — otherwise screen readers announce it nameless.",
+      "propsType": "ProgressBarProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "value",
+          "type": "number",
+          "required": false,
+          "description": "Current progress, from 0 to `max`. Values are clamped into range.\nOmit (or pass `undefined`) for an INDETERMINATE bar that shows an\nanimated sweep instead of a fixed fill."
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "description": "Upper bound of the scale. Defaults to 100."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Track/fill height from the size scale. Defaults to 'medium'.",
+          "typeRef": "ProgressBarSize"
+        },
+        {
+          "name": "variant",
+          "type": "'accent' | 'success' | 'danger'",
+          "required": false,
+          "description": "Fill color, mapped to the matching emphasis token. Defaults to 'accent'.",
+          "typeRef": "ProgressBarVariant"
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Radio",
+      "kind": "component",
+      "description": "Tenet radio. A real `<input type=\"radio\">` tinted with the accent token. Use inside a\n`RadioGroup`, which wires the shared `name` and selection for you.",
+      "propsType": "RadioProps",
+      "refType": "HTMLInputElement",
+      "extends": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>"
+      ],
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "The value submitted when this radio is selected (required)."
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Visible label rendered next to the control."
+        },
+        {
+          "name": "caption",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional helper text under the label."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "RadioGroup",
+      "kind": "component",
+      "description": "Tenet radio group. Renders a `<fieldset>`/`<legend>` and shares `name` + selection with its\n`Radio` children via context — so grouping and accessibility are correct without prop drilling.",
+      "propsType": "RadioGroupProps",
+      "refType": "HTMLFieldSetElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLFieldSetElement>, 'onChange'>"
+      ],
+      "props": [
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Shared form field name. Auto-generated if omitted."
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Group label (rendered as a fieldset legend)."
+        },
+        {
+          "name": "caption",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional helper text for the whole group."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Controlled selected value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Uncontrolled initial selected value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Called with the newly selected value."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the group required (asterisk on the legend)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Disable every radio in the group."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Radio children."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SegmentedControl",
+      "kind": "component",
+      "description": "Tenet segmented control — a compact single-choice switch between a few options (a view toggle,\na filter mode). Implemented as an ARIA radiogroup: arrow keys move and select (selection follows\nfocus), with a roving tab stop. For many options or free text use `Select`; for on/off use `Switch`.",
+      "propsType": "SegmentedControlProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'>"
+      ],
+      "props": [
+        {
+          "name": "options",
+          "type": "SegmentedControlOption[]",
+          "required": true,
+          "description": "The segments to choose from."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Controlled selected value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Uncontrolled initial value.",
+          "default": "first enabled option"
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Called with the newly selected value."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "SegmentedControlSize"
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch segments to fill the available width."
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch segments to fill the available width.",
+          "deprecated": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name for the group (required for screen readers)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Select",
+      "kind": "component",
+      "description": "Tenet select — a real ARIA listbox combobox (not a native `<select>`). Styled menu, full\nkeyboard support (↑/↓/Home/End/Enter/Esc), typeahead, `aria-activedescendant`, click-outside,\ncontrolled or uncontrolled. Token-styled, theme-aware, and FormControl-compatible. Always give\nit an accessible name via FormControl or `aria-label`.",
+      "propsType": "SelectProps",
+      "refType": "HTMLButtonElement",
+      "extends": [
+        "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'value' | 'defaultValue'>"
+      ],
+      "props": [
+        {
+          "name": "options",
+          "type": "SelectOption[]",
+          "required": true,
+          "description": "The options to choose from."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Controlled selected value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Uncontrolled initial value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Called with the newly selected value."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": "Text shown when nothing is selected."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "SelectSize"
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch to fill the available width."
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch to fill the available width.",
+          "deprecated": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Invalid state (danger border + aria-invalid)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Disable the control."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Required (sets aria-required; pairs with FormControl)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Form field name — emits a hidden input so the value submits with a form."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Id applied to the trigger (FormControl sets this automatically)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Skeleton",
+      "kind": "component",
+      "description": "Tenet skeleton — a decorative loading placeholder that shimmers while content streams in.\nIt is `aria-hidden`: announce the wait on the surrounding region with `aria-busy=\"true\"`\n(and a visually-hidden status / Spinner label), not on each skeleton block.\nUse `text` for lines of copy, `circle` for an avatar, `rect` for a media/card block.",
+      "propsType": "SkeletonProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'text' | 'rect' | 'circle'",
+          "required": false,
+          "description": "Shape of the placeholder. `text` mimics a line of copy, `rect` a block, `circle` an avatar/icon.",
+          "typeRef": "SkeletonVariant"
+        },
+        {
+          "name": "width",
+          "type": "string | number",
+          "required": false,
+          "description": "Width applied inline (number → px, string → as-is, e.g. '60%')."
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false,
+          "description": "Height applied inline (number → px, string → as-is). For `circle` it mirrors width."
+        },
+        {
+          "name": "radius",
+          "type": "'small' | 'medium' | 'large' | 'full'",
+          "required": false,
+          "description": "Corner radius token. `circle` always renders as `full` regardless of this prop.",
+          "typeRef": "SkeletonRadius"
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Spinner",
+      "kind": "component",
+      "description": "Tenet spinner — an indeterminate loading indicator. Renders `role=\"status\"` with a visually\nhidden label so screen readers announce the loading state. Inherits `currentColor`, so it tints\nto whatever text color it sits in.",
+      "propsType": "SpinnerProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Size from the scale.",
+          "typeRef": "SpinnerSize"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible label announced to assistive tech (visually hidden)."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Stack",
+      "kind": "component",
+      "description": "",
+      "propsType": "StackProps",
+      "refType": "HTMLDivElement",
+      "extends": [
+        "HTMLAttributes<HTMLDivElement>"
+      ],
+      "props": [
+        {
+          "name": "direction",
+          "type": "'horizontal' | 'vertical'",
+          "required": false,
+          "description": "Main-axis direction.",
+          "typeRef": "StackDirection"
+        },
+        {
+          "name": "gap",
+          "type": "'none' | 'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Space between children, from the `space` scale (condensed=8, normal=16, spacious=24).",
+          "typeRef": "StackGap"
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'center' | 'end' | 'stretch'",
+          "required": false,
+          "description": "Cross-axis alignment (maps to `align-items`).",
+          "typeRef": "StackAlign"
+        },
+        {
+          "name": "justify",
+          "type": "'start' | 'center' | 'end' | 'between'",
+          "required": false,
+          "description": "Main-axis distribution (maps to `justify-content`).",
+          "typeRef": "StackJustify"
+        },
+        {
+          "name": "wrap",
+          "type": "boolean",
+          "required": false,
+          "description": "Allow children to wrap onto multiple lines."
+        },
+        {
+          "name": "padding",
+          "type": "'none' | 'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Inner padding, from the `space` scale.",
+          "typeRef": "StackPadding"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [
+        {
+          "name": "Stack.Item",
+          "kind": "component",
+          "propsType": "StackItemProps",
+          "props": [
+            {
+              "name": "grow",
+              "type": "boolean",
+              "required": false,
+              "description": "Grow to fill the available space along the main axis."
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        }
+      ],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Switch",
+      "kind": "component",
+      "description": "Tenet switch. A real `<input type=\"checkbox\" role=\"switch\">` styled as a sliding toggle —\nuse it for an immediate on/off setting (not for a value you submit on a separate save).\nKeyboard + screen-reader behaviour comes from the native input; the track/knob are CSS.",
+      "propsType": "SwitchProps",
+      "refType": "HTMLInputElement",
+      "extends": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>"
+      ],
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Visible label rendered next to the switch."
+        },
+        {
+          "name": "caption",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional helper text under the label."
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Control track / knob scale.",
+          "typeRef": "SwitchSize"
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field as invalid (sets `aria-invalid` and a danger border)."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Table",
+      "kind": "component",
+      "description": "",
+      "propsType": "TableProps",
+      "refType": "HTMLTableElement",
+      "extends": [
+        "TableHTMLAttributes<HTMLTableElement>"
+      ],
+      "props": [
+        {
+          "name": "density",
+          "type": "'condensed' | 'normal' | 'spacious'",
+          "required": false,
+          "description": "Row height / cell padding scale.",
+          "typeRef": "TableDensity"
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [
+        {
+          "name": "Table.Container",
+          "kind": "component",
+          "propsType": "TableContainerProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "name": "Table.Title",
+          "kind": "component",
+          "propsType": "TableTitleProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "name": "Table.Subtitle",
+          "kind": "component",
+          "propsType": "TableSubtitleProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "name": "Table.Actions",
+          "kind": "component",
+          "propsType": "TableActionsProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "name": "Table.Head",
+          "kind": "component",
+          "propsType": "TableSectionProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "name": "Table.Body",
+          "kind": "component",
+          "propsType": "TableSectionProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "name": "Table.Row",
+          "kind": "component",
+          "propsType": "TableRowProps",
+          "props": [
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "name": "Table.Header",
+          "kind": "component",
+          "propsType": "TableHeaderProps",
+          "props": [
+            {
+              "name": "align",
+              "type": "'start' | 'center' | 'end'",
+              "required": false,
+              "description": "Text alignment within the header cell.",
+              "typeRef": "CellAlign"
+            },
+            {
+              "name": "sortDirection",
+              "type": "'ascending' | 'descending' | 'none'",
+              "required": false,
+              "description": "When set, renders a sort indicator and exposes `aria-sort`. Combine with `onClick`.",
+              "typeRef": "SortDirection"
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        },
+        {
+          "name": "Table.Cell",
+          "kind": "component",
+          "propsType": "TableCellProps",
+          "props": [
+            {
+              "name": "align",
+              "type": "'start' | 'center' | 'end'",
+              "required": false,
+              "description": "Text alignment within the cell.",
+              "typeRef": "CellAlign"
+            },
+            {
+              "name": "children",
+              "type": "ReactNode",
+              "required": false,
+              "description": ""
+            }
+          ],
+          "description": ""
+        }
+      ],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Tabs",
+      "kind": "component",
+      "description": "Tenet tabs — a controlled or uncontrolled tab set following the ARIA tabs pattern. Compose\n`Tabs.List` + `Tabs.Tab` with matching `Tabs.Panel`s. Arrow keys move between tabs (selection\nfollows focus), Home/End jump to the ends; roles, ids and `aria-controls`/`aria-labelledby` are\nwired for you.",
+      "propsType": "TabsProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Controlled active tab value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": "Uncontrolled initial active tab value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "description": "Called when the active tab changes."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "returnType": "react_jsx_runtime.JSX.Element",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Tag",
+      "kind": "component",
+      "description": "Tenet Tag — the system's pill. Without `onRemove` it is a read-only word attached to an item\n(a status such as \"Published\", a category, a keyword) coloured by `variant`. With `onRemove` it\nbecomes a removable chip for user-applied tokens (active filters, selected recipients). For a\ncount or presence dot use `Badge`. (Replaces the deprecated `Label` since 0.4.0.)\n\nThe one rule people get wrong: Tag is stateless. Setting `onRemove` renders a real <button>, but\nthe parent owns the collection — your handler must drop the item, Tag won't remove itself.",
+      "propsType": "TagProps",
+      "refType": "HTMLSpanElement",
+      "extends": [
+        "HTMLAttributes<HTMLSpanElement>"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'accent' | 'success' | 'danger' | 'attention' | 'muted'",
+          "required": false,
+          "description": "Semantic color scheme. Pick by meaning, never by raw color: `accent` for an active/selected token,\n`success` / `danger` / `attention` for status words, `muted` for a quiet neutral, `default` otherwise.",
+          "typeRef": "TagVariant"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium'",
+          "required": false,
+          "description": "Tag size.",
+          "typeRef": "TagSize"
+        },
+        {
+          "name": "leadingIcon",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Optional leading icon rendered before the label; decorative (aria-hidden)."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "The tag label content."
+        },
+        {
+          "name": "onRemove",
+          "type": "() => void",
+          "required": false,
+          "description": "When provided, renders a real remove button. Wire it to drop the tag from your collection.\nTag does not remove itself — it has no internal state."
+        },
+        {
+          "name": "removeLabel",
+          "type": "string",
+          "required": false,
+          "description": "Accessible label for the remove button when `children` is not a plain string.\nFalls back to the string children, otherwise \"Remove\"."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Text",
+      "kind": "component",
+      "description": "Tenet body copy — paragraphs, captions, helper text and status messages on the body (sans) scale.\n`size` picks the scale step, `tone` the semantic color (`muted` for secondary copy, status tones for\nmessages). Use it instead of a `<p style={{ color: '#666', fontSize: 13 }}>`; titles belong in\n`Heading`. Don't convey a status by color alone — pair a `danger`/`success` tone with words or an icon.",
+      "propsType": "TextProps",
+      "refType": "HTMLElement",
+      "extends": [
+        "HTMLAttributes<HTMLElement>"
+      ],
+      "props": [
+        {
+          "name": "as",
+          "type": "'p' | 'span' | 'div' | 'label' | 'strong' | 'em'",
+          "required": false,
+          "description": "Element to render.",
+          "typeRef": "TextElement"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Size on the body type scale (small=12, medium=14, large=16).",
+          "typeRef": "TextSize"
+        },
+        {
+          "name": "tone",
+          "type": "'default' | 'muted' | 'accent' | 'success' | 'danger' | 'attention'",
+          "required": false,
+          "description": "Semantic color: `muted` for secondary copy, status tones for validation and state messages.",
+          "typeRef": "TextTone"
+        },
+        {
+          "name": "weight",
+          "type": "'normal' | 'medium' | 'semibold'",
+          "required": false,
+          "description": "Font weight.",
+          "typeRef": "TextWeight"
+        },
+        {
+          "name": "truncate",
+          "type": "boolean",
+          "required": false,
+          "description": "Clip overflowing text to a single line with an ellipsis."
+        },
+        {
+          "name": "align",
+          "type": "'start' | 'center' | 'end'",
+          "required": false,
+          "description": "Horizontal text alignment (logical: `start`/`end` follow writing direction).",
+          "typeRef": "TextAlign"
+        },
+        {
+          "name": "htmlFor",
+          "type": "string",
+          "required": false,
+          "description": "Associates the text with a form control; only meaningful with `as=\"label\"`."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Text content."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Textarea",
+      "kind": "component",
+      "description": "Tenet multi-line text field. A real, accessible `<textarea>` with token-based chrome — use it\ninstead of a raw `<textarea>`. Always give it an accessible name via FormControl or `aria-label`.",
+      "propsType": "TextareaProps",
+      "refType": "HTMLTextAreaElement",
+      "extends": [
+        "Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'>"
+      ],
+      "props": [
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch to fill the available width."
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch to fill the available width.",
+          "deprecated": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field invalid (sets aria-invalid and a danger border)."
+        },
+        {
+          "name": "resize",
+          "type": "'none' | 'vertical' | 'horizontal' | 'both'",
+          "required": false,
+          "description": "Which directions the user may resize.",
+          "typeRef": "TextareaResize"
+        },
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Padding / font scale — matches TextInput so fields line up in a form.",
+          "typeRef": "TextareaSize"
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextInput",
+      "kind": "component",
+      "description": "Tenet text field. Renders a real, accessible `<input>` wrapped with token-based chrome —\nuse this instead of a raw `<input>` so border, height, spacing and focus styling stay on-system.\nAlways pass an accessible name via `aria-label` or an associated `<label>`.",
+      "propsType": "TextInputProps",
+      "refType": "HTMLInputElement",
+      "extends": [
+        "Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>"
+      ],
+      "props": [
+        {
+          "name": "size",
+          "type": "'small' | 'medium' | 'large'",
+          "required": false,
+          "description": "Control height / font scale.",
+          "typeRef": "TextInputSize"
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the field to fill the available width."
+        },
+        {
+          "name": "block",
+          "type": "boolean",
+          "required": false,
+          "description": "Stretch the field to fill the available width.",
+          "deprecated": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0."
+        },
+        {
+          "name": "leadingVisual",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Element rendered before the input (e.g. a search icon)."
+        },
+        {
+          "name": "trailingVisual",
+          "type": "ReactNode",
+          "required": false,
+          "description": "Element rendered after the input."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Mark the field as invalid (sets `aria-invalid` and a danger border)."
+        }
+      ],
+      "subcomponents": [],
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ToastProvider",
+      "kind": "component",
+      "description": "Tenet toast provider — mounts a portalled, live-region viewport and exposes `useToast()` to any\ndescendant. Toasts auto-dismiss (configurable), can be dismissed manually, and are announced to\nassistive tech (danger = assertive alert, others = polite status). Use toasts for transient,\nnon-blocking feedback; for inline contextual messages use `Banner`, for blocking flows `Dialog`.",
+      "propsType": "ToastProviderProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "description": "Default auto-dismiss duration (ms) when an individual toast doesn't set one."
+        },
+        {
+          "name": "placement",
+          "type": "'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'",
+          "required": false,
+          "description": "Viewport corner."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "returnType": "react_jsx_runtime.JSX.Element",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "Tooltip",
+      "kind": "component",
+      "description": "Tenet tooltip — a small text hint shown on hover and on keyboard focus (not hover-only, so it's\nreachable without a mouse). The trigger is described by the tooltip via `aria-describedby` (merged\nwith any the caller already set, not replaced); the bubble stays mounted so that association is\nalways valid. The bubble renders in a portal and is positioned to the viewport, so it can't be\nclipped by an `overflow:hidden` ancestor or run off the screen near an edge. The trigger must be a\nsingle focusable element. Never put essential-only info in a tooltip.",
+      "propsType": "TooltipProps",
+      "extends": [],
+      "props": [
+        {
+          "name": "content",
+          "type": "ReactNode",
+          "required": true,
+          "description": "Tooltip text/content."
+        },
+        {
+          "name": "placement",
+          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "required": false,
+          "description": "Side of the trigger to render on.",
+          "typeRef": "TooltipPlacement"
+        },
+        {
+          "name": "children",
+          "type": "ReactElement",
+          "required": true,
+          "description": "The single trigger element (must be focusable for keyboard users)."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ],
+      "subcomponents": [],
+      "returnType": "react_jsx_runtime.JSX.Element",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "useToast",
+      "kind": "hook",
+      "description": "Hook to show toasts. Must be used under a `ToastProvider`.\n  const { toast } = useToast();\n  toast({ variant: 'success', title: 'Saved', message: 'Your changes are live.' });",
+      "extends": [],
+      "props": [],
+      "subcomponents": [],
+      "returnType": "ToastContextValue",
+      "file": "index.d.ts"
+    }
+  ],
+  "types": [
+    {
+      "name": "AccordionItemProps",
+      "kind": "interface",
+      "text": "interface AccordionItemProps {\n    /** Unique value identifying this item. */\n    value: string;\n    /** Header text shown on the trigger button. */\n    title: ReactNode;\n    /** Disable this item. */\n    disabled?: boolean;\n    children?: ReactNode;\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "AccordionProps",
+      "kind": "interface",
+      "text": "interface AccordionProps {\n    /** `single` allows one open item (collapsible); `multiple` allows many. */\n    type?: AccordionType;\n    /** Controlled set of open item values. */\n    value?: string[];\n    /**\n     * Uncontrolled initial open item values.\n     * @default []\n     */\n    defaultValue?: string[];\n    /** Called with the new set of open values. */\n    onValueChange?: (value: string[]) => void;\n    children?: ReactNode;\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "AccordionType",
+      "kind": "alias",
+      "text": "'single' | 'multiple'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "AvatarProps",
+      "kind": "interface",
+      "text": "interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {\n    /** Image URL. When omitted (or it fails to load), initials from `name` are shown. */\n    src?: string;\n    /** Person/entity name — used for initials and as the accessible label. */\n    name: string;\n    /** Size from the scale. */\n    size?: AvatarSize;\n    /** Circle (people) or rounded square (orgs/repos). */\n    shape?: AvatarShape;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "AvatarShape",
+      "kind": "alias",
+      "text": "'circle' | 'rounded'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "AvatarSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large' | 'xlarge'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "BadgeProps",
+      "kind": "interface",
+      "text": "interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {\n    /** Semantic color scheme. */\n    variant?: BadgeVariant;\n    /** Numeric count. Rendered with a `max+` overflow when above `max`. */\n    count?: number;\n    /** Overflow threshold for `count` (e.g. 99 -> \"99+\"). */\n    max?: number;\n    /** Render a bare status dot (no text). */\n    dot?: boolean;\n    /** Custom content (overrides count). */\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "BadgeVariant",
+      "kind": "alias",
+      "text": "'default' | 'accent' | 'success' | 'danger' | 'attention'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "BannerProps",
+      "kind": "interface",
+      "text": "interface BannerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {\n    /** Semantic tone. Pick by meaning, not color. */\n    variant?: BannerVariant;\n    /** Optional bold lead-in line. */\n    title?: ReactNode;\n    /**\n     * Replace the default leading icon.\n     * @default per variant\n     */\n    icon?: ReactNode;\n    /** Hide the leading icon entirely. */\n    hideIcon?: boolean;\n    /** When provided, renders a dismiss button that calls this. */\n    onDismiss?: () => void;\n    /** Body content. */\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "BannerVariant",
+      "kind": "alias",
+      "text": "'info' | 'success' | 'warning' | 'danger'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "BreadcrumbItem",
+      "kind": "interface",
+      "text": "interface BreadcrumbItem {\n    /** Visible label. */\n    label: ReactNode;\n    /** Link target. Omit for the current page (rendered as plain text). */\n    href?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "BreadcrumbsProps",
+      "kind": "interface",
+      "text": "interface BreadcrumbsProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {\n    /** Ordered trail, root first. The last item is treated as the current page. */\n    items: BreadcrumbItem[];\n    /**\n     * Accessible name for the nav landmark.\n     * @default Breadcrumb\n     */\n    'aria-label'?: string;\n    /** Separator glyph between items. */\n    separator?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ButtonProps",
+      "kind": "interface",
+      "text": "interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {\n    /** Visual style of the button. Use `primary` for the single most important action per surface. */\n    variant?: ButtonVariant;\n    /** Control height / padding scale. */\n    size?: ButtonSize;\n    /** Icon rendered before the label. */\n    leadingIcon?: ReactNode;\n    /** Icon rendered after the label. */\n    trailingIcon?: ReactNode;\n    /** Stretch the button to fill the available width. */\n    fullWidth?: boolean;\n    /**\n     * Stretch the button to fill the available width.\n     * @deprecated Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.\n     */\n    block?: boolean;\n    /** Button label. */\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ButtonSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ButtonVariant",
+      "kind": "alias",
+      "text": "'default' | 'primary' | 'danger' | 'invisible'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "CalendarProps",
+      "kind": "interface",
+      "text": "interface CalendarProps {\n    /** Controlled selected date (null = nothing selected). */\n    value?: Date | null;\n    /** Uncontrolled initial selected date. */\n    defaultValue?: Date | null;\n    /** Called with the chosen date. */\n    onChange?: (date: Date) => void;\n    /** Controlled visible month (any day within the month). */\n    month?: Date;\n    /**\n     * Uncontrolled initial visible month. Defaults to the selected date's month, else today.\n     * @default selected | today\n     */\n    defaultMonth?: Date;\n    /** Called when the visible month changes (nav buttons / keyboard paging). */\n    onMonthChange?: (month: Date) => void;\n    /** Earliest selectable day (inclusive). */\n    min?: Date;\n    /** Latest selectable day (inclusive). */\n    max?: Date;\n    /** First day of the week: 0 = Sunday (default), 1 = Monday. */\n    weekStartsOn?: WeekStart;\n    /**\n     * BCP-47 locale for month / weekday formatting. Defaults to the runtime locale.\n     * @default runtime locale\n     */\n    locale?: string;\n    className?: string;\n    'aria-label'?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "CardPadding",
+      "kind": "alias",
+      "text": "'none' | 'condensed' | 'normal' | 'spacious'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "CardProps",
+      "kind": "interface",
+      "text": "interface CardProps extends HTMLAttributes<HTMLDivElement> {\n    /** Surface style. `default` sits on the page; `muted` is a recessed/secondary surface. */\n    variant?: CardVariant;\n    /** Inner padding, from the `space` scale. */\n    padding?: CardPadding;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "CardVariant",
+      "kind": "alias",
+      "text": "'default' | 'muted'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "CellAlign",
+      "kind": "alias",
+      "text": "'start' | 'center' | 'end'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "CheckboxProps",
+      "kind": "interface",
+      "text": "interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {\n    /** Visible label rendered next to the box. */\n    label?: ReactNode;\n    /** Optional helper text under the label. */\n    caption?: ReactNode;\n    /** Mark the field as invalid (sets `aria-invalid`). */\n    invalid?: boolean;\n    /** Tri-state \"partially checked\" visual (mixed); also sets `aria-checked=\"mixed\"`. */\n    indeterminate?: boolean;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DataTableColumn",
+      "kind": "interface",
+      "text": "interface DataTableColumn<Row> {\n    /** Stable key — also used to read the cell value when `accessor` is omitted. */\n    id: string;\n    /** Column heading text. */\n    header: ReactNode;\n    /** Read the raw value for a row. Defaults to `row[id]`. Used for sorting + filtering. */\n    accessor?: (row: Row) => unknown;\n    /** Custom cell renderer. Defaults to rendering the accessor value as text. */\n    cell?: (row: Row) => ReactNode;\n    /** Cell + header alignment. */\n    align?: CellAlign;\n    /** Allow clicking the header to sort by this column. */\n    sortable?: boolean;\n    /** Show a per-column dropdown filter built from the distinct values in the data. */\n    filterable?: boolean;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DataTableProps",
+      "kind": "interface",
+      "text": "interface DataTableProps<Row> {\n    /** Column definitions, left to right. */\n    columns: DataTableColumn<Row>[];\n    /** The rows to render. */\n    data: Row[];\n    /**\n     * Stable React key for a row. Defaults to the row index.\n     * @default index\n     */\n    rowKey?: (row: Row, index: number) => string | number;\n    /** Show the global search box. */\n    searchable?: boolean;\n    /** Placeholder for the global search box. */\n    searchPlaceholder?: string;\n    /** Optional surface title (rendered in a `Table.Container`). */\n    title?: ReactNode;\n    /** Optional surface subtitle. */\n    subtitle?: ReactNode;\n    /** Actions rendered at the top-right of the toolbar (e.g. a \"New\" button). */\n    actions?: ReactNode;\n    /** Row height / cell padding scale. */\n    density?: TableDensity;\n    /** Message shown when no rows match the active filters. */\n    emptyText?: ReactNode;\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DatePickerProps",
+      "kind": "interface",
+      "text": "interface DatePickerProps {\n    /** Controlled selected date (null = empty). */\n    value?: Date | null;\n    /** Uncontrolled initial selected date. */\n    defaultValue?: Date | null;\n    /** Called with the chosen date. */\n    onChange?: (date: Date) => void;\n    /** Earliest selectable day (inclusive). */\n    min?: Date;\n    /** Latest selectable day (inclusive). */\n    max?: Date;\n    /** First day of the week: 0 = Sunday (default), 1 = Monday. */\n    weekStartsOn?: WeekStart;\n    /**\n     * BCP-47 locale for the displayed date + calendar. Defaults to the runtime locale.\n     * @default runtime locale\n     */\n    locale?: string;\n    /** Text shown in the trigger when no date is selected. */\n    placeholder?: string;\n    /** Control height / font scale. */\n    size?: DatePickerSize;\n    /** Stretch the trigger to fill the available width. */\n    fullWidth?: boolean;\n    /**\n     * Stretch the trigger to fill the available width.\n     * @deprecated Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.\n     */\n    block?: boolean;\n    /** Invalid state (danger border + aria-invalid). */\n    invalid?: boolean;\n    /** Disable the control. */\n    disabled?: boolean;\n    /** Required (sets aria-required; pairs with FormControl). */\n    required?: boolean;\n    /** Form field name — emits a hidden input (yyyy-mm-dd) so the value submits with a form. */\n    name?: string;\n    /** Id applied to the trigger (FormControl sets this automatically). */\n    id?: string;\n    className?: string;\n    'aria-label'?: string;\n    'aria-describedby'?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DatePickerSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DialogProps",
+      "kind": "interface",
+      "text": "interface DialogProps {\n    /** Whether the dialog is open. */\n    open: boolean;\n    /** Called when the user requests close (Escape, backdrop, close button). */\n    onClose: () => void;\n    /** Accessible title — also the visible heading. */\n    title: ReactNode;\n    /** Optional supporting description under the title. */\n    description?: ReactNode;\n    /** Width from the scale. */\n    size?: DialogSize;\n    /** Footer actions (e.g. Cancel / Confirm buttons). */\n    footer?: ReactNode;\n    /** Allow closing by clicking the backdrop. */\n    closeOnBackdrop?: boolean;\n    /** Body content. */\n    children?: ReactNode;\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DialogSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DividerOrientation",
+      "kind": "alias",
+      "text": "'horizontal' | 'vertical'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "DividerProps",
+      "kind": "interface",
+      "text": "interface DividerProps extends HTMLAttributes<HTMLDivElement> {\n    /** Layout direction. */\n    orientation?: DividerOrientation;\n    /** Optional centered label (horizontal only). */\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "EmptyStateHeadingLevel",
+      "kind": "alias",
+      "text": "2 | 3 | 4",
+      "description": "Heading rank of the title in the document outline.",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "EmptyStateProps",
+      "kind": "interface",
+      "text": "interface EmptyStateProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {\n    /** Short, specific headline — say what is empty (\"No stories yet\"), not just \"Nothing here\". */\n    title: string;\n    /** One or two sentences: why it is empty and what to do next. Inline content (rendered in a muted `Text`). */\n    description?: ReactNode;\n    /** Decorative illustration or icon; wrapped `aria-hidden` — the title carries the meaning. */\n    icon?: ReactNode;\n    /** The primary next step, usually a `Button variant=\"primary\"`. */\n    action?: ReactNode;\n    /** An optional secondary step next to `action` (a default/invisible `Button` or a `Link`). */\n    secondaryAction?: ReactNode;\n    /** Overall scale: `medium` for a region inside a page, `large` for a whole-page/first-run state. */\n    size?: EmptyStateSize;\n    /**\n     * Semantic heading rank of the title (`h2`/`h3`/`h4`) so it fits the surrounding outline. The visual\n     * size follows `size`, not this prop.\n     */\n    headingLevel?: EmptyStateHeadingLevel;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "EmptyStateSize",
+      "kind": "alias",
+      "text": "'medium' | 'large'",
+      "description": "Overall scale: `medium` for an empty table/list region, `large` for a whole-page or first-run state.",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "FormControlCaptionProps",
+      "kind": "interface",
+      "text": "interface FormControlCaptionProps extends HTMLAttributes<HTMLSpanElement> {\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "FormControlLabelProps",
+      "kind": "interface",
+      "text": "interface FormControlLabelProps extends LabelHTMLAttributes<HTMLLabelElement> {\n    /** Visually hide the label but keep it for screen readers. */\n    visuallyHidden?: boolean;\n    /** Injected by FormControl — renders the required asterisk. */\n    required?: boolean;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "FormControlProps",
+      "kind": "interface",
+      "text": "interface FormControlProps extends HTMLAttributes<HTMLDivElement> {\n    /** Override the generated id shared by the label and field. */\n    id?: string;\n    /** Marks the field required (asterisk on the label + `required` on the input). */\n    required?: boolean;\n    /** Disables the field. */\n    disabled?: boolean;\n    /** Force the invalid state. Otherwise inferred from a `FormControl.Validation variant=\"error\"`. */\n    invalid?: boolean;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "FormControlValidationProps",
+      "kind": "interface",
+      "text": "interface FormControlValidationProps extends HTMLAttributes<HTMLSpanElement> {\n    /** Tone of the message. `error` also drives the field's invalid state. */\n    variant?: ValidationVariant;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "GridAlign",
+      "kind": "alias",
+      "text": "'start' | 'center' | 'end' | 'stretch'",
+      "description": "Block-axis alignment of items inside their row (maps to `align-items`).",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "GridGap",
+      "kind": "alias",
+      "text": "'none' | 'condensed' | 'normal' | 'spacious'",
+      "description": "Space between tracks, from the `space` scale (condensed=8, normal=16, spacious=24).",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "GridItemProps",
+      "kind": "interface",
+      "text": "interface GridItemProps extends HTMLAttributes<HTMLDivElement> {\n    /** Number of columns this item spans (`grid-column: span N`), fixed or per breakpoint. */\n    span?: GridResponsiveValue;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "GridProps",
+      "kind": "interface",
+      "text": "interface GridProps extends HTMLAttributes<HTMLDivElement> {\n    /**\n     * Number of equal-width columns, either fixed or per breakpoint, e.g. `{ base: 1, sm: 2, lg: 4 }`.\n     * Each column is `minmax(0, 1fr)` so long content can't blow the track out.\n     */\n    columns?: GridResponsiveValue;\n    /** Space between rows and columns, from the `space` scale (condensed=8, normal=16, spacious=24). */\n    gap?: GridGap;\n    /** Overrides the row spacing only, from the same scale; defaults to `gap`. */\n    rowGap?: GridGap;\n    /** Block-axis alignment of items within their row (maps to `align-items`). */\n    align?: GridAlign;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "GridResponsive",
+      "kind": "interface",
+      "text": "interface GridResponsive {\n    /** Value from 0 up (mobile-first). */\n    base?: number;\n    /** Value from `breakpoint-sm` (640px) up. */\n    sm?: number;\n    /** Value from `breakpoint-md` (960px) up. */\n    md?: number;\n    /** Value from `breakpoint-lg` (1280px) up. */\n    lg?: number;\n}",
+      "description": "A value per breakpoint. `base` applies from 0 up; `sm`/`md`/`lg` apply from `breakpoint-sm` (640),\n`breakpoint-md` (960) and `breakpoint-lg` (1280) upward. Missing steps inherit the previous one\n(lg → md → sm → base).",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "GridResponsiveValue",
+      "kind": "alias",
+      "text": "number | GridResponsive",
+      "description": "A single number (all breakpoints) or a per-breakpoint object.",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "HeadingElement",
+      "kind": "alias",
+      "text": "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'div' | 'span'",
+      "description": "Element rendered. Defaults to the `<h{level}>` matching `level`; pass a different tag when semantics and size differ.",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "HeadingLevel",
+      "kind": "alias",
+      "text": "1 | 2 | 3 | 4",
+      "description": "Visual size step on the display type scale (1 is the largest).",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "HeadingProps",
+      "kind": "interface",
+      "text": "interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {\n    /**\n     * Visual size on the type scale: 1 → `fontSize-5` (36), 2 → `fontSize-4` (28), 3 → `fontSize-3` (20),\n     * 4 → `fontSize-2` (16). Also picks the default element (`h1`…`h4`).\n     */\n    level?: HeadingLevel;\n    /**\n     * Element to render, so document semantics and visual size can differ (e.g. a level-1 look on an `h2`\n     * in a page that already has an `h1`).\n     * @default `h${level}`\n     */\n    as?: HeadingElement;\n    /** Clip overflowing text to a single line with an ellipsis. */\n    truncate?: boolean;\n    /** Heading text. */\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "IconButtonProps",
+      "kind": "interface",
+      "text": "interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {\n    /** The icon to render. This is the only visible content, so the button must also have an accessible name. */\n    icon: ReactNode;\n    /** Visual style of the button. Use `primary` for the single most important action per surface. */\n    variant?: IconButtonVariant;\n    /** Square control size (height = width), mapped to the control-height tokens. */\n    size?: IconButtonSize;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "IconButtonSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "IconButtonVariant",
+      "kind": "alias",
+      "text": "'default' | 'primary' | 'danger' | 'invisible'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "IconGlyphProps",
+      "kind": "alias",
+      "text": "Omit<IconProps, 'children'>",
+      "description": "Props accepted by every generated glyph (`SearchIcon`, `PlusIcon`, …): `IconProps` without `children`.",
+      "file": "Icon-CmPZjl_z.d.ts"
+    },
+    {
+      "name": "IconProps",
+      "kind": "interface",
+      "text": "interface IconProps extends Omit<SVGAttributes<SVGSVGElement>, 'children' | 'width' | 'height' | 'viewBox'> {\n    /**\n     * Rendered width and height in pixels. `16` sits on the text line inside controls (Button,\n     * IconButton, inputs); `20` for large controls and list rows; `24` for empty states, page headers\n     * and stat tiles.\n     */\n    size?: IconSize;\n    /**\n     * Accessible name. Set it ONLY when the icon carries meaning on its own (no adjacent text names\n     * it). When set the SVG gets `role=\"img\"` and `aria-label`; when absent the icon is decorative\n     * (`aria-hidden=\"true\"`) and the surrounding control must carry the name.\n     */\n    label?: string;\n    /**\n     * The glyph: SVG shape nodes (`<path>`, `<circle>`, …) drawn on Lucide's 24×24 grid. Consumers\n     * normally render a named glyph from `tenet-ui/icons` (`<SearchIcon />`) which supplies this.\n     */\n    children: ReactNode;\n}",
+      "description": "Props of the generic `Icon` wrapper. `width`, `height` and `viewBox` are owned by `size` so every\nicon in the system shares the same geometry; `children` are the glyph's SVG shape nodes.",
+      "file": "Icon-CmPZjl_z.d.ts"
+    },
+    {
+      "name": "IconSize",
+      "kind": "alias",
+      "text": "16 | 20 | 24",
+      "description": "Rendered size in CSS pixels. The glyph is always drawn on a 24×24 grid and scaled.",
+      "file": "Icon-CmPZjl_z.d.ts"
+    },
+    {
+      "name": "LabelProps",
+      "kind": "interface",
+      "text": "interface LabelProps extends HTMLAttributes<HTMLSpanElement> {\n    /** Semantic color scheme. Pick by meaning (success/danger/accent), not by raw color. */\n    variant?: LabelVariant;\n    /** Label size. */\n    size?: LabelSize;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "LabelSize",
+      "kind": "alias",
+      "text": "'small' | 'medium'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "LabelVariant",
+      "kind": "alias",
+      "text": "'default' | 'accent' | 'success' | 'danger' | 'attention' | 'muted'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "LinkProps",
+      "kind": "interface",
+      "text": "interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {\n    /** Use the muted foreground color instead of the accent color. */\n    muted?: boolean;\n    /** When the underline is shown. */\n    underline?: LinkUnderline;\n    /**\n     * Marks the link as leading off-site: sets `target=\"_blank\"` +\n     * `rel=\"noopener noreferrer\"` and appends a visually-hidden \" (opens in new tab)\"\n     * warning for screen-reader users.\n     */\n    external?: boolean;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "LinkUnderline",
+      "kind": "alias",
+      "text": "'hover' | 'always' | 'none'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "MenuAction",
+      "kind": "interface",
+      "text": "interface MenuAction {\n    type?: 'item';\n    /** Visible label. */\n    label: ReactNode;\n    /** Invoked when the item is chosen (menu then closes). */\n    onSelect: () => void;\n    /** Optional leading icon. */\n    icon?: ReactNode;\n    /** Disable this item. */\n    disabled?: boolean;\n    /** Render in the danger color for destructive actions. */\n    destructive?: boolean;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "MenuItem",
+      "kind": "alias",
+      "text": "MenuAction | MenuSeparator",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "MenuProps",
+      "kind": "interface",
+      "text": "interface MenuProps {\n    /** The trigger element (e.g. a Button). It is wired with the menu's aria + click handling. */\n    trigger: ReactElement;\n    /** The actions to show. */\n    items: MenuItem[];\n    /**\n     * Accessible name for the menu.\n     * @default trigger label\n     */\n    'aria-label'?: string;\n    /** Menu alignment relative to the trigger. */\n    align?: 'start' | 'end';\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "MenuSeparator",
+      "kind": "interface",
+      "text": "interface MenuSeparator {\n    type: 'separator';\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "NumberInputProps",
+      "kind": "interface",
+      "text": "interface NumberInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange'> {\n    /** Controlled value. Use `null`/`undefined` for an empty field. */\n    value?: number | null;\n    /** Uncontrolled initial value. */\n    defaultValue?: number | null;\n    /** Called with the parsed numeric value (or `null` when the field is cleared). */\n    onChange?: (value: number | null) => void;\n    /** Smallest allowed value. Stepping/clamping respects it. */\n    min?: number;\n    /** Largest allowed value. Stepping/clamping respects it. */\n    max?: number;\n    /** Increment applied by the steppers and arrow keys. */\n    step?: number;\n    /** Control height / font scale. */\n    size?: NumberInputSize;\n    /** Stretch the field to fill the available width. */\n    fullWidth?: boolean;\n    /**\n     * Stretch the field to fill the available width.\n     * @deprecated Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.\n     */\n    block?: boolean;\n    /** Mark the field as invalid (sets `aria-invalid` and a danger border). */\n    invalid?: boolean;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "NumberInputSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "PaginationProps",
+      "kind": "interface",
+      "text": "interface PaginationProps {\n    /** Current page (1-based). */\n    page: number;\n    /** Total number of pages. */\n    pageCount: number;\n    /** Called with the requested page when the user navigates. */\n    onPageChange: (page: number) => void;\n    /** How many page numbers to show around the current page. */\n    siblingCount?: number;\n    /**\n     * Accessible name for the nav landmark.\n     * @default Pagination\n     */\n    'aria-label'?: string;\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "PopoverPlacement",
+      "kind": "alias",
+      "text": "'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "PopoverProps",
+      "kind": "interface",
+      "text": "interface PopoverProps {\n    /**\n     * The trigger element (e.g. a Button). It is cloned and wired with\n     * `aria-haspopup=\"dialog\"`, `aria-expanded`, `aria-controls`, an onClick toggle,\n     * and a ref so focus can be restored to it on close.\n     */\n    trigger: ReactElement;\n    /** The floating content rendered inside the popover surface. */\n    children: ReactNode;\n    /** Where the surface is anchored relative to the trigger. */\n    placement?: PopoverPlacement;\n    /**\n     * Accessible name for the popover dialog (falls back to \"Popover\").\n     * @default Popover\n     */\n    'aria-label'?: string;\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ProgressBarProps",
+      "kind": "interface",
+      "text": "interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {\n    /**\n     * Current progress, from 0 to `max`. Values are clamped into range.\n     * Omit (or pass `undefined`) for an INDETERMINATE bar that shows an\n     * animated sweep instead of a fixed fill.\n     */\n    value?: number;\n    /** Upper bound of the scale. Defaults to 100. */\n    max?: number;\n    /** Track/fill height from the size scale. Defaults to 'medium'. */\n    size?: ProgressBarSize;\n    /** Fill color, mapped to the matching emphasis token. Defaults to 'accent'. */\n    variant?: ProgressBarVariant;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ProgressBarSize",
+      "kind": "alias",
+      "text": "'small' | 'medium'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ProgressBarVariant",
+      "kind": "alias",
+      "text": "'accent' | 'success' | 'danger'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "RadioGroupProps",
+      "kind": "interface",
+      "text": "interface RadioGroupProps extends Omit<HTMLAttributes<HTMLFieldSetElement>, 'onChange'> {\n    /** Shared form field name. Auto-generated if omitted. */\n    name?: string;\n    /** Group label (rendered as a fieldset legend). */\n    label: ReactNode;\n    /** Optional helper text for the whole group. */\n    caption?: ReactNode;\n    /** Controlled selected value. */\n    value?: string;\n    /** Uncontrolled initial selected value. */\n    defaultValue?: string;\n    /** Called with the newly selected value. */\n    onChange?: (value: string) => void;\n    /** Mark the group required (asterisk on the legend). */\n    required?: boolean;\n    /** Disable every radio in the group. */\n    disabled?: boolean;\n    /** Radio children. */\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "RadioProps",
+      "kind": "interface",
+      "text": "interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {\n    /** The value submitted when this radio is selected (required). */\n    value: string;\n    /** Visible label rendered next to the control. */\n    label?: ReactNode;\n    /** Optional helper text under the label. */\n    caption?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SegmentedControlOption",
+      "kind": "interface",
+      "text": "interface SegmentedControlOption {\n    /** Value reported on change. */\n    value: string;\n    /** Visible label. */\n    label: string;\n    /** Disable this segment. */\n    disabled?: boolean;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SegmentedControlProps",
+      "kind": "interface",
+      "text": "interface SegmentedControlProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {\n    /** The segments to choose from. */\n    options: SegmentedControlOption[];\n    /** Controlled selected value. */\n    value?: string;\n    /**\n     * Uncontrolled initial value.\n     * @default first enabled option\n     */\n    defaultValue?: string;\n    /** Called with the newly selected value. */\n    onChange?: (value: string) => void;\n    /** Control height / font scale. */\n    size?: SegmentedControlSize;\n    /** Stretch segments to fill the available width. */\n    fullWidth?: boolean;\n    /**\n     * Stretch segments to fill the available width.\n     * @deprecated Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.\n     */\n    block?: boolean;\n    /** Accessible name for the group (required for screen readers). */\n    'aria-label'?: string;\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SegmentedControlSize",
+      "kind": "alias",
+      "text": "'small' | 'medium'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SelectOption",
+      "kind": "interface",
+      "text": "interface SelectOption {\n    /** Value submitted / reported on change. */\n    value: string;\n    /** Visible option text. */\n    label: string;\n    /** Disable this option. */\n    disabled?: boolean;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SelectProps",
+      "kind": "interface",
+      "text": "interface SelectProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'value' | 'defaultValue'> {\n    /** The options to choose from. */\n    options: SelectOption[];\n    /** Controlled selected value. */\n    value?: string;\n    /** Uncontrolled initial value. */\n    defaultValue?: string;\n    /** Called with the newly selected value. */\n    onChange?: (value: string) => void;\n    /** Text shown when nothing is selected. */\n    placeholder?: string;\n    /** Control height / font scale. */\n    size?: SelectSize;\n    /** Stretch to fill the available width. */\n    fullWidth?: boolean;\n    /**\n     * Stretch to fill the available width.\n     * @deprecated Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.\n     */\n    block?: boolean;\n    /** Invalid state (danger border + aria-invalid). */\n    invalid?: boolean;\n    /** Disable the control. */\n    disabled?: boolean;\n    /** Required (sets aria-required; pairs with FormControl). */\n    required?: boolean;\n    /** Form field name — emits a hidden input so the value submits with a form. */\n    name?: string;\n    /** Id applied to the trigger (FormControl sets this automatically). */\n    id?: string;\n    className?: string;\n    'aria-label'?: string;\n    'aria-describedby'?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SelectSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SkeletonProps",
+      "kind": "interface",
+      "text": "interface SkeletonProps extends HTMLAttributes<HTMLSpanElement> {\n    /** Shape of the placeholder. `text` mimics a line of copy, `rect` a block, `circle` an avatar/icon. */\n    variant?: SkeletonVariant;\n    /** Width applied inline (number → px, string → as-is, e.g. '60%'). */\n    width?: string | number;\n    /** Height applied inline (number → px, string → as-is). For `circle` it mirrors width. */\n    height?: string | number;\n    /** Corner radius token. `circle` always renders as `full` regardless of this prop. */\n    radius?: SkeletonRadius;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SkeletonRadius",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large' | 'full'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SkeletonVariant",
+      "kind": "alias",
+      "text": "'text' | 'rect' | 'circle'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SortDirection",
+      "kind": "alias",
+      "text": "'ascending' | 'descending' | 'none'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SpinnerProps",
+      "kind": "interface",
+      "text": "interface SpinnerProps extends HTMLAttributes<HTMLSpanElement> {\n    /** Size from the scale. */\n    size?: SpinnerSize;\n    /** Accessible label announced to assistive tech (visually hidden). */\n    label?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SpinnerSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "StackAlign",
+      "kind": "alias",
+      "text": "'start' | 'center' | 'end' | 'stretch'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "StackDirection",
+      "kind": "alias",
+      "text": "'horizontal' | 'vertical'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "StackGap",
+      "kind": "alias",
+      "text": "'none' | 'condensed' | 'normal' | 'spacious'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "StackItemProps",
+      "kind": "interface",
+      "text": "interface StackItemProps extends HTMLAttributes<HTMLDivElement> {\n    /** Grow to fill the available space along the main axis. */\n    grow?: boolean;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "StackJustify",
+      "kind": "alias",
+      "text": "'start' | 'center' | 'end' | 'between'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "StackPadding",
+      "kind": "alias",
+      "text": "'none' | 'condensed' | 'normal' | 'spacious'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "StackProps",
+      "kind": "interface",
+      "text": "interface StackProps extends HTMLAttributes<HTMLDivElement> {\n    /** Main-axis direction. */\n    direction?: StackDirection;\n    /** Space between children, from the `space` scale (condensed=8, normal=16, spacious=24). */\n    gap?: StackGap;\n    /** Cross-axis alignment (maps to `align-items`). */\n    align?: StackAlign;\n    /** Main-axis distribution (maps to `justify-content`). */\n    justify?: StackJustify;\n    /** Allow children to wrap onto multiple lines. */\n    wrap?: boolean;\n    /** Inner padding, from the `space` scale. */\n    padding?: StackPadding;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SwitchProps",
+      "kind": "interface",
+      "text": "interface SwitchProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {\n    /** Visible label rendered next to the switch. */\n    label?: ReactNode;\n    /** Optional helper text under the label. */\n    caption?: ReactNode;\n    /** Control track / knob scale. */\n    size?: SwitchSize;\n    /** Mark the field as invalid (sets `aria-invalid` and a danger border). */\n    invalid?: boolean;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "SwitchSize",
+      "kind": "alias",
+      "text": "'small' | 'medium'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableActionsProps",
+      "kind": "interface",
+      "text": "interface TableActionsProps extends HTMLAttributes<HTMLDivElement> {\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableCellProps",
+      "kind": "interface",
+      "text": "interface TableCellProps extends Omit<TdHTMLAttributes<HTMLTableCellElement>, 'align'> {\n    /** Text alignment within the cell. */\n    align?: CellAlign;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableContainerProps",
+      "kind": "interface",
+      "text": "interface TableContainerProps extends HTMLAttributes<HTMLDivElement> {\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableDensity",
+      "kind": "alias",
+      "text": "'condensed' | 'normal' | 'spacious'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableHeaderProps",
+      "kind": "interface",
+      "text": "interface TableHeaderProps extends Omit<ThHTMLAttributes<HTMLTableCellElement>, 'align'> {\n    /** Text alignment within the header cell. */\n    align?: CellAlign;\n    /** When set, renders a sort indicator and exposes `aria-sort`. Combine with `onClick`. */\n    sortDirection?: SortDirection;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableProps",
+      "kind": "interface",
+      "text": "interface TableProps extends TableHTMLAttributes<HTMLTableElement> {\n    /** Row height / cell padding scale. */\n    density?: TableDensity;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableRowProps",
+      "kind": "interface",
+      "text": "interface TableRowProps extends HTMLAttributes<HTMLTableRowElement> {\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableSectionProps",
+      "kind": "interface",
+      "text": "interface TableSectionProps extends HTMLAttributes<HTMLTableSectionElement> {\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableSubtitleProps",
+      "kind": "interface",
+      "text": "interface TableSubtitleProps extends HTMLAttributes<HTMLParagraphElement> {\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TableTitleProps",
+      "kind": "interface",
+      "text": "interface TableTitleProps extends HTMLAttributes<HTMLHeadingElement> {\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TabPanelProps",
+      "kind": "interface",
+      "text": "interface TabPanelProps extends HTMLAttributes<HTMLDivElement> {\n    /** Value this panel is shown for. */\n    value: string;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TabProps",
+      "kind": "interface",
+      "text": "interface TabProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'value'> {\n    /** Value this tab selects — must match a `Tabs.Panel` value. */\n    value: string;\n    /** Disable this tab. */\n    disabled?: boolean;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TabsListProps",
+      "kind": "interface",
+      "text": "interface TabsListProps extends HTMLAttributes<HTMLDivElement> {\n    /** Accessible name for the tablist. */\n    'aria-label'?: string;\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TabsProps",
+      "kind": "interface",
+      "text": "interface TabsProps {\n    /** Controlled active tab value. */\n    value?: string;\n    /** Uncontrolled initial active tab value. */\n    defaultValue?: string;\n    /** Called when the active tab changes. */\n    onChange?: (value: string) => void;\n    children?: ReactNode;\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TagProps",
+      "kind": "interface",
+      "text": "interface TagProps extends HTMLAttributes<HTMLSpanElement> {\n    /**\n     * Semantic color scheme. Pick by meaning, never by raw color: `accent` for an active/selected token,\n     * `success` / `danger` / `attention` for status words, `muted` for a quiet neutral, `default` otherwise.\n     */\n    variant?: TagVariant;\n    /** Tag size. */\n    size?: TagSize;\n    /** Optional leading icon rendered before the label; decorative (aria-hidden). */\n    leadingIcon?: ReactNode;\n    /** The tag label content. */\n    children?: ReactNode;\n    /**\n     * When provided, renders a real remove button. Wire it to drop the tag from your collection.\n     * Tag does not remove itself — it has no internal state.\n     */\n    onRemove?: () => void;\n    /**\n     * Accessible label for the remove button when `children` is not a plain string.\n     * Falls back to the string children, otherwise \"Remove\".\n     */\n    removeLabel?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TagSize",
+      "kind": "alias",
+      "text": "'small' | 'medium'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TagVariant",
+      "kind": "alias",
+      "text": "'default' | 'accent' | 'success' | 'danger' | 'attention' | 'muted'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextAlign",
+      "kind": "alias",
+      "text": "'start' | 'center' | 'end'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextareaProps",
+      "kind": "interface",
+      "text": "interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'> {\n    /** Stretch to fill the available width. */\n    fullWidth?: boolean;\n    /**\n     * Stretch to fill the available width.\n     * @deprecated Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.\n     */\n    block?: boolean;\n    /** Mark the field invalid (sets aria-invalid and a danger border). */\n    invalid?: boolean;\n    /** Which directions the user may resize. */\n    resize?: TextareaResize;\n    /** Padding / font scale — matches TextInput so fields line up in a form. */\n    size?: TextareaSize;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextareaResize",
+      "kind": "alias",
+      "text": "'none' | 'vertical' | 'horizontal' | 'both'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextElement",
+      "kind": "alias",
+      "text": "'p' | 'span' | 'div' | 'label' | 'strong' | 'em'",
+      "description": "Element rendered. Block copy is a `p`; inline runs are `span`/`strong`/`em`; `label` for form captions.",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextInputProps",
+      "kind": "interface",
+      "text": "interface TextInputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {\n    /** Control height / font scale. */\n    size?: TextInputSize;\n    /** Stretch the field to fill the available width. */\n    fullWidth?: boolean;\n    /**\n     * Stretch the field to fill the available width.\n     * @deprecated Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.\n     */\n    block?: boolean;\n    /** Element rendered before the input (e.g. a search icon). */\n    leadingVisual?: ReactNode;\n    /** Element rendered after the input. */\n    trailingVisual?: ReactNode;\n    /** Mark the field as invalid (sets `aria-invalid` and a danger border). */\n    invalid?: boolean;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextInputSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextProps",
+      "kind": "interface",
+      "text": "interface TextProps extends HTMLAttributes<HTMLElement> {\n    /** Element to render. */\n    as?: TextElement;\n    /** Size on the body type scale (small=12, medium=14, large=16). */\n    size?: TextSize;\n    /** Semantic color: `muted` for secondary copy, status tones for validation and state messages. */\n    tone?: TextTone;\n    /** Font weight. */\n    weight?: TextWeight;\n    /** Clip overflowing text to a single line with an ellipsis. */\n    truncate?: boolean;\n    /** Horizontal text alignment (logical: `start`/`end` follow writing direction). */\n    align?: TextAlign;\n    /** Associates the text with a form control; only meaningful with `as=\"label\"`. */\n    htmlFor?: string;\n    /** Text content. */\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextSize",
+      "kind": "alias",
+      "text": "'small' | 'medium' | 'large'",
+      "description": "Body type scale: small → `fontSize-0` (12), medium → `fontSize-1` (14), large → `fontSize-2` (16).",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextTone",
+      "kind": "alias",
+      "text": "'default' | 'muted' | 'accent' | 'success' | 'danger' | 'attention'",
+      "description": "Semantic color, mapped to the `fgColor-*` tokens.",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TextWeight",
+      "kind": "alias",
+      "text": "'normal' | 'medium' | 'semibold'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ToastContextValue",
+      "kind": "interface",
+      "text": "interface ToastContextValue {\n    /** Show a toast; returns its id. */\n    toast: (options: ToastOptions) => string;\n    /** Dismiss a toast by id. */\n    dismiss: (id: string) => void;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ToastEntry",
+      "kind": "interface",
+      "text": "interface ToastEntry extends ToastOptions {\n    id: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ToastOptions",
+      "kind": "interface",
+      "text": "interface ToastOptions {\n    /** Semantic tone. */\n    variant?: ToastVariant;\n    /** Optional bold lead-in line. */\n    title?: ReactNode;\n    /** Main message. */\n    message: ReactNode;\n    /** Auto-dismiss after N ms. 0 keeps it until dismissed. */\n    duration?: number;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ToastProviderProps",
+      "kind": "interface",
+      "text": "interface ToastProviderProps {\n    /** Default auto-dismiss duration (ms) when an individual toast doesn't set one. */\n    duration?: number;\n    /** Viewport corner. */\n    placement?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';\n    children?: ReactNode;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ToastVariant",
+      "kind": "alias",
+      "text": "'info' | 'success' | 'warning' | 'danger'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TooltipPlacement",
+      "kind": "alias",
+      "text": "'top' | 'bottom' | 'left' | 'right'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "TooltipProps",
+      "kind": "interface",
+      "text": "interface TooltipProps {\n    /** Tooltip text/content. */\n    content: ReactNode;\n    /** Side of the trigger to render on. */\n    placement?: TooltipPlacement;\n    /** The single trigger element (must be focusable for keyboard users). */\n    children: ReactElement;\n    className?: string;\n}",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "ValidationVariant",
+      "kind": "alias",
+      "text": "'error' | 'success'",
+      "description": "",
+      "file": "index.d.ts"
+    },
+    {
+      "name": "WeekStart",
+      "kind": "alias",
+      "text": "0 | 1",
+      "description": "",
+      "file": "index.d.ts"
+    }
+  ],
+  "unclassified": []
+}

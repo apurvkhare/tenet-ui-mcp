@@ -1,0 +1,3075 @@
+{
+  "storybookVersion": "10.6.0",
+  "dsVersion": "0.4.0",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "generatedAt": "2026-09-12T14:14:33.789Z",
+  "entries": [
+    {
+      "storyId": "components-accordion--multiple",
+      "component": "Components/Accordion",
+      "name": "Multiple",
+      "importPath": "./src/components/Accordion/Accordion.stories.tsx",
+      "theme": "dark",
+      "file": "components-accordion--multiple.dark.png",
+      "sha256": "6d4f085f316456574bd5d047abd96290bd3ccd21f3b393033ec5624d59f6ad89",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-accordion--multiple",
+      "component": "Components/Accordion",
+      "name": "Multiple",
+      "importPath": "./src/components/Accordion/Accordion.stories.tsx",
+      "theme": "light",
+      "file": "components-accordion--multiple.light.png",
+      "sha256": "a89aa9a4fa60a216ebafa7da1f6c7bcbfe97c3ff5756b55bfb2f8f64eb838dbb",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-accordion--single",
+      "component": "Components/Accordion",
+      "name": "Single",
+      "importPath": "./src/components/Accordion/Accordion.stories.tsx",
+      "theme": "dark",
+      "file": "components-accordion--single.dark.png",
+      "sha256": "106c82a8713beffb468c42de896dd4f2f3a217d504766e23e8cac20c02e2537d",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-accordion--single",
+      "component": "Components/Accordion",
+      "name": "Single",
+      "importPath": "./src/components/Accordion/Accordion.stories.tsx",
+      "theme": "light",
+      "file": "components-accordion--single.light.png",
+      "sha256": "b643ed684a7fb1af97547ed59b9a8151718c905a7f3dbe15efe4f993b0a59517",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-avatar--image",
+      "component": "Components/Avatar",
+      "name": "Image",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "theme": "dark",
+      "file": "components-avatar--image.dark.png",
+      "sha256": "4fce7fdb0b79caae0cbfcdf109df18ee4aa0f59d9036aa200c26b947180da83a",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-avatar--image",
+      "component": "Components/Avatar",
+      "name": "Image",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "theme": "light",
+      "file": "components-avatar--image.light.png",
+      "sha256": "9a9e0d7e3eff202ff2a9a190f55b0c32adfba43e4b924e38cbcc991b246904a9",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-avatar--initials",
+      "component": "Components/Avatar",
+      "name": "Initials",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "theme": "dark",
+      "file": "components-avatar--initials.dark.png",
+      "sha256": "ed18b19d297c62e12c2f2d27165f19a8c2c2368f8f3096b4585a632c972807d1",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-avatar--initials",
+      "component": "Components/Avatar",
+      "name": "Initials",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "theme": "light",
+      "file": "components-avatar--initials.light.png",
+      "sha256": "eb2950ee1a068aab57896f4618356a2e823d9f30b8ca8879ae529f5a017af569",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-avatar--large",
+      "component": "Components/Avatar",
+      "name": "Large",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "theme": "dark",
+      "file": "components-avatar--large.dark.png",
+      "sha256": "9fb185d15e87e479f73ffcd9b6a3c70e249fbc4a876917b17d7bfef15ca4cc74",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-avatar--large",
+      "component": "Components/Avatar",
+      "name": "Large",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "theme": "light",
+      "file": "components-avatar--large.light.png",
+      "sha256": "a5597ebb8083e41e07a8a54037fec2efd5e2e78e00239030c473b328d8b388a5",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-avatar--org",
+      "component": "Components/Avatar",
+      "name": "Org (rounded)",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "theme": "dark",
+      "file": "components-avatar--org.dark.png",
+      "sha256": "9d7d5bdbd97af631d25f509cf6276b1f2b3288594da715f01f2dda33d589488a",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-avatar--org",
+      "component": "Components/Avatar",
+      "name": "Org (rounded)",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "theme": "light",
+      "file": "components-avatar--org.light.png",
+      "sha256": "8ed62170b1545920fb910d0cdc9cae69d6d22ce563c7ae17ea72896cb83f61b4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-badge--count",
+      "component": "Components/Badge",
+      "name": "Count",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "theme": "dark",
+      "file": "components-badge--count.dark.png",
+      "sha256": "9565dd72c2da5946c9712bfbb803a65623451dd25239bf96b207399a1177481d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-badge--count",
+      "component": "Components/Badge",
+      "name": "Count",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "theme": "light",
+      "file": "components-badge--count.light.png",
+      "sha256": "58d2e17875ef0ccc90afcb62199da9e5a29d37d25dcac0fa3cb336c06735ea6e",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-badge--default",
+      "component": "Components/Badge",
+      "name": "Default",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "theme": "dark",
+      "file": "components-badge--default.dark.png",
+      "sha256": "ed19b809ea5ad0c6670381a36233f7c9577a8d13e1f437bdd8160c35a06b2518",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-badge--default",
+      "component": "Components/Badge",
+      "name": "Default",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "theme": "light",
+      "file": "components-badge--default.light.png",
+      "sha256": "7d055bce2d550ea1fd619bf1bf1746352e3a6312869324dba36ac7f9fcbf4920",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-badge--dot",
+      "component": "Components/Badge",
+      "name": "Dot",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "theme": "dark",
+      "file": "components-badge--dot.dark.png",
+      "sha256": "d196c5cc6d5c8fd641691e644e6db340da36dcc6b66de00576eec148a0ed6e20",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-badge--dot",
+      "component": "Components/Badge",
+      "name": "Dot",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "theme": "light",
+      "file": "components-badge--dot.light.png",
+      "sha256": "80b5ea7ab30d753e77b39aa5daea843240a027ec486f805e2f8bb8b8765c2534",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-badge--overflow",
+      "component": "Components/Badge",
+      "name": "Overflow",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "theme": "dark",
+      "file": "components-badge--overflow.dark.png",
+      "sha256": "60b5b1be58c5f85dc0debfc0ecb1302d9e10cc89a12ff8fe69fee3936b095f3f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-badge--overflow",
+      "component": "Components/Badge",
+      "name": "Overflow",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "theme": "light",
+      "file": "components-badge--overflow.light.png",
+      "sha256": "a83fc3d4e3a207af62c3f25f2848a5b6e100f94b02705a2f83fe03248927bb00",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--danger",
+      "component": "Components/Banner",
+      "name": "Danger",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "dark",
+      "file": "components-banner--danger.dark.png",
+      "sha256": "3dab0cdd76aa3eb5e73b342d4d3bb8ea4687e37ce8b65ac69a2dd078ecd67dfd",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--danger",
+      "component": "Components/Banner",
+      "name": "Danger",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "light",
+      "file": "components-banner--danger.light.png",
+      "sha256": "784b5e313ee6ea436d95ed0e87bcad08502a97e0fc8f3d08bc673c5e335972f3",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--dismissible",
+      "component": "Components/Banner",
+      "name": "Dismissible",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "dark",
+      "file": "components-banner--dismissible.dark.png",
+      "sha256": "8b711bb56ccc82fe414ebb46cb15040cab4c8d5ddd1789fbff7361d53e0a26d6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--dismissible",
+      "component": "Components/Banner",
+      "name": "Dismissible",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "light",
+      "file": "components-banner--dismissible.light.png",
+      "sha256": "1850f4e9dcad33bfdb372dae826837f6e5ccffc9ac278ed370809bfdedc41dbb",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--info",
+      "component": "Components/Banner",
+      "name": "Info",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "dark",
+      "file": "components-banner--info.dark.png",
+      "sha256": "7fc6e48ba819b0a116aa351f70ed17a74a65bce9db4f72b338769a160e868799",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--info",
+      "component": "Components/Banner",
+      "name": "Info",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "light",
+      "file": "components-banner--info.light.png",
+      "sha256": "0cf177090ff0ea568373fa615aabd4e0830a128dee986204b8052f94fb98010b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--success",
+      "component": "Components/Banner",
+      "name": "Success",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "dark",
+      "file": "components-banner--success.dark.png",
+      "sha256": "c65f022cf0452a279dbcf9db16e0a2b52f9d2a9f6a06101e22b7ffc862e31a18",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--success",
+      "component": "Components/Banner",
+      "name": "Success",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "light",
+      "file": "components-banner--success.light.png",
+      "sha256": "50f3bab9b71de43f0347885b6b91be32b5e235f003a5fa772a0c85faea450fba",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--warning",
+      "component": "Components/Banner",
+      "name": "Warning",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "dark",
+      "file": "components-banner--warning.dark.png",
+      "sha256": "3e5c65105d7fb794e3de1a4a62acec2fa0eae0ea93a409bfca9f7d6f2645a036",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-banner--warning",
+      "component": "Components/Banner",
+      "name": "Warning",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "theme": "light",
+      "file": "components-banner--warning.light.png",
+      "sha256": "41384928d6e9fb7c83dba8923d357df73da3a4d74c0add7a072e9f4a731b686c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-breadcrumbs--chevron-separator",
+      "component": "Components/Breadcrumbs",
+      "name": "Chevron separator",
+      "importPath": "./src/components/Breadcrumbs/Breadcrumbs.stories.tsx",
+      "theme": "dark",
+      "file": "components-breadcrumbs--chevron-separator.dark.png",
+      "sha256": "a6f19877873330afc585b0480f08febcc409991a6e4edbff7e41d778883e6b6b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-breadcrumbs--chevron-separator",
+      "component": "Components/Breadcrumbs",
+      "name": "Chevron separator",
+      "importPath": "./src/components/Breadcrumbs/Breadcrumbs.stories.tsx",
+      "theme": "light",
+      "file": "components-breadcrumbs--chevron-separator.light.png",
+      "sha256": "3992ed8554d9b5609a8c6afe3cb19e512352548a6ab725875ec36f920dc4e5b2",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-breadcrumbs--default",
+      "component": "Components/Breadcrumbs",
+      "name": "Default",
+      "importPath": "./src/components/Breadcrumbs/Breadcrumbs.stories.tsx",
+      "theme": "dark",
+      "file": "components-breadcrumbs--default.dark.png",
+      "sha256": "331bbad55430820e5411114022aa70df6cba75219093477ef5cdf79178215f2b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-breadcrumbs--default",
+      "component": "Components/Breadcrumbs",
+      "name": "Default",
+      "importPath": "./src/components/Breadcrumbs/Breadcrumbs.stories.tsx",
+      "theme": "light",
+      "file": "components-breadcrumbs--default.light.png",
+      "sha256": "1cc36121417db9773c2f2be8ad4e49090b7b798ca35f035d03319c63ffc9d0be",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--danger",
+      "component": "Components/Button",
+      "name": "Danger",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "dark",
+      "file": "components-button--danger.dark.png",
+      "sha256": "ce68566f649b7044cff18b18304ac23abda67d54824b443888bd683585173d43",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--danger",
+      "component": "Components/Button",
+      "name": "Danger",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "light",
+      "file": "components-button--danger.light.png",
+      "sha256": "c21fd01e2b44e51e01151964e216ed43adbacbecb9f101e3294fa0a85fbe42ae",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--default",
+      "component": "Components/Button",
+      "name": "Default",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "dark",
+      "file": "components-button--default.dark.png",
+      "sha256": "ec0688d81a2b51b7a5837a1f8ec6585fe0ce2e39a0e9845e91ad4eefb0ea0299",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--default",
+      "component": "Components/Button",
+      "name": "Default",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "light",
+      "file": "components-button--default.light.png",
+      "sha256": "199dc8d4f8d70aeac27a64a3f2a261fdc4ef8b2f1faa9fe3a352058a2d926f4d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--invisible",
+      "component": "Components/Button",
+      "name": "Invisible",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "dark",
+      "file": "components-button--invisible.dark.png",
+      "sha256": "2421de07928878ce62af43c046a9bce49b2dabe1c324af79f56640df8156f88b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--invisible",
+      "component": "Components/Button",
+      "name": "Invisible",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "light",
+      "file": "components-button--invisible.light.png",
+      "sha256": "3b10964b865f63334fb1d163de687a363a5802ef2cdf3ef176a55b565ab59450",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--primary",
+      "component": "Components/Button",
+      "name": "Primary",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "dark",
+      "file": "components-button--primary.dark.png",
+      "sha256": "df88b00489a05d3cfa9eb613e9381f12f0b77436fa104bd6eadfb79121147872",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--primary",
+      "component": "Components/Button",
+      "name": "Primary",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "light",
+      "file": "components-button--primary.light.png",
+      "sha256": "74eb84ca4fa6f0304cb551c40698dcc9788af85df2d529fd15a96a1e7a06fc46",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--sizes",
+      "component": "Components/Button",
+      "name": "Sizes",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "dark",
+      "file": "components-button--sizes.dark.png",
+      "sha256": "babb52c9918239e904f3721395f4853f5897154ab946cf05ebafdbf78fd10af4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--sizes",
+      "component": "Components/Button",
+      "name": "Sizes",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "light",
+      "file": "components-button--sizes.light.png",
+      "sha256": "7aba881cb1c806e3389080a1ac5a25e142d341720433226801d2b86ba3adee9f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--with-leading-icon",
+      "component": "Components/Button",
+      "name": "With Leading Icon",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "dark",
+      "file": "components-button--with-leading-icon.dark.png",
+      "sha256": "d4c2b8b5837dae8ef48f4260976e3a3c906d477c499ca7f8d3d4d0d3fa4c463c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--with-leading-icon",
+      "component": "Components/Button",
+      "name": "With Leading Icon",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "light",
+      "file": "components-button--with-leading-icon.light.png",
+      "sha256": "81988fbc86a090bbf684e1b4a5c4c1becf3522cd0af394fa98aad61478306dee",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--with-trailing-icon",
+      "component": "Components/Button",
+      "name": "With Trailing Icon",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "dark",
+      "file": "components-button--with-trailing-icon.dark.png",
+      "sha256": "387cbebc8531df54e0c9260e04912e4330fd02de7dc21ea8647e5038648cd1c4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-button--with-trailing-icon",
+      "component": "Components/Button",
+      "name": "With Trailing Icon",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "theme": "light",
+      "file": "components-button--with-trailing-icon.light.png",
+      "sha256": "350e5cf24624b9d3da1f54c59ba763cb5ca656c06c0b3d4e5416e318743909d6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-calendar--default",
+      "component": "Components/Calendar",
+      "name": "Default",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "theme": "dark",
+      "file": "components-calendar--default.dark.png",
+      "sha256": "e7c23116aaccea6426335f7dd566ce418331e119eee70b0e17fd2b266c1e2bc0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-calendar--default",
+      "component": "Components/Calendar",
+      "name": "Default",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "theme": "light",
+      "file": "components-calendar--default.light.png",
+      "sha256": "e245b36cee3826e443e2fefd6e2a1141085d6d7dc506fbca387ef2dc44854b9b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-calendar--monday-start",
+      "component": "Components/Calendar",
+      "name": "Week starts Monday",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "theme": "dark",
+      "file": "components-calendar--monday-start.dark.png",
+      "sha256": "3213179ac40a80d6fcd36935ee9f5cd5354f8702cb6b49403e1322cc58f6bd9b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-calendar--monday-start",
+      "component": "Components/Calendar",
+      "name": "Week starts Monday",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "theme": "light",
+      "file": "components-calendar--monday-start.light.png",
+      "sha256": "5ee13c9b15923509657bd245282451f80f0295ce141987f4843e172a92e7ad0c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-calendar--with-range",
+      "component": "Components/Calendar",
+      "name": "With min / max",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "theme": "dark",
+      "file": "components-calendar--with-range.dark.png",
+      "sha256": "b11f5cb265deddac0bb477c37cb3e997df7cf74f83711e20d54a972e1f221aa4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-calendar--with-range",
+      "component": "Components/Calendar",
+      "name": "With min / max",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "theme": "light",
+      "file": "components-calendar--with-range.light.png",
+      "sha256": "dbe7746f735b5d3a093fddf47326ad8d27c1a3b4825a2edbee8ec61a4d708327",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-calendar--with-selection",
+      "component": "Components/Calendar",
+      "name": "With selection",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "theme": "dark",
+      "file": "components-calendar--with-selection.dark.png",
+      "sha256": "f7da4706e692d25fa642dddb709e9bfcd02220a817d756f37b965d6264f5d637",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-calendar--with-selection",
+      "component": "Components/Calendar",
+      "name": "With selection",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "theme": "light",
+      "file": "components-calendar--with-selection.light.png",
+      "sha256": "e8c5999beb181f3f40f180c15676a8d2cd28dbfaf22361a979c0dda0a0858c9d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-card--default",
+      "component": "Components/Card",
+      "name": "Default",
+      "importPath": "./src/components/Card/Card.stories.tsx",
+      "theme": "dark",
+      "file": "components-card--default.dark.png",
+      "sha256": "c32d6a54ba8fced877be1ea955c61673bad10cb0147cf52aa04096df89558655",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-card--default",
+      "component": "Components/Card",
+      "name": "Default",
+      "importPath": "./src/components/Card/Card.stories.tsx",
+      "theme": "light",
+      "file": "components-card--default.light.png",
+      "sha256": "c3f7750b0f04232951c90a05f4f1dec97e06da121f8f9fa2ec067b75ebe44a23",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-card--muted",
+      "component": "Components/Card",
+      "name": "Muted",
+      "importPath": "./src/components/Card/Card.stories.tsx",
+      "theme": "dark",
+      "file": "components-card--muted.dark.png",
+      "sha256": "461637626424ab41c9312be896f022faf182fdf5fc5874db4ddac03e3efdf7d5",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-card--muted",
+      "component": "Components/Card",
+      "name": "Muted",
+      "importPath": "./src/components/Card/Card.stories.tsx",
+      "theme": "light",
+      "file": "components-card--muted.light.png",
+      "sha256": "fe0177236a0cb028154ff9ddcfd14fc81a1f2ae1f28ef50d0fa166f696b8f9ff",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-checkbox--checked",
+      "component": "Components/Checkbox",
+      "name": "Checked",
+      "importPath": "./src/components/Checkbox/Checkbox.stories.tsx",
+      "theme": "dark",
+      "file": "components-checkbox--checked.dark.png",
+      "sha256": "d67685c35926cc59a377930d97a4428857fbc913b938eb757ef6d5bed2f2ed75",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-checkbox--checked",
+      "component": "Components/Checkbox",
+      "name": "Checked",
+      "importPath": "./src/components/Checkbox/Checkbox.stories.tsx",
+      "theme": "light",
+      "file": "components-checkbox--checked.light.png",
+      "sha256": "aa22f50e2a9fef9ae0f4e9233d4d8df8913a48ebb27677494df5606c0cc50e2d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-checkbox--default",
+      "component": "Components/Checkbox",
+      "name": "Default",
+      "importPath": "./src/components/Checkbox/Checkbox.stories.tsx",
+      "theme": "dark",
+      "file": "components-checkbox--default.dark.png",
+      "sha256": "3871581f1e92609210c774ef500fe41af207300cd67f94c7b268ff7c18d6cd74",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-checkbox--default",
+      "component": "Components/Checkbox",
+      "name": "Default",
+      "importPath": "./src/components/Checkbox/Checkbox.stories.tsx",
+      "theme": "light",
+      "file": "components-checkbox--default.light.png",
+      "sha256": "fad01a2db2074740e71a87b3debb3456e580b286a0505032e70efce24e37282c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-checkbox--with-caption",
+      "component": "Components/Checkbox",
+      "name": "With caption",
+      "importPath": "./src/components/Checkbox/Checkbox.stories.tsx",
+      "theme": "dark",
+      "file": "components-checkbox--with-caption.dark.png",
+      "sha256": "ba3e588dbc4f3ddb17e537a75a7d850de0b68b84a2628556bcda10045e23acb1",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-checkbox--with-caption",
+      "component": "Components/Checkbox",
+      "name": "With caption",
+      "importPath": "./src/components/Checkbox/Checkbox.stories.tsx",
+      "theme": "light",
+      "file": "components-checkbox--with-caption.light.png",
+      "sha256": "be40783e86bd6de2f19879f3923da58b0a06e18a1137da963c578a34e3b489ff",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datatable--default",
+      "component": "Components/DataTable",
+      "name": "Default",
+      "importPath": "./src/components/DataTable/DataTable.stories.tsx",
+      "theme": "dark",
+      "file": "components-datatable--default.dark.png",
+      "sha256": "435dc47bde62b1d4e44ecb011a975785c8dc97e0eeb47f43901ad6342d64a6b0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datatable--default",
+      "component": "Components/DataTable",
+      "name": "Default",
+      "importPath": "./src/components/DataTable/DataTable.stories.tsx",
+      "theme": "light",
+      "file": "components-datatable--default.light.png",
+      "sha256": "8aeb90c05ba41fe16550a5f5487249b4c85053770f9725cc568d630f318e702a",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datatable--search-only",
+      "component": "Components/DataTable",
+      "name": "Search only",
+      "importPath": "./src/components/DataTable/DataTable.stories.tsx",
+      "theme": "dark",
+      "file": "components-datatable--search-only.dark.png",
+      "sha256": "ef6df0ff26fd0e03cc0eb2c74e63fb4cdf19e1e8a66b69a32fe322f3a004981b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datatable--search-only",
+      "component": "Components/DataTable",
+      "name": "Search only",
+      "importPath": "./src/components/DataTable/DataTable.stories.tsx",
+      "theme": "light",
+      "file": "components-datatable--search-only.light.png",
+      "sha256": "e47eafe07b733596f8f9bb2b3d9287b58ed4e6fca9f026c6bc8860eac4b1c05b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datepicker--default",
+      "component": "Components/DatePicker",
+      "name": "Default",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "theme": "dark",
+      "file": "components-datepicker--default.dark.png",
+      "sha256": "1ac2b9652a47aee26ee521cecdc289d793440dbca2ddba4b54aa3eba1ae2f7ac",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-datepicker--default",
+      "component": "Components/DatePicker",
+      "name": "Default",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "theme": "light",
+      "file": "components-datepicker--default.light.png",
+      "sha256": "d766db7ac24408c24d5b0a3b5f59d862a9c9f42e64ba0ba23f7e9a3ec0b5a9d8",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-datepicker--disabled",
+      "component": "Components/DatePicker",
+      "name": "Disabled",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "theme": "dark",
+      "file": "components-datepicker--disabled.dark.png",
+      "sha256": "1cdda0165de6eea2bfa6d736516a624cc57b91037d60cd07e2bfc219822ea0b9",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datepicker--disabled",
+      "component": "Components/DatePicker",
+      "name": "Disabled",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "theme": "light",
+      "file": "components-datepicker--disabled.light.png",
+      "sha256": "ed26c05d15580f497c89bf46b72dcfd4caeb2656af9c6a89e1653fdd33b9b86a",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datepicker--with-range",
+      "component": "Components/DatePicker",
+      "name": "With min / max",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "theme": "dark",
+      "file": "components-datepicker--with-range.dark.png",
+      "sha256": "444919d760876db7a06b945c83942d324786134492300ca18c96f8797e9952a4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datepicker--with-range",
+      "component": "Components/DatePicker",
+      "name": "With min / max",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "theme": "light",
+      "file": "components-datepicker--with-range.light.png",
+      "sha256": "fd421cb08d8fc80e01491f204fffebd033eea1e3347325e42eb2d17fe288a039",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datepicker--with-value",
+      "component": "Components/DatePicker",
+      "name": "With value",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "theme": "dark",
+      "file": "components-datepicker--with-value.dark.png",
+      "sha256": "213cf0b85af5da055fc735fb78c36076d969e80af1fdadff94fca84b69261d9b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-datepicker--with-value",
+      "component": "Components/DatePicker",
+      "name": "With value",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "theme": "light",
+      "file": "components-datepicker--with-value.light.png",
+      "sha256": "0cdc3ca7866963fc4cc683d04b09d7344db73ad561ef2e1dc3cd2ed412bc37ca",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-dialog--default",
+      "component": "Components/Dialog",
+      "name": "Default",
+      "importPath": "./src/components/Dialog/Dialog.stories.tsx",
+      "theme": "dark",
+      "file": "components-dialog--default.dark.png",
+      "sha256": "6c29c668fb1b7ca5408e9fbf14acc713bdab92f935e180a4dca6c13324933278",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-dialog--default",
+      "component": "Components/Dialog",
+      "name": "Default",
+      "importPath": "./src/components/Dialog/Dialog.stories.tsx",
+      "theme": "light",
+      "file": "components-dialog--default.light.png",
+      "sha256": "5a09e79fd7d9100fe03cea4bd092929905a3104b4a2fe594bde6144397556d3c",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-divider--horizontal",
+      "component": "Components/Divider",
+      "name": "Horizontal",
+      "importPath": "./src/components/Divider/Divider.stories.tsx",
+      "theme": "dark",
+      "file": "components-divider--horizontal.dark.png",
+      "sha256": "d8ab476fde9cc8c56c6559a1f65a285f807181d7e0da87975ff896e01e12c3c8",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-divider--horizontal",
+      "component": "Components/Divider",
+      "name": "Horizontal",
+      "importPath": "./src/components/Divider/Divider.stories.tsx",
+      "theme": "light",
+      "file": "components-divider--horizontal.light.png",
+      "sha256": "884eec6bff78ca81fd2c1f52fc2a14479e6ce40e41b7a5a898bd29acf45948f9",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-divider--labelled",
+      "component": "Components/Divider",
+      "name": "Labelled",
+      "importPath": "./src/components/Divider/Divider.stories.tsx",
+      "theme": "dark",
+      "file": "components-divider--labelled.dark.png",
+      "sha256": "902464bd6f5b45e73fd13ceb8581af1c1b3805dac15bb8d291166b6361f89bd6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-divider--labelled",
+      "component": "Components/Divider",
+      "name": "Labelled",
+      "importPath": "./src/components/Divider/Divider.stories.tsx",
+      "theme": "light",
+      "file": "components-divider--labelled.light.png",
+      "sha256": "f539577a00b3a84e252f1771ee209d922408940f220c5b06866d387c38141311",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-divider--vertical",
+      "component": "Components/Divider",
+      "name": "Vertical",
+      "importPath": "./src/components/Divider/Divider.stories.tsx",
+      "theme": "dark",
+      "file": "components-divider--vertical.dark.png",
+      "sha256": "e840d4ee889303b234d2ca5f564aacbf730c219edcece03ad6954af77b62eb37",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-divider--vertical",
+      "component": "Components/Divider",
+      "name": "Vertical",
+      "importPath": "./src/components/Divider/Divider.stories.tsx",
+      "theme": "light",
+      "file": "components-divider--vertical.light.png",
+      "sha256": "6b17e829dcd5db39508ef613d7afd863b61079fbf25358318a848b237f3017ed",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--default",
+      "component": "Components/EmptyState",
+      "name": "Default",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "dark",
+      "file": "components-emptystate--default.dark.png",
+      "sha256": "fab0f70d24c54c8b984b6667f580e809f26338c01bbee639fa30c2c79da32e55",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--default",
+      "component": "Components/EmptyState",
+      "name": "Default",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "light",
+      "file": "components-emptystate--default.light.png",
+      "sha256": "8f90fa6aece394d6ff1fad8512dd55213b0d1ccd09d98c07fda0954c381b4e0e",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--large",
+      "component": "Components/EmptyState",
+      "name": "Large",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "dark",
+      "file": "components-emptystate--large.dark.png",
+      "sha256": "e534feb6c74c4507002069fdb88144cd334c3c36ab01af85bb45236e64abe9ca",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--large",
+      "component": "Components/EmptyState",
+      "name": "Large",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "light",
+      "file": "components-emptystate--large.light.png",
+      "sha256": "1236d28d179ea2fd6672211a8698c67c77049ad9ee16b0bfb28fbf594433d489",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--search-results",
+      "component": "Components/EmptyState",
+      "name": "Search results (composed)",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "dark",
+      "file": "components-emptystate--search-results.dark.png",
+      "sha256": "3195222f789d2d6f78c5e790cbef6da88dd9d4cb13a4971a64c1125ba648dcd6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--search-results",
+      "component": "Components/EmptyState",
+      "name": "Search results (composed)",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "light",
+      "file": "components-emptystate--search-results.light.png",
+      "sha256": "c28f2e3c9b85c16abc300193fae9d70e488d0a9a82b4c3fdd2161cc8ff9cc3f7",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--title-only",
+      "component": "Components/EmptyState",
+      "name": "Title only",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "dark",
+      "file": "components-emptystate--title-only.dark.png",
+      "sha256": "eb937db9fc6cd874ad212f535516af55d62b71e185211222e02a5f4f5191832d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--title-only",
+      "component": "Components/EmptyState",
+      "name": "Title only",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "light",
+      "file": "components-emptystate--title-only.light.png",
+      "sha256": "ec0c461fa67ce2f05e3f356c97d97ab14922989d0d46f7f67a97408f959bb0d6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--with-actions",
+      "component": "Components/EmptyState",
+      "name": "With actions",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "dark",
+      "file": "components-emptystate--with-actions.dark.png",
+      "sha256": "725764bbc035141c9b2b5fd4b85e01e67b161744899b40248227e1ea9db4bd47",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--with-actions",
+      "component": "Components/EmptyState",
+      "name": "With actions",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "light",
+      "file": "components-emptystate--with-actions.light.png",
+      "sha256": "0ec8ead3216468a5fd7e10dfa7f6f25199dbefc6ee10b03ef5515c9ab8c2d3cd",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--with-icon",
+      "component": "Components/EmptyState",
+      "name": "With icon",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "dark",
+      "file": "components-emptystate--with-icon.dark.png",
+      "sha256": "3506441f8207f40c6c82a69260b9bc3345cf3fe404627c27f643633880834cd2",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-emptystate--with-icon",
+      "component": "Components/EmptyState",
+      "name": "With icon",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "theme": "light",
+      "file": "components-emptystate--with-icon.light.png",
+      "sha256": "34642172d4795380600317aeaf1a80717dfa2c86dfaa0d4a60cadb1be00c34f0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-formcontrol--required-with-caption",
+      "component": "Components/FormControl",
+      "name": "Required with caption",
+      "importPath": "./src/components/FormControl/FormControl.stories.tsx",
+      "theme": "dark",
+      "file": "components-formcontrol--required-with-caption.dark.png",
+      "sha256": "415c5e7d8a0d965a4c06f4c8abdc15ec3ba0f153648b8bec40786b91cfba5ccc",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-formcontrol--required-with-caption",
+      "component": "Components/FormControl",
+      "name": "Required with caption",
+      "importPath": "./src/components/FormControl/FormControl.stories.tsx",
+      "theme": "light",
+      "file": "components-formcontrol--required-with-caption.light.png",
+      "sha256": "16ae8758ef02e0fa317c81091efb29bbf0bea3de66253633a2a5c11302f61acc",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-formcontrol--text-field",
+      "component": "Components/FormControl",
+      "name": "Text Field",
+      "importPath": "./src/components/FormControl/FormControl.stories.tsx",
+      "theme": "dark",
+      "file": "components-formcontrol--text-field.dark.png",
+      "sha256": "47dfa6075166e788860072451704c1632e60bd9f18dd1935bfb3eee37968b75f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-formcontrol--text-field",
+      "component": "Components/FormControl",
+      "name": "Text Field",
+      "importPath": "./src/components/FormControl/FormControl.stories.tsx",
+      "theme": "light",
+      "file": "components-formcontrol--text-field.light.png",
+      "sha256": "53dccb745d7dbfc5dcd9a3883d184fef7259929d784dcacfa0a7cd0b65a2b7b9",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-formcontrol--with-error",
+      "component": "Components/FormControl",
+      "name": "With error",
+      "importPath": "./src/components/FormControl/FormControl.stories.tsx",
+      "theme": "dark",
+      "file": "components-formcontrol--with-error.dark.png",
+      "sha256": "a53e1368f3b361fc825e0dafde56f19e970ae0f269448e480a517b5c4bcacce1",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-formcontrol--with-error",
+      "component": "Components/FormControl",
+      "name": "With error",
+      "importPath": "./src/components/FormControl/FormControl.stories.tsx",
+      "theme": "light",
+      "file": "components-formcontrol--with-error.light.png",
+      "sha256": "a1abb8b337c91d72c8d2157db500f05aa97470c39e0bb1695cea12cbc8d02483",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--align",
+      "component": "Components/Grid",
+      "name": "Align",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "dark",
+      "file": "components-grid--align.dark.png",
+      "sha256": "725457a655692035b8b798fba72ec82e22b9f3b422e47cd96a9c2d6e54b528aa",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--align",
+      "component": "Components/Grid",
+      "name": "Align",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "light",
+      "file": "components-grid--align.light.png",
+      "sha256": "5d858c40761ce39b5f44d42d2140f620715d64872c85a0fd2aa4a487f6766a73",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--fixed-columns",
+      "component": "Components/Grid",
+      "name": "Fixed columns",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "dark",
+      "file": "components-grid--fixed-columns.dark.png",
+      "sha256": "946bbdf936b6c85d410af687bde2c3996163ff9cb0ccdf427a4e35dcb32b9c5c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--fixed-columns",
+      "component": "Components/Grid",
+      "name": "Fixed columns",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "light",
+      "file": "components-grid--fixed-columns.light.png",
+      "sha256": "17e676bf67209535157b068dbf2f27df4efba5e69649b538584b534018967cab",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--gaps",
+      "component": "Components/Grid",
+      "name": "Gaps",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "dark",
+      "file": "components-grid--gaps.dark.png",
+      "sha256": "4e5ae2e03787be64dc185ba1bd764f397fe5fc33dd3002466987a3132ec6e105",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--gaps",
+      "component": "Components/Grid",
+      "name": "Gaps",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "light",
+      "file": "components-grid--gaps.light.png",
+      "sha256": "357cfcc0aa73c580f01d2a830c55cdd5428c06bd33718168666c82366333d913",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--item-span",
+      "component": "Components/Grid",
+      "name": "Grid.Item span",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "dark",
+      "file": "components-grid--item-span.dark.png",
+      "sha256": "5dba77eb398a75dedc581e986679d2224509a9198b66ae1b0ff0a8a30a2f51bc",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--item-span",
+      "component": "Components/Grid",
+      "name": "Grid.Item span",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "light",
+      "file": "components-grid--item-span.light.png",
+      "sha256": "fd04a41c7a2ab7c6ba17bdd0214abd6346495d81c2c68121daaec4c93d5d8f5c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--responsive-columns",
+      "component": "Components/Grid",
+      "name": "Responsive columns",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "dark",
+      "file": "components-grid--responsive-columns.dark.png",
+      "sha256": "39acb8dfa3292a4fa6793a1230bd7e56b558db27cbcf4cd215af96ca6a8f871a",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--responsive-columns",
+      "component": "Components/Grid",
+      "name": "Responsive columns",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "light",
+      "file": "components-grid--responsive-columns.light.png",
+      "sha256": "62a306627785f3ccd45c9778e65a78e8acfb72653b70c4bda5cd86856c238336",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--row-gap-override",
+      "component": "Components/Grid",
+      "name": "Row gap override",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "dark",
+      "file": "components-grid--row-gap-override.dark.png",
+      "sha256": "991bbd700f73c7619dafd8a616882c13c755ac93e4aebd23c39ade25dcb33e2d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--row-gap-override",
+      "component": "Components/Grid",
+      "name": "Row gap override",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "light",
+      "file": "components-grid--row-gap-override.light.png",
+      "sha256": "7d06ce4763d3be6ae32e969cf0be4f8659095a0e9ece74971a744f4bc686b8cc",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--stat-cards",
+      "component": "Components/Grid",
+      "name": "Stat cards (composed)",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "dark",
+      "file": "components-grid--stat-cards.dark.png",
+      "sha256": "7feadbbd90341a4ae90a0feffaf0979967037ef955e0b0f86dcca52e40523043",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-grid--stat-cards",
+      "component": "Components/Grid",
+      "name": "Stat cards (composed)",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "theme": "light",
+      "file": "components-grid--stat-cards.light.png",
+      "sha256": "e206d77bb8a61a194ace578059648ed87c2b8eac91863db13eb4ede5be305586",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--level-1",
+      "component": "Components/Heading",
+      "name": "Level 1",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "dark",
+      "file": "components-heading--level-1.dark.png",
+      "sha256": "bd9060389c47076fcb1f9a5ad144468a165becfabf37c38d488e77624092f40c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--level-1",
+      "component": "Components/Heading",
+      "name": "Level 1",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "light",
+      "file": "components-heading--level-1.light.png",
+      "sha256": "51723546968e3edee8875962f14fdc6c78e70c293f7d9bbe18c21ccda84929e9",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--level-2",
+      "component": "Components/Heading",
+      "name": "Level 2",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "dark",
+      "file": "components-heading--level-2.dark.png",
+      "sha256": "b6adb4cd715a6ea66740e57cbcc258e924ce9037af0ef3912626533fbf0ea7c2",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--level-2",
+      "component": "Components/Heading",
+      "name": "Level 2",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "light",
+      "file": "components-heading--level-2.light.png",
+      "sha256": "8f17d722e323bfc7b26e94d64d4c141c4608fba1830ea889376f70d3f18fe1b0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--level-3",
+      "component": "Components/Heading",
+      "name": "Level 3",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "dark",
+      "file": "components-heading--level-3.dark.png",
+      "sha256": "db273962414f93b2e3bdf6e6ea84f0a0fb17d320f405de965c3e35d5c00479e1",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--level-3",
+      "component": "Components/Heading",
+      "name": "Level 3",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "light",
+      "file": "components-heading--level-3.light.png",
+      "sha256": "99fb89f7280e9aa08eb42d52526bcf344958205ac72e83dcb3041bc6e61f9b44",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--level-4",
+      "component": "Components/Heading",
+      "name": "Level 4",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "dark",
+      "file": "components-heading--level-4.dark.png",
+      "sha256": "762182060f0ff2aafb369466e810814e89168fb191ca0489cae746e4c014673d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--level-4",
+      "component": "Components/Heading",
+      "name": "Level 4",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "light",
+      "file": "components-heading--level-4.light.png",
+      "sha256": "4e4200ef673d6e0c1883c61f1ce6a43a23bcc7c94381a7fd74bb593e88593e72",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--semantics-vs-size",
+      "component": "Components/Heading",
+      "name": "Semantics vs size (as)",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "dark",
+      "file": "components-heading--semantics-vs-size.dark.png",
+      "sha256": "c419b5b34146ebc27d616604fa9e6123075c6de97d029d758b4943c0af59e3e6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--semantics-vs-size",
+      "component": "Components/Heading",
+      "name": "Semantics vs size (as)",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "light",
+      "file": "components-heading--semantics-vs-size.light.png",
+      "sha256": "6276a71bc046fd58e10757f9580fd3fade19626cba823e2f9fbda89b902df447",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--truncate",
+      "component": "Components/Heading",
+      "name": "Truncate",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "dark",
+      "file": "components-heading--truncate.dark.png",
+      "sha256": "a9117dc685feecbe06095e5b9537152ee28a3db0f3ff5a1b1ca143f2634d3a10",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--truncate",
+      "component": "Components/Heading",
+      "name": "Truncate",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "light",
+      "file": "components-heading--truncate.light.png",
+      "sha256": "90717d784753f4b565f2b164aebbcb9429a43388b21c8e7a2daaa28ac0c007f4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--type-scale",
+      "component": "Components/Heading",
+      "name": "Type scale (composed)",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "dark",
+      "file": "components-heading--type-scale.dark.png",
+      "sha256": "b714305d9c2f9c3c7e57e2e2cc15ea28a488d8c2fd3d19c90950cba6f2eaac81",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-heading--type-scale",
+      "component": "Components/Heading",
+      "name": "Type scale (composed)",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "theme": "light",
+      "file": "components-heading--type-scale.light.png",
+      "sha256": "81e974960199b04cd2d14e41f5027bef1c67da1888e5a06ddb766de4167d8978",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--default",
+      "component": "Components/Icon",
+      "name": "Default",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "dark",
+      "file": "components-icon--default.dark.png",
+      "sha256": "4be4810b7e14abccd1816603567db9b8193268d9407492388b6fa244f5dff011",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--default",
+      "component": "Components/Icon",
+      "name": "Default",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "light",
+      "file": "components-icon--default.light.png",
+      "sha256": "174c14699ed99e25e682ea2432ff7843b41b34edf1f3d74b4519333fd3683b9d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--gallery",
+      "component": "Components/Icon",
+      "name": "Gallery",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "dark",
+      "file": "components-icon--gallery.dark.png",
+      "sha256": "256bec9e72ab7ab9b2c137f249d2b19b5f5c1439eb79e8c748a81dcde05c5588",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--gallery",
+      "component": "Components/Icon",
+      "name": "Gallery",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "light",
+      "file": "components-icon--gallery.light.png",
+      "sha256": "8048a1bd0bb55ab8e071625991c36dca8564966a07a21444ca552e747e0c718b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--in-button",
+      "component": "Components/Icon",
+      "name": "In Button",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "dark",
+      "file": "components-icon--in-button.dark.png",
+      "sha256": "b1a22815de01e4ac5cb164ae8f488e2a29445f22db71bd364ea1b4ea098e4e00",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--in-button",
+      "component": "Components/Icon",
+      "name": "In Button",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "light",
+      "file": "components-icon--in-button.light.png",
+      "sha256": "4d0daff248fc477e02e7a0d2334e8ad8553d1bdf1c673020c8a59bb7804bced7",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--in-icon-button",
+      "component": "Components/Icon",
+      "name": "In Icon Button",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "dark",
+      "file": "components-icon--in-icon-button.dark.png",
+      "sha256": "cb2bcce542d74291b662f4339fa1dc55dce8a335bff7a9a49da41dddf025387c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--in-icon-button",
+      "component": "Components/Icon",
+      "name": "In Icon Button",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "light",
+      "file": "components-icon--in-icon-button.light.png",
+      "sha256": "6e13d64691f4f90dc2bde95c8288508419d14ecebbb18873152e515501dc4cc7",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--labeled",
+      "component": "Components/Icon",
+      "name": "Labeled",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "dark",
+      "file": "components-icon--labeled.dark.png",
+      "sha256": "6ded80368d85926c268411888fd667c349a7085853803534bee3a231dc19c38b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--labeled",
+      "component": "Components/Icon",
+      "name": "Labeled",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "light",
+      "file": "components-icon--labeled.light.png",
+      "sha256": "a071906f01f57a6de830f4705aa15de15edfa33a2494eafc30ec9b6ca64ebe25",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--sizes",
+      "component": "Components/Icon",
+      "name": "Sizes",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "dark",
+      "file": "components-icon--sizes.dark.png",
+      "sha256": "1e538922ca1d642f7c29678f81d29e19f6ab09bf047dd35fbfd946ef8df1cc78",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-icon--sizes",
+      "component": "Components/Icon",
+      "name": "Sizes",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "theme": "light",
+      "file": "components-icon--sizes.light.png",
+      "sha256": "55ff3137033df6a8dbba8141c5e55b6529865bd54adcec0004cd0ca0307ecbfa",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--danger",
+      "component": "Components/IconButton",
+      "name": "Danger",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "dark",
+      "file": "components-iconbutton--danger.dark.png",
+      "sha256": "b91b15b461b0d39abff695ea47f4c88fc956e68ce3d9f66fcae24cce4afc09d8",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--danger",
+      "component": "Components/IconButton",
+      "name": "Danger",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "light",
+      "file": "components-iconbutton--danger.light.png",
+      "sha256": "b2730d456bc58b0b350fa757e28cc02b886c0b157a3a47ee64bf8814b37aa66f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--default",
+      "component": "Components/IconButton",
+      "name": "Default",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "dark",
+      "file": "components-iconbutton--default.dark.png",
+      "sha256": "0a42f55092555d8653042d55bc42b2882ed7ab25c435fcfa7fc63f3ab2d19a19",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--default",
+      "component": "Components/IconButton",
+      "name": "Default",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "light",
+      "file": "components-iconbutton--default.light.png",
+      "sha256": "d7590643be87e1c41eb260f8be9174b9930e5cbbfef4a2029fbe74ec95ee1dae",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--invisible",
+      "component": "Components/IconButton",
+      "name": "Invisible",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "dark",
+      "file": "components-iconbutton--invisible.dark.png",
+      "sha256": "2efcbc9c743fa001d0c0316a83a5905566598649c5ca741cfaf500d3f066e5fe",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--invisible",
+      "component": "Components/IconButton",
+      "name": "Invisible",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "light",
+      "file": "components-iconbutton--invisible.light.png",
+      "sha256": "966edfb2aecebf396cbbb08dcecda08d764153d2ff7d3f646a9bf6af25c297d0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--primary",
+      "component": "Components/IconButton",
+      "name": "Primary",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "dark",
+      "file": "components-iconbutton--primary.dark.png",
+      "sha256": "5464ffdcd96c2fa928fe3b4b4da022864ed330f458573f7e82064ea26ae7881f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--primary",
+      "component": "Components/IconButton",
+      "name": "Primary",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "light",
+      "file": "components-iconbutton--primary.light.png",
+      "sha256": "12b44a6ed8cb843ac28ea601b6d1a6659c855d734cb6acffe80a3ef41490fd7a",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--sizes",
+      "component": "Components/IconButton",
+      "name": "Sizes",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "dark",
+      "file": "components-iconbutton--sizes.dark.png",
+      "sha256": "c7751aaac7ec73e327f7b75b2417d8fdccba50f5bc2de327b4b232176c3031ea",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-iconbutton--sizes",
+      "component": "Components/IconButton",
+      "name": "Sizes",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "theme": "light",
+      "file": "components-iconbutton--sizes.light.png",
+      "sha256": "4946e360c9e1f2f565ece2692b82c0009fa798e15106ddc85cb23faea70e8ed0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-label--default",
+      "component": "Components/Label",
+      "name": "Default",
+      "importPath": "./src/components/Label/Label.stories.tsx",
+      "theme": "dark",
+      "file": "components-label--default.dark.png",
+      "sha256": "10140bc9ab55563d402c7faeabd70069b829ce4ee4c7d7ff74827b35a684a170",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-label--default",
+      "component": "Components/Label",
+      "name": "Default",
+      "importPath": "./src/components/Label/Label.stories.tsx",
+      "theme": "light",
+      "file": "components-label--default.light.png",
+      "sha256": "6d1c552c1ec4942e67364514678e63c1e46a3530202b0798b726525f4290aa6c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-label--sizes",
+      "component": "Components/Label",
+      "name": "Sizes",
+      "importPath": "./src/components/Label/Label.stories.tsx",
+      "theme": "dark",
+      "file": "components-label--sizes.dark.png",
+      "sha256": "e1d4a0465598af73ad88c6fac42ead923e3f4a3e637bf20180902a795e64b7b0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-label--sizes",
+      "component": "Components/Label",
+      "name": "Sizes",
+      "importPath": "./src/components/Label/Label.stories.tsx",
+      "theme": "light",
+      "file": "components-label--sizes.light.png",
+      "sha256": "0af661eeaf3e9fdb30f740d4dc2613364b46c77541b76b33c62e3e6a30dc7138",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-label--variants",
+      "component": "Components/Label",
+      "name": "Variants",
+      "importPath": "./src/components/Label/Label.stories.tsx",
+      "theme": "dark",
+      "file": "components-label--variants.dark.png",
+      "sha256": "0115d87ff9e19696fa01b326cef9afa712cce15279e3394df0e73056d596ea3f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-label--variants",
+      "component": "Components/Label",
+      "name": "Variants",
+      "importPath": "./src/components/Label/Label.stories.tsx",
+      "theme": "light",
+      "file": "components-label--variants.light.png",
+      "sha256": "f80992e34d28716af48e3b6859172efd2acca061cd2f7c3eaf54e9cecfa717b5",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--always-underlined",
+      "component": "Components/Link",
+      "name": "Always underlined",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "dark",
+      "file": "components-link--always-underlined.dark.png",
+      "sha256": "8c025f496394002b9e66c1552cd012981236ff38825f7f3dee202a80fe9c6e55",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--always-underlined",
+      "component": "Components/Link",
+      "name": "Always underlined",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "light",
+      "file": "components-link--always-underlined.light.png",
+      "sha256": "cf64fc4baa9c2be2b01223c725b6afa04360a5002c73ea203ffcbe4b4d0b050b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--default",
+      "component": "Components/Link",
+      "name": "Default",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "dark",
+      "file": "components-link--default.dark.png",
+      "sha256": "3b693167532a722c1a0484fcd499a0b30261333854fc5d21f902926fcc4670a4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--default",
+      "component": "Components/Link",
+      "name": "Default",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "light",
+      "file": "components-link--default.light.png",
+      "sha256": "dccf94ffd81e9b85848861883db07e017d6f9e82301bd3207d67a6881a55c4ed",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--external",
+      "component": "Components/Link",
+      "name": "External",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "dark",
+      "file": "components-link--external.dark.png",
+      "sha256": "37c614bf7b5b18923d7700a3a2ad9609d237b570079cd79b00b0feff23aafb89",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--external",
+      "component": "Components/Link",
+      "name": "External",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "light",
+      "file": "components-link--external.light.png",
+      "sha256": "378986045b26b11bb946976ec7d117bcab4d5705029c14fc9d62ee7b6aa3bef7",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--muted",
+      "component": "Components/Link",
+      "name": "Muted",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "dark",
+      "file": "components-link--muted.dark.png",
+      "sha256": "9b148181dc718d4584c52df5bae255ac2a6cff841ed3aad93c580fc5ec48b7ca",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--muted",
+      "component": "Components/Link",
+      "name": "Muted",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "light",
+      "file": "components-link--muted.light.png",
+      "sha256": "58c7e7c9f615fa1378f88e946d3bef5cf90daf57ceb7c887904356b9b3e0e6e8",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--no-underline",
+      "component": "Components/Link",
+      "name": "No underline",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "dark",
+      "file": "components-link--no-underline.dark.png",
+      "sha256": "3b693167532a722c1a0484fcd499a0b30261333854fc5d21f902926fcc4670a4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-link--no-underline",
+      "component": "Components/Link",
+      "name": "No underline",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "theme": "light",
+      "file": "components-link--no-underline.light.png",
+      "sha256": "dccf94ffd81e9b85848861883db07e017d6f9e82301bd3207d67a6881a55c4ed",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-menu--default",
+      "component": "Components/Menu",
+      "name": "Default",
+      "importPath": "./src/components/Menu/Menu.stories.tsx",
+      "theme": "dark",
+      "file": "components-menu--default.dark.png",
+      "sha256": "569991359745ebc301cc2840ac87d8c07e58b22f697059caad02507e29bf02dd",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-menu--default",
+      "component": "Components/Menu",
+      "name": "Default",
+      "importPath": "./src/components/Menu/Menu.stories.tsx",
+      "theme": "light",
+      "file": "components-menu--default.light.png",
+      "sha256": "7bb92a2110285b2dc7c736d0b91e4a298bbea9d877f97b4b2ca26c12e8b5b9e0",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-numberinput--default",
+      "component": "Components/NumberInput",
+      "name": "Default",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "theme": "dark",
+      "file": "components-numberinput--default.dark.png",
+      "sha256": "6320a96898198aafef29ba4cb5a2600b988b86351d6483115a6d06e05d5d3b7f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-numberinput--default",
+      "component": "Components/NumberInput",
+      "name": "Default",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "theme": "light",
+      "file": "components-numberinput--default.light.png",
+      "sha256": "6084af263a7e22e0f33d6cb6d8a9dec7e97a0076066aba5c75fee13e2659cf91",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-numberinput--disabled",
+      "component": "Components/NumberInput",
+      "name": "Disabled",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "theme": "dark",
+      "file": "components-numberinput--disabled.dark.png",
+      "sha256": "9808299a215af6f8e5a031030f6aa9d4ed59415878589922ddd8721e0e59aca6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-numberinput--disabled",
+      "component": "Components/NumberInput",
+      "name": "Disabled",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "theme": "light",
+      "file": "components-numberinput--disabled.light.png",
+      "sha256": "98470c658318e1a452c4d823993f25c08010f2270ec6c63a2e7cdd6dcbd2e41e",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-numberinput--empty",
+      "component": "Components/NumberInput",
+      "name": "Empty",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "theme": "dark",
+      "file": "components-numberinput--empty.dark.png",
+      "sha256": "ab2a5f59c7a881db982229d8096ccfa0784b11b2c775ec8b24cf4c2343da8fa7",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-numberinput--empty",
+      "component": "Components/NumberInput",
+      "name": "Empty",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "theme": "light",
+      "file": "components-numberinput--empty.light.png",
+      "sha256": "51e19de8aea026c2ded4846284bce89f536d96c53ff637eb1bd3facf0faec959",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-numberinput--with-range",
+      "component": "Components/NumberInput",
+      "name": "With min / max / step",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "theme": "dark",
+      "file": "components-numberinput--with-range.dark.png",
+      "sha256": "02bf148fc34e740cc5458b3c85661d6975d03821f97ba1f1f6704f54c9c87912",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-numberinput--with-range",
+      "component": "Components/NumberInput",
+      "name": "With min / max / step",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "theme": "light",
+      "file": "components-numberinput--with-range.light.png",
+      "sha256": "d4a9b6811e5f048e0ea9f30cc00cee7fa5ed662f6f56179c4409a0dee078ddb8",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-pagination--default",
+      "component": "Components/Pagination",
+      "name": "Default",
+      "importPath": "./src/components/Pagination/Pagination.stories.tsx",
+      "theme": "dark",
+      "file": "components-pagination--default.dark.png",
+      "sha256": "2314e437422650ebbfda48424f36ba719411369c19b3e0fc5b6da2da24a73821",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-pagination--default",
+      "component": "Components/Pagination",
+      "name": "Default",
+      "importPath": "./src/components/Pagination/Pagination.stories.tsx",
+      "theme": "light",
+      "file": "components-pagination--default.light.png",
+      "sha256": "a96c1f726a4a0246e6bb70124cb8ffebe9310675a44d79efea85c351c781e29e",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-pagination--many-pages",
+      "component": "Components/Pagination",
+      "name": "Many pages",
+      "importPath": "./src/components/Pagination/Pagination.stories.tsx",
+      "theme": "dark",
+      "file": "components-pagination--many-pages.dark.png",
+      "sha256": "b46fea2a7e51806655842e58829bd129518f7c438379fd29a708830d19845e86",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-pagination--many-pages",
+      "component": "Components/Pagination",
+      "name": "Many pages",
+      "importPath": "./src/components/Pagination/Pagination.stories.tsx",
+      "theme": "light",
+      "file": "components-pagination--many-pages.light.png",
+      "sha256": "b9491f83369abf0ed51256386c263cdfc877a4aa8ef40e430ff3074ed550e6c4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-popover--default",
+      "component": "Components/Popover",
+      "name": "Default",
+      "importPath": "./src/components/Popover/Popover.stories.tsx",
+      "theme": "dark",
+      "file": "components-popover--default.dark.png",
+      "sha256": "6855cdfb9af2e0e6647c4a1ac5685979f8117e90436583e35d50ea41ad974ff2",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-popover--default",
+      "component": "Components/Popover",
+      "name": "Default",
+      "importPath": "./src/components/Popover/Popover.stories.tsx",
+      "theme": "light",
+      "file": "components-popover--default.light.png",
+      "sha256": "7fc69e32a5f5b36df09b0467f364860738d82cba74f2dab0efc7176ac66b2665",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-popover--top-end",
+      "component": "Components/Popover",
+      "name": "Top End",
+      "importPath": "./src/components/Popover/Popover.stories.tsx",
+      "theme": "dark",
+      "file": "components-popover--top-end.dark.png",
+      "sha256": "b9493866c461f95d7e05a9bdcc1a9f6dbb1b9c4b9c392fcbac18a3a30bf4a6c6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-popover--top-end",
+      "component": "Components/Popover",
+      "name": "Top End",
+      "importPath": "./src/components/Popover/Popover.stories.tsx",
+      "theme": "light",
+      "file": "components-popover--top-end.light.png",
+      "sha256": "9865f1351fdfc78a7ee91cc089ab4435752a0cbfcdada5388f6ac4a0d2ea80c9",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-progressbar--default",
+      "component": "Components/ProgressBar",
+      "name": "Default",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "theme": "dark",
+      "file": "components-progressbar--default.dark.png",
+      "sha256": "22d48b201ed815e1c05c72f01408e3f6e0a6f31b6a5c948073de8f60a391e308",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-progressbar--default",
+      "component": "Components/ProgressBar",
+      "name": "Default",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "theme": "light",
+      "file": "components-progressbar--default.light.png",
+      "sha256": "d95fcc83295077bc5a1eeda52ebf11a52cf009efdeb2879418c9cae79cd2c00b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-progressbar--indeterminate",
+      "component": "Components/ProgressBar",
+      "name": "Indeterminate",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "theme": "dark",
+      "file": "components-progressbar--indeterminate.dark.png",
+      "sha256": "e41868ee90cb07956d4f1e2fcbdd93b3887ea74b1e5d6279d5dcfabe711c2777",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-progressbar--indeterminate",
+      "component": "Components/ProgressBar",
+      "name": "Indeterminate",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "theme": "light",
+      "file": "components-progressbar--indeterminate.light.png",
+      "sha256": "6dccc2e8fc4218fa03e97acdb2ee3e7402eeced9387f42d0b71c47881e8a926e",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-progressbar--small",
+      "component": "Components/ProgressBar",
+      "name": "Small",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "theme": "dark",
+      "file": "components-progressbar--small.dark.png",
+      "sha256": "08e87c1d8c7818cd6b94cc7c19b46a508f46e1b57583182cb11d8a2645cb061b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-progressbar--small",
+      "component": "Components/ProgressBar",
+      "name": "Small",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "theme": "light",
+      "file": "components-progressbar--small.light.png",
+      "sha256": "fd27ac57ba265b7cfd86f4405ced542ba2e7b3e43ba216b3a1661e7078f37e0f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-progressbar--variants",
+      "component": "Components/ProgressBar",
+      "name": "Variants",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "theme": "dark",
+      "file": "components-progressbar--variants.dark.png",
+      "sha256": "4ca71863c419e1a5e17dc6a2eda72136922f6ea0df7dcec2732907d10be13b9d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-progressbar--variants",
+      "component": "Components/ProgressBar",
+      "name": "Variants",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "theme": "light",
+      "file": "components-progressbar--variants.light.png",
+      "sha256": "9f8fa274ab08792493eab4de3b09d55a18f5ff65c0cb3be0b8f5f151642f0153",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-radiogroup--default",
+      "component": "Components/RadioGroup",
+      "name": "Default",
+      "importPath": "./src/components/Radio/Radio.stories.tsx",
+      "theme": "dark",
+      "file": "components-radiogroup--default.dark.png",
+      "sha256": "69008a3b34662cf4240cbbb433cebb3f4a23a1f07a798e03df63b06c227a5292",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-radiogroup--default",
+      "component": "Components/RadioGroup",
+      "name": "Default",
+      "importPath": "./src/components/Radio/Radio.stories.tsx",
+      "theme": "light",
+      "file": "components-radiogroup--default.light.png",
+      "sha256": "d72dd48a7678d73b9844e4a96ac3b211e3867b3e851eb21986448ff0b85da6fc",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-radiogroup--with-captions",
+      "component": "Components/RadioGroup",
+      "name": "With captions",
+      "importPath": "./src/components/Radio/Radio.stories.tsx",
+      "theme": "dark",
+      "file": "components-radiogroup--with-captions.dark.png",
+      "sha256": "efb26b9b7678b7d2f4f0b49e949ef767841b15461331484a3464f8493925a8f1",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-radiogroup--with-captions",
+      "component": "Components/RadioGroup",
+      "name": "With captions",
+      "importPath": "./src/components/Radio/Radio.stories.tsx",
+      "theme": "light",
+      "file": "components-radiogroup--with-captions.light.png",
+      "sha256": "efd61c7e97c30392a050c1d3e7758afdb231e08dfb873397c41499506b7bd983",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-segmentedcontrol--default",
+      "component": "Components/SegmentedControl",
+      "name": "Default",
+      "importPath": "./src/components/SegmentedControl/SegmentedControl.stories.tsx",
+      "theme": "dark",
+      "file": "components-segmentedcontrol--default.dark.png",
+      "sha256": "ea7b1752606a24969e3893bb4a903742f7baf343b944d4b0d282aa4b35e7c522",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-segmentedcontrol--default",
+      "component": "Components/SegmentedControl",
+      "name": "Default",
+      "importPath": "./src/components/SegmentedControl/SegmentedControl.stories.tsx",
+      "theme": "light",
+      "file": "components-segmentedcontrol--default.light.png",
+      "sha256": "0b0b2032c7d98ec3ff41baf891c6b0655db9ed1f85bb278c403071bb06fc77cb",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-segmentedcontrol--small",
+      "component": "Components/SegmentedControl",
+      "name": "Small",
+      "importPath": "./src/components/SegmentedControl/SegmentedControl.stories.tsx",
+      "theme": "dark",
+      "file": "components-segmentedcontrol--small.dark.png",
+      "sha256": "2b9582aad2b2964cd6aeb04aac0b817493d00ded05dc3819fe04d94ce7c1525f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-segmentedcontrol--small",
+      "component": "Components/SegmentedControl",
+      "name": "Small",
+      "importPath": "./src/components/SegmentedControl/SegmentedControl.stories.tsx",
+      "theme": "light",
+      "file": "components-segmentedcontrol--small.light.png",
+      "sha256": "e20caa45b2d7e27bfc3560ed61fc2775bca5b1d9e0fdf4fc3d4159b55f50903e",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-segmentedcontrol--with-disabled",
+      "component": "Components/SegmentedControl",
+      "name": "With disabled segment",
+      "importPath": "./src/components/SegmentedControl/SegmentedControl.stories.tsx",
+      "theme": "dark",
+      "file": "components-segmentedcontrol--with-disabled.dark.png",
+      "sha256": "c7ba9fdb3d8ac8d2dd3be1b8b34e37cd3a524934af764c9516a30d165ab992ad",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-segmentedcontrol--with-disabled",
+      "component": "Components/SegmentedControl",
+      "name": "With disabled segment",
+      "importPath": "./src/components/SegmentedControl/SegmentedControl.stories.tsx",
+      "theme": "light",
+      "file": "components-segmentedcontrol--with-disabled.light.png",
+      "sha256": "77a09db56e3cd7a1168218b80953fdc01379e82291fbc685274592d20055a598",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-select--default",
+      "component": "Components/Select",
+      "name": "Default",
+      "importPath": "./src/components/Select/Select.stories.tsx",
+      "theme": "dark",
+      "file": "components-select--default.dark.png",
+      "sha256": "30897f8722461979ba4fe0ba110db224ed0f4927ea675da34bb9a57761211f6d",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-select--default",
+      "component": "Components/Select",
+      "name": "Default",
+      "importPath": "./src/components/Select/Select.stories.tsx",
+      "theme": "light",
+      "file": "components-select--default.light.png",
+      "sha256": "ee9078df56b1987eb99eeec17b52b0aae1e30c564583377e6b2dfea5dc4984c4",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-select--with-disabled-option",
+      "component": "Components/Select",
+      "name": "With disabled option",
+      "importPath": "./src/components/Select/Select.stories.tsx",
+      "theme": "dark",
+      "file": "components-select--with-disabled-option.dark.png",
+      "sha256": "cf8ae308258ed3221aebee57cbd239f2e32e3d05cc0aefcc385694dff839c8a2",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-select--with-disabled-option",
+      "component": "Components/Select",
+      "name": "With disabled option",
+      "importPath": "./src/components/Select/Select.stories.tsx",
+      "theme": "light",
+      "file": "components-select--with-disabled-option.light.png",
+      "sha256": "d5617db9cde507b2496085a0c675097aefb0bcccca0676551469e47a0ed489b0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-select--with-placeholder",
+      "component": "Components/Select",
+      "name": "With placeholder",
+      "importPath": "./src/components/Select/Select.stories.tsx",
+      "theme": "dark",
+      "file": "components-select--with-placeholder.dark.png",
+      "sha256": "4e2eca5d2d2a467b75ae65f063d2a4cff6e5833930258317efa5fd8acb7cca94",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-select--with-placeholder",
+      "component": "Components/Select",
+      "name": "With placeholder",
+      "importPath": "./src/components/Select/Select.stories.tsx",
+      "theme": "light",
+      "file": "components-select--with-placeholder.light.png",
+      "sha256": "61c844c89e670ffa4350c25796a0adeaee490157e6e030be2a6e02b9aae95808",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--card",
+      "component": "Components/Skeleton",
+      "name": "Card",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "dark",
+      "file": "components-skeleton--card.dark.png",
+      "sha256": "a7de2b6b50e9ff7704fcaf5e45db6efd8ec9c800441436ceef95a1bf468b6e5b",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--card",
+      "component": "Components/Skeleton",
+      "name": "Card",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "light",
+      "file": "components-skeleton--card.light.png",
+      "sha256": "6777a976bc6dc86e5332e654a6b91eb6568a4142fff771549f61454f0f3e5354",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--circle",
+      "component": "Components/Skeleton",
+      "name": "Circle",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "dark",
+      "file": "components-skeleton--circle.dark.png",
+      "sha256": "30ff1427de1d1e5caf2037f9a9d67eab84ce314a00a40ec8b40c79b3a37f1e69",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--circle",
+      "component": "Components/Skeleton",
+      "name": "Circle",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "light",
+      "file": "components-skeleton--circle.light.png",
+      "sha256": "850061f36d061e42df55bd131832e7f7e2a4acbb503ce772cd2350729293f681",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--default",
+      "component": "Components/Skeleton",
+      "name": "Default",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "dark",
+      "file": "components-skeleton--default.dark.png",
+      "sha256": "36e9b0910ba2d21c4c24daa65d749c9a7b15a8df43c4e752f3c53600af71a6eb",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--default",
+      "component": "Components/Skeleton",
+      "name": "Default",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "light",
+      "file": "components-skeleton--default.light.png",
+      "sha256": "7cefda05586dbc7faba1fffcefecab66cdffdb75729d54787fdd7c9ba71aacda",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--rect",
+      "component": "Components/Skeleton",
+      "name": "Rect",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "dark",
+      "file": "components-skeleton--rect.dark.png",
+      "sha256": "c3098f07888c669bc0b03bef9826462b7fda850e9fcd9fddfdb10273442536f2",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--rect",
+      "component": "Components/Skeleton",
+      "name": "Rect",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "light",
+      "file": "components-skeleton--rect.light.png",
+      "sha256": "0ac81e0d30c060dfa65753d184f2610ad35b0f0bbb831a49f79552357ad6bc47",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--text",
+      "component": "Components/Skeleton",
+      "name": "Text",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "dark",
+      "file": "components-skeleton--text.dark.png",
+      "sha256": "2e74cd6b9dbca958e5caf5d9f0a44976c10d625b1c2eda60c6acf63e37f9346e",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-skeleton--text",
+      "component": "Components/Skeleton",
+      "name": "Text",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "theme": "light",
+      "file": "components-skeleton--text.light.png",
+      "sha256": "b82dce164f1914fd106ec3488ba4edb6757c2a7e8520b8f0eda576e275f3beaf",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-spinner--default",
+      "component": "Components/Spinner",
+      "name": "Default",
+      "importPath": "./src/components/Spinner/Spinner.stories.tsx",
+      "theme": "dark",
+      "file": "components-spinner--default.dark.png",
+      "sha256": "17786692e8945318b446487b29dea686d2619fbc4332cec39791ced92a28f6b9",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-spinner--default",
+      "component": "Components/Spinner",
+      "name": "Default",
+      "importPath": "./src/components/Spinner/Spinner.stories.tsx",
+      "theme": "light",
+      "file": "components-spinner--default.light.png",
+      "sha256": "ca90a3ff310c2df6e6e66902115e8f647248378159721eeec4dfdd087a268512",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-spinner--large",
+      "component": "Components/Spinner",
+      "name": "Large",
+      "importPath": "./src/components/Spinner/Spinner.stories.tsx",
+      "theme": "dark",
+      "file": "components-spinner--large.dark.png",
+      "sha256": "3ad1a580d640f31f176878d37d89056a8a60399fcd49ed5124140f06c80801b3",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-spinner--large",
+      "component": "Components/Spinner",
+      "name": "Large",
+      "importPath": "./src/components/Spinner/Spinner.stories.tsx",
+      "theme": "light",
+      "file": "components-spinner--large.light.png",
+      "sha256": "15370000a8d5ef006e1f63722ef4fb4d7a6e4582578650bc628ae1632e093529",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-spinner--small",
+      "component": "Components/Spinner",
+      "name": "Small",
+      "importPath": "./src/components/Spinner/Spinner.stories.tsx",
+      "theme": "dark",
+      "file": "components-spinner--small.dark.png",
+      "sha256": "40416ca31b4204678a6be78cfd2c297dd9230706b9b476d5fcdf00a68db76dc6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-spinner--small",
+      "component": "Components/Spinner",
+      "name": "Small",
+      "importPath": "./src/components/Spinner/Spinner.stories.tsx",
+      "theme": "light",
+      "file": "components-spinner--small.light.png",
+      "sha256": "ae7831d1fd64fbfc8b98cd9152c398a1300d76b6c638cdea2c15343430fc72eb",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-stack--horizontal",
+      "component": "Components/Stack",
+      "name": "Horizontal",
+      "importPath": "./src/components/Stack/Stack.stories.tsx",
+      "theme": "dark",
+      "file": "components-stack--horizontal.dark.png",
+      "sha256": "456b0fd5dd31655e8a0031e0f26603635ece551dd4ce4a6da74378d07b0fc137",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-stack--horizontal",
+      "component": "Components/Stack",
+      "name": "Horizontal",
+      "importPath": "./src/components/Stack/Stack.stories.tsx",
+      "theme": "light",
+      "file": "components-stack--horizontal.light.png",
+      "sha256": "5b540fbc89a8734f68fd75fa3409ba335c820d18411f42f53bb98ee7ecece08d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-stack--toolbar",
+      "component": "Components/Stack",
+      "name": "Toolbar (Stack.Item grow)",
+      "importPath": "./src/components/Stack/Stack.stories.tsx",
+      "theme": "dark",
+      "file": "components-stack--toolbar.dark.png",
+      "sha256": "572a087a73763da09e70d5535548e69ee2012c56b712540aae92755c7982d0f5",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-stack--toolbar",
+      "component": "Components/Stack",
+      "name": "Toolbar (Stack.Item grow)",
+      "importPath": "./src/components/Stack/Stack.stories.tsx",
+      "theme": "light",
+      "file": "components-stack--toolbar.light.png",
+      "sha256": "839c96a31d53bd337ff1865ffe9f801752439fec6f3c821e180fd729a772f0af",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-stack--vertical",
+      "component": "Components/Stack",
+      "name": "Vertical",
+      "importPath": "./src/components/Stack/Stack.stories.tsx",
+      "theme": "dark",
+      "file": "components-stack--vertical.dark.png",
+      "sha256": "22859836cb110bc13fbea908c819fbec209318ad0ca31ac9398c31d20e5601e6",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-stack--vertical",
+      "component": "Components/Stack",
+      "name": "Vertical",
+      "importPath": "./src/components/Stack/Stack.stories.tsx",
+      "theme": "light",
+      "file": "components-stack--vertical.light.png",
+      "sha256": "6beeaba4471594f4bf3512b634c33cc07c2dd4a2d5d1966c7539c972a9e0e164",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--default",
+      "component": "Components/Switch",
+      "name": "Default",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "dark",
+      "file": "components-switch--default.dark.png",
+      "sha256": "5265afdc8553dc505ba86042933f319c1ffac043adabf5ed3451f89cb9a8f3d0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--default",
+      "component": "Components/Switch",
+      "name": "Default",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "light",
+      "file": "components-switch--default.light.png",
+      "sha256": "f88babda169da80d1900f3f672cf03f5fee4d98815934d95ed20b0ef43f8c922",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--disabled",
+      "component": "Components/Switch",
+      "name": "Disabled",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "dark",
+      "file": "components-switch--disabled.dark.png",
+      "sha256": "b9da444ee91c92775f4ee5db0a1c3ab33e3f7b55e6daf6f62c4588375d494721",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--disabled",
+      "component": "Components/Switch",
+      "name": "Disabled",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "light",
+      "file": "components-switch--disabled.light.png",
+      "sha256": "e35de428316f9cc83e6fed664c755b2ecdd7c53ad569e51923e2b57a4238ee66",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--on",
+      "component": "Components/Switch",
+      "name": "On",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "dark",
+      "file": "components-switch--on.dark.png",
+      "sha256": "4dd9e285977086bc33f18cc33a933f7a77ac195ef314f4aaacbdbb0375e008dc",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--on",
+      "component": "Components/Switch",
+      "name": "On",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "light",
+      "file": "components-switch--on.light.png",
+      "sha256": "8bea8054e76d56293c930e924331e99c7181b5782cc92761cd922514c2338d5c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--small",
+      "component": "Components/Switch",
+      "name": "Small",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "dark",
+      "file": "components-switch--small.dark.png",
+      "sha256": "3eda90f43eadd33c392ddee52620e88731dcae6f998979e28af369919ea24666",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--small",
+      "component": "Components/Switch",
+      "name": "Small",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "light",
+      "file": "components-switch--small.light.png",
+      "sha256": "8551ee512084766aff9b37659aa61c69cbb71ad75397721bb3454b8da52fdb8c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--with-caption",
+      "component": "Components/Switch",
+      "name": "With caption",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "dark",
+      "file": "components-switch--with-caption.dark.png",
+      "sha256": "62a49fe3e816d933b4712c582c9a348a2a0825c2453e7473f6cf52b2bd7da7bd",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-switch--with-caption",
+      "component": "Components/Switch",
+      "name": "With caption",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "theme": "light",
+      "file": "components-switch--with-caption.light.png",
+      "sha256": "3a7b7d6a90003c950ab1c9cc11b9ea296894f84362bea6f947b19e5508534a92",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-table--basic",
+      "component": "Components/Table",
+      "name": "Basic",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "theme": "dark",
+      "file": "components-table--basic.dark.png",
+      "sha256": "bbea4d39964313a28f0879d741cb383f40ba8a397e28ef13f949029e36744265",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-table--basic",
+      "component": "Components/Table",
+      "name": "Basic",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "theme": "light",
+      "file": "components-table--basic.light.png",
+      "sha256": "f09a478b4e69b1f5661dd0ed29c6e370197acd3c961152b6d66b3a2c52edc925",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-table--densities",
+      "component": "Components/Table",
+      "name": "Densities",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "theme": "dark",
+      "file": "components-table--densities.dark.png",
+      "sha256": "c743df0a04ffc994c7ce612e67ae1f31364058708b7601e53ef1a7fd43749396",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-table--densities",
+      "component": "Components/Table",
+      "name": "Densities",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "theme": "light",
+      "file": "components-table--densities.light.png",
+      "sha256": "fbc7d1ebe2997110c92058c919fe5d3a4e7d7b0d68adf31a4a920d6e3ebfdedb",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-table--in-container",
+      "component": "Components/Table",
+      "name": "In a titled container",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "theme": "dark",
+      "file": "components-table--in-container.dark.png",
+      "sha256": "1fa20fd7ab7e9d47e8706d1d87475ef5c7a2af5c43473c5a1fe449d08f171697",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-table--in-container",
+      "component": "Components/Table",
+      "name": "In a titled container",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "theme": "light",
+      "file": "components-table--in-container.light.png",
+      "sha256": "cd03b264507b63d9a892d1c6ff7529f6f5211e2533580c686ceac27849db66b4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-table--sortable",
+      "component": "Components/Table",
+      "name": "Sortable",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "theme": "dark",
+      "file": "components-table--sortable.dark.png",
+      "sha256": "4fb6e8ac6614f0d802ad361db26e7049a75b73c3603b29cd6734271ccfbd6a85",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-table--sortable",
+      "component": "Components/Table",
+      "name": "Sortable",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "theme": "light",
+      "file": "components-table--sortable.light.png",
+      "sha256": "4280e66043abf7beccd2d7f4c6958a34bdb432f5a3fd3baf7b5fd3bebf12324a",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tabs--default",
+      "component": "Components/Tabs",
+      "name": "Default",
+      "importPath": "./src/components/Tabs/Tabs.stories.tsx",
+      "theme": "dark",
+      "file": "components-tabs--default.dark.png",
+      "sha256": "203ad4c3dbaff234c2f11ef0c14269b8a7d338ef5eb272908d558442b2442e6a",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-tabs--default",
+      "component": "Components/Tabs",
+      "name": "Default",
+      "importPath": "./src/components/Tabs/Tabs.stories.tsx",
+      "theme": "light",
+      "file": "components-tabs--default.light.png",
+      "sha256": "5bfd818cd8937cc43cd2be48ffdf4a0dcc2dd3fdb661d928ee81a92e7c9c5546",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-tag--default",
+      "component": "Components/Tag",
+      "name": "Default",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "dark",
+      "file": "components-tag--default.dark.png",
+      "sha256": "9a7aedae7fec754b36c6eac85ee5ec1a54dc74243d29519a85eaa9133953adef",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--default",
+      "component": "Components/Tag",
+      "name": "Default",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "light",
+      "file": "components-tag--default.light.png",
+      "sha256": "bfcb9ff07bffb5ea18d26b57fd4248581d2c1d0ac3cb61deddd14349935c7102",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--removable",
+      "component": "Components/Tag",
+      "name": "Removable",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "dark",
+      "file": "components-tag--removable.dark.png",
+      "sha256": "bc3ae8ee60acaccefbc6f90d666afdee30f9262af8e51b00ab2c6e7110d72f6d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--removable",
+      "component": "Components/Tag",
+      "name": "Removable",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "light",
+      "file": "components-tag--removable.light.png",
+      "sha256": "df1bec631f1b273a1ae2e9cb45e84ce50d532bea8716463ce25026f3b6e143f5",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--sizes",
+      "component": "Components/Tag",
+      "name": "Sizes",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "dark",
+      "file": "components-tag--sizes.dark.png",
+      "sha256": "af836f18981f4c619de7673ee47528328ce9f2e9d2984c742331410adebc9926",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--sizes",
+      "component": "Components/Tag",
+      "name": "Sizes",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "light",
+      "file": "components-tag--sizes.light.png",
+      "sha256": "ea7f579c0d6c9048df664311e4c1794b5e294baaa9688a0e7492600b0c521d1c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--status-pills",
+      "component": "Components/Tag",
+      "name": "Status Pills",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "dark",
+      "file": "components-tag--status-pills.dark.png",
+      "sha256": "81df14c3bb0ee461da585084227e65aeb0b49f31c1d2d3d0117e89308162cfa4",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--status-pills",
+      "component": "Components/Tag",
+      "name": "Status Pills",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "light",
+      "file": "components-tag--status-pills.light.png",
+      "sha256": "10c035ddca26fdb277e1cdc73eceae200d4be6ab148aa9de08b9fa005b1254e3",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--variants",
+      "component": "Components/Tag",
+      "name": "Variants",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "dark",
+      "file": "components-tag--variants.dark.png",
+      "sha256": "74b630c1560adfbd2db6db7ed0ef27238a0800e6152a34024e21b71ccc9a6f84",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--variants",
+      "component": "Components/Tag",
+      "name": "Variants",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "light",
+      "file": "components-tag--variants.light.png",
+      "sha256": "60d918af5a92d0b733987b650685df013865121de821ab2f2e2f6573b1017de0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--with-icon",
+      "component": "Components/Tag",
+      "name": "With Icon",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "dark",
+      "file": "components-tag--with-icon.dark.png",
+      "sha256": "ca70445730f65420a96ccff7ada47e45df968952fdbaa4481cb6c282b51d0345",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tag--with-icon",
+      "component": "Components/Tag",
+      "name": "With Icon",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "theme": "light",
+      "file": "components-tag--with-icon.light.png",
+      "sha256": "3ef33cf72389de105ac6f8a6713a8e9979e70032ad89bbed645543b3762c9afd",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--aligned",
+      "component": "Components/Text",
+      "name": "Aligned",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--aligned.dark.png",
+      "sha256": "f3792d7ca1a36031cd24f7918bc4823a74755f1e3377acfe2b10dfbebe373e57",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--aligned",
+      "component": "Components/Text",
+      "name": "Aligned",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--aligned.light.png",
+      "sha256": "2abc7d157b6549aed4649981c70235020f364e7a7334392cce30d8bcf220f339",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--as-label",
+      "component": "Components/Text",
+      "name": "As label (htmlFor)",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--as-label.dark.png",
+      "sha256": "00fca1988d915f2129fb3da9d452617d2ac556ab0597c4bcb00d771fd3e0cecc",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--as-label",
+      "component": "Components/Text",
+      "name": "As label (htmlFor)",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--as-label.light.png",
+      "sha256": "546a83193322169dc6ddc78b2bda2f60c0960e655833c0f00ff16c6bac188778",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--composed",
+      "component": "Components/Text",
+      "name": "Composed (with Heading)",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--composed.dark.png",
+      "sha256": "651dcadd6f127a2d10f28f576f287179767d6da05be5b7a080b2c8ba5e02c812",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--composed",
+      "component": "Components/Text",
+      "name": "Composed (with Heading)",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--composed.light.png",
+      "sha256": "ce02e98b3dd19831c4772a495a835e7a78dfcca4a3242a3821d1882dc65f5d52",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--default",
+      "component": "Components/Text",
+      "name": "Default",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--default.dark.png",
+      "sha256": "15ff93b1ae6573c8ecf194647ece982120c389802cd5254d5ce009ecc068e4cf",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--default",
+      "component": "Components/Text",
+      "name": "Default",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--default.light.png",
+      "sha256": "d66e8a0d03a5605889e336260a5fd3640cfac3b96fcafd8d351a2fce11d0972c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--inline-elements",
+      "component": "Components/Text",
+      "name": "Inline elements (as)",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--inline-elements.dark.png",
+      "sha256": "5a4aee9809cd5af3ff3ea8af8c56edb21aa11f83867e2dda32c41c07b344563c",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--inline-elements",
+      "component": "Components/Text",
+      "name": "Inline elements (as)",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--inline-elements.light.png",
+      "sha256": "64ae731134e9f7ea47f9b0ff06bdcb37df53f5d530480f686616e9ef12752377",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--large",
+      "component": "Components/Text",
+      "name": "Large",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--large.dark.png",
+      "sha256": "fb81386419ea76553f0d5835cedb1477a5e7c2a6dfabe47a6d376f7f4324a577",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--large",
+      "component": "Components/Text",
+      "name": "Large",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--large.light.png",
+      "sha256": "aa37fdce1737511ef13a9b696a5d27e4c97f45991ba9c89c1d95b0a7ec8b4deb",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--muted",
+      "component": "Components/Text",
+      "name": "Muted",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--muted.dark.png",
+      "sha256": "f84e7db2efef547e9ceb89fc4d92e7680a3f42560e896710b200c2a547a5c7d0",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--muted",
+      "component": "Components/Text",
+      "name": "Muted",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--muted.light.png",
+      "sha256": "8d997a33ffd4ee41cda02b9fccd31d9d7194c31f01a35f39512b2a4a7afbde81",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--small",
+      "component": "Components/Text",
+      "name": "Small",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--small.dark.png",
+      "sha256": "749f9193c41de5c0d8567721b4b84973efbac203b0cd5381bec47cbb00130459",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--small",
+      "component": "Components/Text",
+      "name": "Small",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--small.light.png",
+      "sha256": "3f382f850d41ed51dc3c52540f1e1c046a0c9c2aea7c4c954771f34d895be5af",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--tones",
+      "component": "Components/Text",
+      "name": "Tones",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--tones.dark.png",
+      "sha256": "b3e2fa22c8f8a92f8818d7885e8e8c861fd4703b3b51926c8623abdbd210cd24",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--tones",
+      "component": "Components/Text",
+      "name": "Tones",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--tones.light.png",
+      "sha256": "319d4464b08f6acafb1579a89d61ab58d7998bf3204778cc12113ccfda7335b3",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--truncate",
+      "component": "Components/Text",
+      "name": "Truncate",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--truncate.dark.png",
+      "sha256": "8ee4a9f979a298242e2826d339beb1b2e35d7347b7ab39d3d3ffbf87e65b4ebb",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--truncate",
+      "component": "Components/Text",
+      "name": "Truncate",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--truncate.light.png",
+      "sha256": "843eb978884097bf18bc7d7f5f2eb22c2433e4970a7449a7d7c37d9b0f780a80",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--weights",
+      "component": "Components/Text",
+      "name": "Weights",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "dark",
+      "file": "components-text--weights.dark.png",
+      "sha256": "33e59a2d5b90a91f33eb20f71ec6ac79ecacacbef1370c7ef04ea6df30aaf789",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-text--weights",
+      "component": "Components/Text",
+      "name": "Weights",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "theme": "light",
+      "file": "components-text--weights.light.png",
+      "sha256": "a3d05284e346ad7d0d4c4f79c1b8a7aaffafc87f90167d779e24c18a6c489403",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textarea--default",
+      "component": "Components/Textarea",
+      "name": "Default",
+      "importPath": "./src/components/Textarea/Textarea.stories.tsx",
+      "theme": "dark",
+      "file": "components-textarea--default.dark.png",
+      "sha256": "2dd5ba5a5beb95374d6a8c3da553bbeb3817642ee74b953bde82bc58faa10857",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textarea--default",
+      "component": "Components/Textarea",
+      "name": "Default",
+      "importPath": "./src/components/Textarea/Textarea.stories.tsx",
+      "theme": "light",
+      "file": "components-textarea--default.light.png",
+      "sha256": "2d628728d5e1744949d7306dab72a001290d3a88acdf42ef94b7deb8f9192485",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textarea--invalid",
+      "component": "Components/Textarea",
+      "name": "Invalid",
+      "importPath": "./src/components/Textarea/Textarea.stories.tsx",
+      "theme": "dark",
+      "file": "components-textarea--invalid.dark.png",
+      "sha256": "c4bef18a7faee5e1fcc7e281e03d42991df2b86e88f6e3ec3a79c58ce83e2c4d",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textarea--invalid",
+      "component": "Components/Textarea",
+      "name": "Invalid",
+      "importPath": "./src/components/Textarea/Textarea.stories.tsx",
+      "theme": "light",
+      "file": "components-textarea--invalid.light.png",
+      "sha256": "beb2eadf5cb7dafdd4b0f9350b0a14fb0e07ff453e119b43d9cbfe034baa4d60",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textinput--default",
+      "component": "Components/TextInput",
+      "name": "Default",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "theme": "dark",
+      "file": "components-textinput--default.dark.png",
+      "sha256": "1f539ea57bc52baee2ecf1a7c8d591ba210bae20380616d74748e1e19f9d39bf",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textinput--default",
+      "component": "Components/TextInput",
+      "name": "Default",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "theme": "light",
+      "file": "components-textinput--default.light.png",
+      "sha256": "1bf1d8c7c20aeefbd643780b40a63abf8488e1701a3cccdd3409dd7b7d5ca616",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textinput--invalid",
+      "component": "Components/TextInput",
+      "name": "Invalid",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "theme": "dark",
+      "file": "components-textinput--invalid.dark.png",
+      "sha256": "04163fa54734e37459dae237b9cfc0154b8db8e0c8809017a39de7a2f20ebd50",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textinput--invalid",
+      "component": "Components/TextInput",
+      "name": "Invalid",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "theme": "light",
+      "file": "components-textinput--invalid.light.png",
+      "sha256": "e7fcc2684a7593abb6fcdab4d8fc58c74dc09d0fd8c536300d2f905d9ea136dc",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textinput--sizes",
+      "component": "Components/TextInput",
+      "name": "Sizes",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "theme": "dark",
+      "file": "components-textinput--sizes.dark.png",
+      "sha256": "d6008053e27cc6af102d6e4e6a4c0626a5579d4a0a840c97e2fdb89d6fe9d4de",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textinput--sizes",
+      "component": "Components/TextInput",
+      "name": "Sizes",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "theme": "light",
+      "file": "components-textinput--sizes.light.png",
+      "sha256": "e65cf1ecd849056603e7d9a70914388b05d9e173f8ce67a154c8cb384df4a34f",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textinput--with-leading-visual",
+      "component": "Components/TextInput",
+      "name": "With leading visual",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "theme": "dark",
+      "file": "components-textinput--with-leading-visual.dark.png",
+      "sha256": "ef86ee11fdb9cd4834c660980e89358b1ae4d570e780a5a8438cd7db0c03f67e",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-textinput--with-leading-visual",
+      "component": "Components/TextInput",
+      "name": "With leading visual",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "theme": "light",
+      "file": "components-textinput--with-leading-visual.light.png",
+      "sha256": "cb33f3020d3c98ea1a27215cab91cffa2116eb76fab084f8977c034bedf7fb7a",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-toast--default",
+      "component": "Components/Toast",
+      "name": "Default",
+      "importPath": "./src/components/Toast/Toast.stories.tsx",
+      "theme": "dark",
+      "file": "components-toast--default.dark.png",
+      "sha256": "03a23f29393dac5cac7e5c1bd375c79a4a8f576fddc94f62c60e9732306d3d83",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-toast--default",
+      "component": "Components/Toast",
+      "name": "Default",
+      "importPath": "./src/components/Toast/Toast.stories.tsx",
+      "theme": "light",
+      "file": "components-toast--default.light.png",
+      "sha256": "cc897f05c2dfeddad6240c9888ad6a64d175e95e5cc9aec5ac1790320685f7c9",
+      "hasPlay": true
+    },
+    {
+      "storyId": "components-tooltip--bottom",
+      "component": "Components/Tooltip",
+      "name": "Bottom",
+      "importPath": "./src/components/Tooltip/Tooltip.stories.tsx",
+      "theme": "dark",
+      "file": "components-tooltip--bottom.dark.png",
+      "sha256": "767dd4b86e4bc12c8a5b4c826e4321814df25f4589165cb09b58075a149b8343",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tooltip--bottom",
+      "component": "Components/Tooltip",
+      "name": "Bottom",
+      "importPath": "./src/components/Tooltip/Tooltip.stories.tsx",
+      "theme": "light",
+      "file": "components-tooltip--bottom.light.png",
+      "sha256": "f1e49ad3c9570c4c96fa1aa37d9dc1b1c074d2ea3f335a7fec8f0a8e41f64c55",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tooltip--default",
+      "component": "Components/Tooltip",
+      "name": "Default",
+      "importPath": "./src/components/Tooltip/Tooltip.stories.tsx",
+      "theme": "dark",
+      "file": "components-tooltip--default.dark.png",
+      "sha256": "49e3dae335f018f08dd99593a0306beab5d510879f655d899eaf3fbc8a249219",
+      "hasPlay": false
+    },
+    {
+      "storyId": "components-tooltip--default",
+      "component": "Components/Tooltip",
+      "name": "Default",
+      "importPath": "./src/components/Tooltip/Tooltip.stories.tsx",
+      "theme": "light",
+      "file": "components-tooltip--default.light.png",
+      "sha256": "af9e737402e27a3278fc41877beb87e00dc3039dedaa1604188f7202eda335ed",
+      "hasPlay": false
+    }
+  ]
+}

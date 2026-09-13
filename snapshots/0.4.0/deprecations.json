@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "package": "tenet-ui",
+  "version": "0.4.0",
+  "deprecations": [
+    {
+      "kind": "prop",
+      "component": "Button",
+      "prop": "block",
+      "replacement": "fullWidth",
+      "message": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.",
+      "since": "0.4.0"
+    },
+    {
+      "kind": "prop",
+      "component": "DatePicker",
+      "prop": "block",
+      "replacement": "fullWidth",
+      "message": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.",
+      "since": "0.4.0"
+    },
+    {
+      "kind": "component",
+      "component": "Label",
+      "replacement": "Tag",
+      "message": "Use `Tag` instead (since 0.4.0). `Tag` now carries the same status variants\n(`success` / `danger` / `attention` / `muted` / `accent`) and is read-only when `onRemove` is\nabsent, so one pill component covers both status words and removable chips — and the name no\nlonger collides with `FormControl.Label`. `Label` keeps rendering until 0.5.0.",
+      "since": "0.4.0"
+    },
+    {
+      "kind": "prop",
+      "component": "NumberInput",
+      "prop": "block",
+      "replacement": "fullWidth",
+      "message": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.",
+      "since": "0.4.0"
+    },
+    {
+      "kind": "prop",
+      "component": "SegmentedControl",
+      "prop": "block",
+      "replacement": "fullWidth",
+      "message": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.",
+      "since": "0.4.0"
+    },
+    {
+      "kind": "prop",
+      "component": "Select",
+      "prop": "block",
+      "replacement": "fullWidth",
+      "message": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.",
+      "since": "0.4.0"
+    },
+    {
+      "kind": "prop",
+      "component": "TextInput",
+      "prop": "block",
+      "replacement": "fullWidth",
+      "message": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.",
+      "since": "0.4.0"
+    },
+    {
+      "kind": "prop",
+      "component": "Textarea",
+      "prop": "block",
+      "replacement": "fullWidth",
+      "message": "Use `fullWidth` instead (renamed in 0.4.0). `block` keeps working until 0.5.0.",
+      "since": "0.4.0"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "package": "tenet-ui",
+  "version": "0.3.0",
+  "ingestedAt": "2026-09-13T12:54:54.257Z",
+  "provenance": {
+    "status": "none",
+    "attestationsUrl": "https://registry.npmjs.org/-/npm/v1/attestations/tenet-ui@0.3.0",
+    "detail": "no SLSA provenance attestation on the registry"
+  },
+  "sourceRef": {
+    "tag": "v0.3.0",
+    "tarball": "https://registry.npmjs.org/tenet-ui/-/tenet-ui-0.3.0.tgz",
+    "tarballSha256": "49d9678ef77a9239ddd8829cc22bee36319f47480f97d2f369fd56aed52e444f"
+  },
+  "sources": [
+    {
+      "kind": "types",
+      "source": "npm",
+      "sourceRef": "tenet-ui@0.3.0",
+      "url": "https://registry.npmjs.org/tenet-ui/-/tenet-ui-0.3.0.tgz",
+      "contentHash": "df6139cedabbb40d8fba83fcda972f68adadb6c9c303672aa317452dc0b29fcb",
+      "extractedAt": "2026-09-13T12:54:54.257Z",
+      "status": "ok",
+      "detail": "TypeScript 5.9.3"
+    },
+    {
+      "kind": "guidelines",
+      "source": "npm",
+      "sourceRef": "0.3.0",
+      "contentHash": "",
+      "extractedAt": "2026-09-13T12:54:54.257Z",
+      "status": "missing",
+      "detail": "no generated/guidelines/ in the tarball"
+    },
+    {
+      "kind": "catalog",
+      "source": "npm",
+      "sourceRef": "tenet-ui@0.3.0",
+      "contentHash": "f8cff93ce2088059e518e104f1f8b9e18cc4ebe4c04ce9b9076a00c6c75320c3",
+      "extractedAt": "2026-09-13T12:54:54.257Z",
+      "status": "ok",
+      "detail": "merged with generated/components.json schema 1"
+    },
+    {
+      "kind": "tokens",
+      "source": "npm",
+      "sourceRef": "tenet-ui@0.3.0",
+      "contentHash": "5fcc97c6f6db8e601208335388f1ae55db1c974d1e0d7da090ffd886d5dfb759",
+      "extractedAt": "2026-09-13T12:54:54.257Z",
+      "status": "ok",
+      "detail": "98 tokens, 0 documented contrast pairs"
+    },
+    {
+      "kind": "icons",
+      "source": "npm",
+      "sourceRef": "0.3.0",
+      "contentHash": "",
+      "extractedAt": "2026-09-13T12:54:54.257Z",
+      "status": "missing",
+      "detail": "no generated/icons.json"
+    },
+    {
+      "kind": "deprecations",
+      "source": "npm",
+      "sourceRef": "0.3.0",
+      "contentHash": "",
+      "extractedAt": "2026-09-13T12:54:54.257Z",
+      "status": "missing",
+      "detail": "no generated/deprecations.json"
+    },
+    {
+      "kind": "changelog",
+      "source": "npm",
+      "sourceRef": "tenet-ui@0.3.0",
+      "contentHash": "316226c8b005f6d18e52b18b7b1514603a657411c5f204a043288749c1ad1812",
+      "extractedAt": "2026-09-13T12:54:54.257Z",
+      "status": "ok",
+      "detail": "3 releases"
+    },
+    {
+      "kind": "stories",
+      "source": "storybook",
+      "sourceRef": "0.3.0",
+      "contentHash": "",
+      "extractedAt": "2026-09-13T12:54:54.257Z",
+      "status": "missing",
+      "detail": "no Storybook URL (package has no homepage and DS_STORYBOOK_URL is unset)"
+    },
+    {
+      "kind": "baselines",
+      "source": "github-release",
+      "sourceRef": "0.3.0",
+      "contentHash": "",
+      "extractedAt": "2026-09-13T12:54:54.257Z",
+      "status": "missing",
+      "detail": "no baselines-v0.3.0.tgz on release v0.3.0"
+    }
+  ],
+  "counts": {
+    "exportedComponents": 37,
+    "exportedHooks": 1,
+    "exportedTypes": 106,
+    "components": 36,
+    "props": 210,
+    "tokens": 98,
+    "contrastPairs": 0,
+    "changelogEntries": 3
+  },
+  "files": [
+    "CHANGELOG.md",
+    "changelog.json",
+    "components.json",
+    "gaps.json",
+    "tokens.json",
+    "types.json"
+  ]
+}

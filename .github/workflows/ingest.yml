@@ -1,0 +1,58 @@
+name: Ingest tenet-ui
+
+# The three triggers of DESIGN.md §10, all running the same idempotent command:
+#   - repository_dispatch `tenet-ui-released`: sent by tenet-ui's release workflow (needs DS_MCP_REPO_TOKEN there)
+#   - schedule: the registry watch (every 6 hours, ingests any version not yet snapshotted)
+#   - workflow_dispatch: by hand, optionally for one version with --force
+# A successful ingest commits the new snapshot to main; the server image is built from this repo.
+on:
+  repository_dispatch:
+    types: [tenet-ui-released]
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to ingest (default: every new version)'
+        required: false
+      force:
+        description: 'Re-ingest even if the snapshot exists'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # release-asset download, higher API rate limit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Ingest
+        run: |
+          VERSION="${{ github.event.client_payload.version || github.event.inputs.version }}"
+          if [ -n "$VERSION" ]; then
+            npm run ingest -- "$VERSION" ${{ github.event.inputs.force == 'true' && '--force' || '' }}
+          else
+            npm run ingest -- --new   # one pass of the registry watch
+          fi
+      - name: Commit the snapshot
+        run: |
+          git config user.name "tenet-ui-mcp ingest"
+          git config user.email "ingest@users.noreply.github.com"
+          git add snapshots
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -m "snapshots: ingest $(node -p "require('./snapshots/index.json').latest") ($(date -u +%Y-%m-%dT%H:%MZ))"
+          git push

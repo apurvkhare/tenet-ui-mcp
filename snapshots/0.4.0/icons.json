@@ -1,0 +1,1496 @@
+{
+  "schemaVersion": 1,
+  "source": "lucide-static@1.45.0",
+  "importPath": "tenet-ui/icons",
+  "sizes": [
+    16,
+    20,
+    24
+  ],
+  "icons": [
+    {
+      "name": "alert-circle",
+      "component": "AlertCircleIcon",
+      "source": "lucide:circle-alert",
+      "category": "status",
+      "keywords": [
+        "alert circle",
+        "error",
+        "danger",
+        "invalid",
+        "validation",
+        "problem",
+        "exclamation",
+        "warning",
+        "alert",
+        "exclamation mark",
+        "circle alert"
+      ]
+    },
+    {
+      "name": "alert-triangle",
+      "component": "AlertTriangleIcon",
+      "source": "lucide:triangle-alert",
+      "category": "status",
+      "keywords": [
+        "alert triangle",
+        "warning",
+        "attention",
+        "caution",
+        "risk",
+        "alert",
+        "danger",
+        "exclamation mark",
+        "linter",
+        "triangle alert"
+      ]
+    },
+    {
+      "name": "archive",
+      "component": "ArchiveIcon",
+      "source": "lucide:archive",
+      "category": "actions",
+      "keywords": [
+        "archive",
+        "box",
+        "store",
+        "hide",
+        "retire",
+        "index",
+        "backup",
+        "storage",
+        "records"
+      ]
+    },
+    {
+      "name": "arrow-down",
+      "component": "ArrowDownIcon",
+      "source": "lucide:arrow-down",
+      "category": "navigation",
+      "keywords": [
+        "arrow down",
+        "down",
+        "decrease",
+        "move down",
+        "descending",
+        "backwards",
+        "reverse",
+        "direction",
+        "south"
+      ]
+    },
+    {
+      "name": "arrow-left",
+      "component": "ArrowLeftIcon",
+      "source": "lucide:arrow-left",
+      "category": "navigation",
+      "keywords": [
+        "arrow left",
+        "back",
+        "previous",
+        "return",
+        "direction",
+        "west",
+        "<-"
+      ]
+    },
+    {
+      "name": "arrow-right",
+      "component": "ArrowRightIcon",
+      "source": "lucide:arrow-right",
+      "category": "navigation",
+      "keywords": [
+        "arrow right",
+        "forward",
+        "next",
+        "continue",
+        "go",
+        "direction",
+        "east",
+        "->"
+      ]
+    },
+    {
+      "name": "arrow-up",
+      "component": "ArrowUpIcon",
+      "source": "lucide:arrow-up",
+      "category": "navigation",
+      "keywords": [
+        "arrow up",
+        "up",
+        "increase",
+        "move up",
+        "ascending",
+        "forward",
+        "direction",
+        "north"
+      ]
+    },
+    {
+      "name": "bar-chart",
+      "component": "BarChartIcon",
+      "source": "lucide:chart-column",
+      "category": "data",
+      "keywords": [
+        "bar chart",
+        "chart",
+        "analytics",
+        "statistics",
+        "metrics",
+        "report",
+        "diagram",
+        "graph",
+        "chart column"
+      ]
+    },
+    {
+      "name": "bell",
+      "component": "BellIcon",
+      "source": "lucide:bell",
+      "category": "communication",
+      "keywords": [
+        "bell",
+        "notification",
+        "alert",
+        "reminder",
+        "subscribe",
+        "unread",
+        "alarm",
+        "sound"
+      ]
+    },
+    {
+      "name": "book-open",
+      "component": "BookOpenIcon",
+      "source": "lucide:book-open",
+      "category": "editorial",
+      "keywords": [
+        "book open",
+        "read",
+        "reading",
+        "documentation",
+        "guide",
+        "style guide",
+        "library",
+        "pages",
+        "booklet",
+        "magazine",
+        "leaflet",
+        "pamphlet",
+        "writing",
+        "written",
+        "writer",
+        "author",
+        "story",
+        "script",
+        "screenplay",
+        "fiction",
+        "novel",
+        "information",
+        "knowledge",
+        "education",
+        "high school",
+        "university",
+        "college",
+        "academy",
+        "student",
+        "study",
+        "learning",
+        "homework",
+        "research",
+        "revealed",
+        "blank",
+        "plain"
+      ]
+    },
+    {
+      "name": "bookmark",
+      "component": "BookmarkIcon",
+      "source": "lucide:bookmark",
+      "category": "objects",
+      "keywords": [
+        "bookmark",
+        "save",
+        "read later",
+        "saved",
+        "favorite",
+        "mark",
+        "label",
+        "attachment",
+        "file",
+        "stick",
+        "pin",
+        "read",
+        "clip",
+        "marker",
+        "tag"
+      ]
+    },
+    {
+      "name": "calendar",
+      "component": "CalendarIcon",
+      "source": "lucide:calendar",
+      "category": "objects",
+      "keywords": [
+        "calendar",
+        "date",
+        "schedule",
+        "date picker",
+        "deadline",
+        "publish date",
+        "month",
+        "year",
+        "event",
+        "birthday",
+        "birthdate"
+      ]
+    },
+    {
+      "name": "check",
+      "component": "CheckIcon",
+      "source": "lucide:check",
+      "category": "actions",
+      "keywords": [
+        "check",
+        "done",
+        "confirm",
+        "selected",
+        "tick",
+        "success",
+        "todo",
+        "complete",
+        "task"
+      ]
+    },
+    {
+      "name": "check-circle",
+      "component": "CheckCircleIcon",
+      "source": "lucide:circle-check",
+      "category": "status",
+      "keywords": [
+        "check circle",
+        "success",
+        "complete",
+        "done",
+        "verified",
+        "published",
+        "passing",
+        "todo",
+        "tick",
+        "task",
+        "circle check"
+      ]
+    },
+    {
+      "name": "chevron-down",
+      "component": "ChevronDownIcon",
+      "source": "lucide:chevron-down",
+      "category": "navigation",
+      "keywords": [
+        "chevron down",
+        "caret down",
+        "expand",
+        "dropdown",
+        "select",
+        "disclosure",
+        "backwards",
+        "reverse",
+        "slow"
+      ]
+    },
+    {
+      "name": "chevron-left",
+      "component": "ChevronLeftIcon",
+      "source": "lucide:chevron-left",
+      "category": "navigation",
+      "keywords": [
+        "chevron left",
+        "caret left",
+        "previous",
+        "back",
+        "pagination",
+        "less than",
+        "fewer",
+        "menu",
+        "<"
+      ]
+    },
+    {
+      "name": "chevron-right",
+      "component": "ChevronRightIcon",
+      "source": "lucide:chevron-right",
+      "category": "navigation",
+      "keywords": [
+        "chevron right",
+        "caret right",
+        "next",
+        "forward",
+        "pagination",
+        "breadcrumb",
+        "drill in",
+        "more than",
+        "greater",
+        "menu",
+        "code",
+        "coding",
+        "command line",
+        "terminal",
+        "prompt",
+        "shell",
+        ">"
+      ]
+    },
+    {
+      "name": "chevron-up",
+      "component": "ChevronUpIcon",
+      "source": "lucide:chevron-up",
+      "category": "navigation",
+      "keywords": [
+        "chevron up",
+        "caret up",
+        "collapse",
+        "expand less",
+        "scroll to top",
+        "caret",
+        "keyboard",
+        "mac",
+        "control",
+        "ctrl",
+        "superscript",
+        "exponential",
+        "power",
+        "ahead",
+        "fast",
+        "^",
+        "dropdown"
+      ]
+    },
+    {
+      "name": "clock",
+      "component": "ClockIcon",
+      "source": "lucide:clock",
+      "category": "objects",
+      "keywords": [
+        "clock",
+        "time",
+        "recent",
+        "history",
+        "pending",
+        "duration",
+        "scheduled",
+        "watch",
+        "alarm"
+      ]
+    },
+    {
+      "name": "columns",
+      "component": "ColumnsIcon",
+      "source": "lucide:columns-3",
+      "category": "data",
+      "keywords": [
+        "columns",
+        "column picker",
+        "layout",
+        "board",
+        "kanban",
+        "split",
+        "lines",
+        "list",
+        "queue",
+        "preview",
+        "parallel",
+        "series",
+        "vertical",
+        "horizontal",
+        "thirds",
+        "triple",
+        "center",
+        "middle",
+        "alignment",
+        "even",
+        "sidebars",
+        "drawers",
+        "gutters",
+        "fold",
+        "reflow",
+        "typography",
+        "pagination",
+        "pages",
+        "columns 3"
+      ]
+    },
+    {
+      "name": "copy",
+      "component": "CopyIcon",
+      "source": "lucide:copy",
+      "category": "actions",
+      "keywords": [
+        "copy",
+        "duplicate",
+        "clipboard",
+        "clone",
+        "multiple"
+      ]
+    },
+    {
+      "name": "download",
+      "component": "DownloadIcon",
+      "source": "lucide:download",
+      "category": "actions",
+      "keywords": [
+        "download",
+        "export",
+        "save as",
+        "get",
+        "import",
+        "save"
+      ]
+    },
+    {
+      "name": "external-link",
+      "component": "ExternalLinkIcon",
+      "source": "lucide:external-link",
+      "category": "actions",
+      "keywords": [
+        "external link",
+        "open in new tab",
+        "outbound",
+        "new window",
+        "open",
+        "share"
+      ]
+    },
+    {
+      "name": "eye",
+      "component": "EyeIcon",
+      "source": "lucide:eye",
+      "category": "actions",
+      "keywords": [
+        "eye",
+        "view",
+        "show",
+        "visible",
+        "preview",
+        "reveal password",
+        "watch",
+        "see",
+        "expose",
+        "reveal",
+        "display",
+        "visibility",
+        "vision",
+        "read"
+      ]
+    },
+    {
+      "name": "eye-off",
+      "component": "EyeOffIcon",
+      "source": "lucide:eye-off",
+      "category": "actions",
+      "keywords": [
+        "eye off",
+        "hide",
+        "hidden",
+        "invisible",
+        "mask password",
+        "unwatch",
+        "view",
+        "watch",
+        "see",
+        "conceal",
+        "mask",
+        "visibility",
+        "vision"
+      ]
+    },
+    {
+      "name": "file",
+      "component": "FileIcon",
+      "source": "lucide:file",
+      "category": "objects",
+      "keywords": [
+        "file",
+        "document",
+        "page",
+        "blank",
+        "attachment"
+      ]
+    },
+    {
+      "name": "file-text",
+      "component": "FileTextIcon",
+      "source": "lucide:file-text",
+      "category": "objects",
+      "keywords": [
+        "file text",
+        "document",
+        "article",
+        "draft",
+        "story",
+        "report",
+        "notes",
+        "data",
+        "txt",
+        "pdf"
+      ]
+    },
+    {
+      "name": "filter",
+      "component": "FilterIcon",
+      "source": "lucide:funnel",
+      "category": "actions",
+      "keywords": [
+        "filter",
+        "funnel",
+        "refine",
+        "narrow",
+        "hopper"
+      ]
+    },
+    {
+      "name": "folder",
+      "component": "FolderIcon",
+      "source": "lucide:folder",
+      "category": "objects",
+      "keywords": [
+        "folder",
+        "directory",
+        "collection",
+        "section",
+        "group"
+      ]
+    },
+    {
+      "name": "globe",
+      "component": "GlobeIcon",
+      "source": "lucide:globe",
+      "category": "objects",
+      "keywords": [
+        "globe",
+        "world",
+        "web",
+        "public",
+        "language",
+        "region",
+        "international",
+        "browser",
+        "translate"
+      ]
+    },
+    {
+      "name": "grid",
+      "component": "GridIcon",
+      "source": "lucide:layout-grid",
+      "category": "data",
+      "keywords": [
+        "grid",
+        "grid view",
+        "cards",
+        "tiles",
+        "gallery view",
+        "apps",
+        "app",
+        "home",
+        "start",
+        "layout grid"
+      ]
+    },
+    {
+      "name": "help-circle",
+      "component": "HelpCircleIcon",
+      "source": "lucide:circle-question-mark",
+      "category": "status",
+      "keywords": [
+        "help circle",
+        "help",
+        "question",
+        "support",
+        "faq",
+        "unknown",
+        "hint",
+        "question mark",
+        "circle question mark"
+      ]
+    },
+    {
+      "name": "home",
+      "component": "HomeIcon",
+      "source": "lucide:house",
+      "category": "navigation",
+      "keywords": [
+        "home",
+        "house",
+        "start",
+        "dashboard",
+        "overview",
+        "breadcrumb root",
+        "living",
+        "building",
+        "residence",
+        "architecture"
+      ]
+    },
+    {
+      "name": "image",
+      "component": "ImageIcon",
+      "source": "lucide:image",
+      "category": "media",
+      "keywords": [
+        "image",
+        "picture",
+        "photo",
+        "thumbnail",
+        "placeholder",
+        "media",
+        "hero"
+      ]
+    },
+    {
+      "name": "inbox",
+      "component": "InboxIcon",
+      "source": "lucide:inbox",
+      "category": "objects",
+      "keywords": [
+        "inbox",
+        "empty state",
+        "nothing here",
+        "no results",
+        "tray",
+        "queue",
+        "email"
+      ]
+    },
+    {
+      "name": "info",
+      "component": "InfoIcon",
+      "source": "lucide:info",
+      "category": "status",
+      "keywords": [
+        "info",
+        "information",
+        "help",
+        "note",
+        "banner info",
+        "tooltip",
+        "about",
+        "advice",
+        "clue",
+        "details",
+        "hint",
+        "indicator",
+        "knowledge",
+        "notice",
+        "status",
+        "support"
+      ]
+    },
+    {
+      "name": "layout-dashboard",
+      "component": "LayoutDashboardIcon",
+      "source": "lucide:layout-dashboard",
+      "category": "navigation",
+      "keywords": [
+        "layout dashboard",
+        "dashboard",
+        "overview",
+        "widgets",
+        "panels",
+        "home",
+        "masonry",
+        "brick"
+      ]
+    },
+    {
+      "name": "link",
+      "component": "LinkIcon",
+      "source": "lucide:link",
+      "category": "actions",
+      "keywords": [
+        "link",
+        "url",
+        "hyperlink",
+        "chain",
+        "anchor",
+        "permalink"
+      ]
+    },
+    {
+      "name": "list",
+      "component": "ListIcon",
+      "source": "lucide:list",
+      "category": "data",
+      "keywords": [
+        "list",
+        "list view",
+        "bullets",
+        "items",
+        "rows",
+        "todo",
+        "options"
+      ]
+    },
+    {
+      "name": "lock",
+      "component": "LockIcon",
+      "source": "lucide:lock",
+      "category": "actions",
+      "keywords": [
+        "lock",
+        "locked",
+        "private",
+        "secure",
+        "read-only",
+        "permission",
+        "security",
+        "password",
+        "admin"
+      ]
+    },
+    {
+      "name": "log-out",
+      "component": "LogOutIcon",
+      "source": "lucide:log-out",
+      "category": "actions",
+      "keywords": [
+        "log out",
+        "sign out",
+        "logout",
+        "exit",
+        "leave",
+        "arrow",
+        "auth"
+      ]
+    },
+    {
+      "name": "mail",
+      "component": "MailIcon",
+      "source": "lucide:mail",
+      "category": "communication",
+      "keywords": [
+        "mail",
+        "email",
+        "message",
+        "envelope",
+        "newsletter",
+        "contact",
+        "letter",
+        "unread"
+      ]
+    },
+    {
+      "name": "map-pin",
+      "component": "MapPinIcon",
+      "source": "lucide:map-pin",
+      "category": "objects",
+      "keywords": [
+        "map pin",
+        "location",
+        "place",
+        "address",
+        "dateline",
+        "geo",
+        "waypoint",
+        "marker",
+        "drop"
+      ]
+    },
+    {
+      "name": "menu",
+      "component": "MenuIcon",
+      "source": "lucide:menu",
+      "category": "navigation",
+      "keywords": [
+        "menu",
+        "hamburger",
+        "navigation",
+        "sidebar toggle",
+        "drawer",
+        "bars",
+        "options"
+      ]
+    },
+    {
+      "name": "message-square",
+      "component": "MessageSquareIcon",
+      "source": "lucide:message-square",
+      "category": "communication",
+      "keywords": [
+        "message square",
+        "comment",
+        "chat",
+        "discussion",
+        "feedback",
+        "reply",
+        "conversation",
+        "dialog",
+        "speech bubble"
+      ]
+    },
+    {
+      "name": "minus",
+      "component": "MinusIcon",
+      "source": "lucide:minus",
+      "category": "actions",
+      "keywords": [
+        "minus",
+        "remove",
+        "subtract",
+        "collapse",
+        "decrement",
+        "decrease",
+        "reduce",
+        "negative",
+        "calculate",
+        "line",
+        "divider",
+        "separator",
+        "horizontal rule",
+        "hr",
+        "html",
+        "markup",
+        "markdown",
+        "---",
+        "toolbar",
+        "operator",
+        "code",
+        "coding",
+        "minimum",
+        "downgrade"
+      ]
+    },
+    {
+      "name": "moon",
+      "component": "MoonIcon",
+      "source": "lucide:moon",
+      "category": "objects",
+      "keywords": [
+        "moon",
+        "dark mode",
+        "night",
+        "theme",
+        "sleep",
+        "dark"
+      ]
+    },
+    {
+      "name": "more-horizontal",
+      "component": "MoreHorizontalIcon",
+      "source": "lucide:ellipsis",
+      "category": "navigation",
+      "keywords": [
+        "more horizontal",
+        "more",
+        "ellipsis",
+        "overflow menu",
+        "actions menu",
+        "kebab",
+        "meatball",
+        "dots",
+        "et cetera",
+        "etc",
+        "loader",
+        "loading",
+        "progress",
+        "pending",
+        "throbber",
+        "menu",
+        "options",
+        "operator",
+        "code",
+        "coding",
+        "spread",
+        "rest",
+        "further",
+        "extra",
+        "overflow",
+        "…",
+        "..."
+      ]
+    },
+    {
+      "name": "more-vertical",
+      "component": "MoreVerticalIcon",
+      "source": "lucide:ellipsis-vertical",
+      "category": "navigation",
+      "keywords": [
+        "more vertical",
+        "more",
+        "ellipsis",
+        "overflow menu",
+        "actions menu",
+        "kebab",
+        "dots",
+        "row actions",
+        "menu",
+        "options",
+        "spread",
+        "further",
+        "extra",
+        "overflow",
+        "…",
+        "...",
+        "ellipsis vertical"
+      ]
+    },
+    {
+      "name": "newspaper",
+      "component": "NewspaperIcon",
+      "source": "lucide:newspaper",
+      "category": "editorial",
+      "keywords": [
+        "newspaper",
+        "news",
+        "press",
+        "edition",
+        "headline",
+        "front page",
+        "publication",
+        "feed",
+        "home",
+        "magazine",
+        "article"
+      ]
+    },
+    {
+      "name": "paperclip",
+      "component": "PaperclipIcon",
+      "source": "lucide:paperclip",
+      "category": "communication",
+      "keywords": [
+        "paperclip",
+        "attachment",
+        "attach file",
+        "clip",
+        "file"
+      ]
+    },
+    {
+      "name": "pen-line",
+      "component": "PenLineIcon",
+      "source": "lucide:pen-line",
+      "category": "editorial",
+      "keywords": [
+        "pen line",
+        "write",
+        "compose",
+        "sign",
+        "byline",
+        "author",
+        "editorial",
+        "pencil",
+        "change",
+        "create",
+        "draw",
+        "writer",
+        "writing",
+        "biro",
+        "ink",
+        "marker",
+        "felt tip",
+        "stationery",
+        "artist"
+      ]
+    },
+    {
+      "name": "pencil",
+      "component": "PencilIcon",
+      "source": "lucide:pencil",
+      "category": "actions",
+      "keywords": [
+        "pencil",
+        "edit",
+        "rename",
+        "modify",
+        "write",
+        "rubber",
+        "create",
+        "draw",
+        "sketch",
+        "draft",
+        "writer",
+        "writing",
+        "stationery",
+        "artist"
+      ]
+    },
+    {
+      "name": "pie-chart",
+      "component": "PieChartIcon",
+      "source": "lucide:chart-pie",
+      "category": "data",
+      "keywords": [
+        "pie chart",
+        "chart",
+        "analytics",
+        "share",
+        "breakdown",
+        "percentage",
+        "statistics",
+        "diagram",
+        "presentation",
+        "chart pie"
+      ]
+    },
+    {
+      "name": "play",
+      "component": "PlayIcon",
+      "source": "lucide:play",
+      "category": "media",
+      "keywords": [
+        "play",
+        "video",
+        "audio",
+        "start",
+        "run",
+        "preview",
+        "music"
+      ]
+    },
+    {
+      "name": "plus",
+      "component": "PlusIcon",
+      "source": "lucide:plus",
+      "category": "actions",
+      "keywords": [
+        "plus",
+        "add",
+        "new",
+        "create",
+        "insert",
+        "increase",
+        "increment",
+        "positive",
+        "calculate",
+        "toolbar",
+        "crosshair",
+        "aim",
+        "target",
+        "scope",
+        "sight",
+        "reticule",
+        "maximum",
+        "upgrade",
+        "extra",
+        "+"
+      ]
+    },
+    {
+      "name": "printer",
+      "component": "PrinterIcon",
+      "source": "lucide:printer",
+      "category": "actions",
+      "keywords": [
+        "printer",
+        "print",
+        "hard copy",
+        "paper",
+        "fax",
+        "office",
+        "device"
+      ]
+    },
+    {
+      "name": "quote",
+      "component": "QuoteIcon",
+      "source": "lucide:quote",
+      "category": "editorial",
+      "keywords": [
+        "quote",
+        "quotation",
+        "pull quote",
+        "citation",
+        "blockquote",
+        "testimonial"
+      ]
+    },
+    {
+      "name": "refresh",
+      "component": "RefreshIcon",
+      "source": "lucide:refresh-cw",
+      "category": "actions",
+      "keywords": [
+        "refresh",
+        "reload",
+        "sync",
+        "retry",
+        "rerun",
+        "update",
+        "rotate",
+        "synchronise",
+        "synchronize",
+        "arrows",
+        "circular",
+        "cycle",
+        "refresh cw"
+      ]
+    },
+    {
+      "name": "search",
+      "component": "SearchIcon",
+      "source": "lucide:search",
+      "category": "actions",
+      "keywords": [
+        "search",
+        "query",
+        "filter",
+        "find",
+        "scan",
+        "magnifier",
+        "magnifying glass",
+        "lens",
+        "locate",
+        "explore",
+        "discover",
+        "enlarge",
+        "zoom"
+      ]
+    },
+    {
+      "name": "send",
+      "component": "SendIcon",
+      "source": "lucide:send",
+      "category": "communication",
+      "keywords": [
+        "send",
+        "submit",
+        "publish",
+        "paper plane",
+        "deliver",
+        "post",
+        "email",
+        "message",
+        "mail",
+        "paper airplane",
+        "paper aeroplane"
+      ]
+    },
+    {
+      "name": "settings",
+      "component": "SettingsIcon",
+      "source": "lucide:settings",
+      "category": "actions",
+      "keywords": [
+        "settings",
+        "gear",
+        "cog",
+        "configure",
+        "options",
+        "edit",
+        "preferences"
+      ]
+    },
+    {
+      "name": "share",
+      "component": "ShareIcon",
+      "source": "lucide:share",
+      "category": "actions",
+      "keywords": [
+        "share",
+        "export",
+        "send to",
+        "social",
+        "network",
+        "connections"
+      ]
+    },
+    {
+      "name": "sort-ascending",
+      "component": "SortAscendingIcon",
+      "source": "lucide:arrow-up-narrow-wide",
+      "category": "actions",
+      "keywords": [
+        "sort ascending",
+        "sort asc",
+        "sort",
+        "order",
+        "a to z",
+        "column header",
+        "filter",
+        "ascending",
+        "descending",
+        "increasing",
+        "decreasing",
+        "rising",
+        "falling",
+        "arrow up narrow wide"
+      ]
+    },
+    {
+      "name": "sort-descending",
+      "component": "SortDescendingIcon",
+      "source": "lucide:arrow-down-wide-narrow",
+      "category": "actions",
+      "keywords": [
+        "sort descending",
+        "sort desc",
+        "sort",
+        "order",
+        "z to a",
+        "column header",
+        "filter",
+        "ascending",
+        "descending",
+        "increasing",
+        "decreasing",
+        "rising",
+        "falling",
+        "arrow down wide narrow"
+      ]
+    },
+    {
+      "name": "star",
+      "component": "StarIcon",
+      "source": "lucide:star",
+      "category": "status",
+      "keywords": [
+        "star",
+        "favorite",
+        "featured",
+        "rating",
+        "pinned",
+        "highlight",
+        "bookmark",
+        "like",
+        "review"
+      ]
+    },
+    {
+      "name": "sun",
+      "component": "SunIcon",
+      "source": "lucide:sun",
+      "category": "objects",
+      "keywords": [
+        "sun",
+        "light mode",
+        "day",
+        "theme",
+        "brightness",
+        "weather",
+        "light",
+        "summer"
+      ]
+    },
+    {
+      "name": "table",
+      "component": "TableIcon",
+      "source": "lucide:table",
+      "category": "data",
+      "keywords": [
+        "table",
+        "grid view",
+        "spreadsheet",
+        "rows",
+        "data table",
+        "tabular",
+        "grid"
+      ]
+    },
+    {
+      "name": "tag",
+      "component": "TagIcon",
+      "source": "lucide:tag",
+      "category": "objects",
+      "keywords": [
+        "tag",
+        "label",
+        "category",
+        "topic",
+        "keyword",
+        "price",
+        "badge",
+        "ticket",
+        "mark"
+      ]
+    },
+    {
+      "name": "trash",
+      "component": "TrashIcon",
+      "source": "lucide:trash",
+      "category": "actions",
+      "keywords": [
+        "trash",
+        "delete",
+        "remove",
+        "bin",
+        "destroy",
+        "empty",
+        "deletion",
+        "cleanup",
+        "junk",
+        "clear",
+        "garbage",
+        "waste",
+        "recycle",
+        "discard",
+        "binoculars",
+        "rubbish"
+      ]
+    },
+    {
+      "name": "trending-down",
+      "component": "TrendingDownIcon",
+      "source": "lucide:trending-down",
+      "category": "data",
+      "keywords": [
+        "trending down",
+        "decline",
+        "decrease",
+        "negative",
+        "down",
+        "stat",
+        "statistics"
+      ]
+    },
+    {
+      "name": "trending-up",
+      "component": "TrendingUpIcon",
+      "source": "lucide:trending-up",
+      "category": "data",
+      "keywords": [
+        "trending up",
+        "growth",
+        "increase",
+        "positive",
+        "up",
+        "stat",
+        "statistics"
+      ]
+    },
+    {
+      "name": "unlock",
+      "component": "UnlockIcon",
+      "source": "lucide:lock-open",
+      "category": "actions",
+      "keywords": [
+        "unlock",
+        "unlocked",
+        "open",
+        "public",
+        "editable",
+        "security",
+        "lock open"
+      ]
+    },
+    {
+      "name": "upload",
+      "component": "UploadIcon",
+      "source": "lucide:upload",
+      "category": "actions",
+      "keywords": [
+        "upload",
+        "import",
+        "attach",
+        "put",
+        "file"
+      ]
+    },
+    {
+      "name": "user",
+      "component": "UserIcon",
+      "source": "lucide:user",
+      "category": "objects",
+      "keywords": [
+        "user",
+        "person",
+        "account",
+        "profile",
+        "author",
+        "avatar",
+        "member",
+        "contact"
+      ]
+    },
+    {
+      "name": "users",
+      "component": "UsersIcon",
+      "source": "lucide:users",
+      "category": "objects",
+      "keywords": [
+        "users",
+        "people",
+        "team",
+        "group",
+        "members",
+        "audience",
+        "contributors"
+      ]
+    },
+    {
+      "name": "x",
+      "component": "XIcon",
+      "source": "lucide:x",
+      "category": "actions",
+      "keywords": [
+        "x",
+        "close",
+        "dismiss",
+        "cancel",
+        "clear",
+        "remove",
+        "cross",
+        "delete",
+        "ex",
+        "times",
+        "math",
+        "multiply",
+        "multiplication"
+      ]
+    },
+    {
+      "name": "x-circle",
+      "component": "XCircleIcon",
+      "source": "lucide:circle-x",
+      "category": "status",
+      "keywords": [
+        "x circle",
+        "error",
+        "failed",
+        "rejected",
+        "cancelled",
+        "clear input",
+        "cancel",
+        "close",
+        "delete",
+        "remove",
+        "times",
+        "clear",
+        "incorrect",
+        "wrong",
+        "mistake",
+        "failure",
+        "linter",
+        "multiply",
+        "multiplication",
+        "circle x"
+      ]
+    },
+    {
+      "name": "zoom-in",
+      "component": "ZoomInIcon",
+      "source": "lucide:zoom-in",
+      "category": "actions",
+      "keywords": [
+        "zoom in",
+        "magnify",
+        "enlarge",
+        "increase",
+        "magnifying glass",
+        "plus"
+      ]
+    },
+    {
+      "name": "zoom-out",
+      "component": "ZoomOutIcon",
+      "source": "lucide:zoom-out",
+      "category": "actions",
+      "keywords": [
+        "zoom out",
+        "shrink",
+        "reduce",
+        "decrease",
+        "magnifying glass",
+        "plus"
+      ]
+    }
+  ]
+}

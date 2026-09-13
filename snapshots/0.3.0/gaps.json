@@ -1,0 +1,380 @@
+{
+  "version": "0.3.0",
+  "summary": {
+    "no-guideline": 36,
+    "no-story": 1,
+    "a11y-not-reviewed": 1,
+    "not-in-package-catalog": 1,
+    "catalog-mismatch": 29
+  },
+  "components": [
+    {
+      "component": "accordion",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "avatar",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "badge",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "banner",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "breadcrumbs",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "button",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "calendar",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "card",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "checkbox",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "data-table",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "date-picker",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "dialog",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "divider",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "form-control",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "icon-button",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "label",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "link",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "menu",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "number-input",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "pagination",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "popover",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "progress-bar",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "radio-group",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "segmented-control",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "select",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "skeleton",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "spinner",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "stack",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "switch",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "table",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "tabs",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "tag",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "text-input",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "textarea",
+      "gaps": [
+        "no-guideline"
+      ]
+    },
+    {
+      "component": "toast-provider",
+      "gaps": [
+        "no-story",
+        "no-guideline",
+        "a11y-not-reviewed",
+        "not-in-package-catalog"
+      ]
+    },
+    {
+      "component": "tooltip",
+      "gaps": [
+        "no-guideline"
+      ]
+    }
+  ],
+  "catalogMismatches": [
+    {
+      "component": "Accordion",
+      "kind": "prop-only-in-types",
+      "detail": "children"
+    },
+    {
+      "component": "Accordion",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "Badge",
+      "kind": "prop-only-in-types",
+      "detail": "children"
+    },
+    {
+      "component": "Banner",
+      "kind": "prop-only-in-types",
+      "detail": "children"
+    },
+    {
+      "component": "Calendar",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "Calendar",
+      "kind": "prop-only-in-types",
+      "detail": "aria-label"
+    },
+    {
+      "component": "Checkbox",
+      "kind": "prop-only-in-catalog",
+      "detail": "checked"
+    },
+    {
+      "component": "Checkbox",
+      "kind": "prop-only-in-catalog",
+      "detail": "defaultChecked"
+    },
+    {
+      "component": "Checkbox",
+      "kind": "prop-only-in-catalog",
+      "detail": "disabled"
+    },
+    {
+      "component": "DataTable",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "DatePicker",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "DatePicker",
+      "kind": "prop-only-in-types",
+      "detail": "aria-label"
+    },
+    {
+      "component": "DatePicker",
+      "kind": "prop-only-in-types",
+      "detail": "aria-describedby"
+    },
+    {
+      "component": "Dialog",
+      "kind": "prop-only-in-types",
+      "detail": "children"
+    },
+    {
+      "component": "Dialog",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "Menu",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "NumberInput",
+      "kind": "prop-only-in-catalog",
+      "detail": "disabled"
+    },
+    {
+      "component": "Pagination",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "RadioGroup",
+      "kind": "prop-only-in-types",
+      "detail": "children"
+    },
+    {
+      "component": "SegmentedControl",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "Switch",
+      "kind": "prop-only-in-catalog",
+      "detail": "checked"
+    },
+    {
+      "component": "Switch",
+      "kind": "prop-only-in-catalog",
+      "detail": "defaultChecked"
+    },
+    {
+      "component": "Switch",
+      "kind": "prop-only-in-catalog",
+      "detail": "disabled"
+    },
+    {
+      "component": "Tabs",
+      "kind": "prop-only-in-types",
+      "detail": "children"
+    },
+    {
+      "component": "Tabs",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "Textarea",
+      "kind": "prop-only-in-catalog",
+      "detail": "rows"
+    },
+    {
+      "component": "Toast",
+      "kind": "component-only-in-catalog",
+      "detail": "listed in generated/components.json but not exported from the .d.ts"
+    },
+    {
+      "component": "Tooltip",
+      "kind": "prop-only-in-types",
+      "detail": "className"
+    },
+    {
+      "component": "ToastProvider",
+      "kind": "component-only-in-types",
+      "detail": "exported from the package but absent from generated/components.json"
+    }
+  ],
+  "storyIdsNotInStorybook": [],
+  "unclassifiedExports": []
+}

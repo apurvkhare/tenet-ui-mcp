@@ -1,0 +1,1852 @@
+{
+  "storybookUrl": "https://tenet-ui.pages.dev/storybook/",
+  "indexVersion": 5,
+  "contentHash": "9328ad30470957ea0863b640a36e735cfa38eba1af871d075fda27a37e3b0ef7",
+  "stories": [
+    {
+      "id": "components-accordion--multiple",
+      "title": "Components/Accordion",
+      "name": "Multiple",
+      "importPath": "./src/components/Accordion/Accordion.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-accordion--single",
+      "title": "Components/Accordion",
+      "name": "Single",
+      "importPath": "./src/components/Accordion/Accordion.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest",
+        "play-fn"
+      ],
+      "hasPlay": true
+    },
+    {
+      "id": "components-avatar--image",
+      "title": "Components/Avatar",
+      "name": "Image",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-avatar--initials",
+      "title": "Components/Avatar",
+      "name": "Initials",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-avatar--large",
+      "title": "Components/Avatar",
+      "name": "Large",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-avatar--org",
+      "title": "Components/Avatar",
+      "name": "Org (rounded)",
+      "importPath": "./src/components/Avatar/Avatar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-badge--count",
+      "title": "Components/Badge",
+      "name": "Count",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-badge--default",
+      "title": "Components/Badge",
+      "name": "Default",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-badge--dot",
+      "title": "Components/Badge",
+      "name": "Dot",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-badge--overflow",
+      "title": "Components/Badge",
+      "name": "Overflow",
+      "importPath": "./src/components/Badge/Badge.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-banner--danger",
+      "title": "Components/Banner",
+      "name": "Danger",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-banner--dismissible",
+      "title": "Components/Banner",
+      "name": "Dismissible",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-banner--info",
+      "title": "Components/Banner",
+      "name": "Info",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-banner--success",
+      "title": "Components/Banner",
+      "name": "Success",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-banner--warning",
+      "title": "Components/Banner",
+      "name": "Warning",
+      "importPath": "./src/components/Banner/Banner.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-breadcrumbs--chevron-separator",
+      "title": "Components/Breadcrumbs",
+      "name": "Chevron separator",
+      "importPath": "./src/components/Breadcrumbs/Breadcrumbs.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-breadcrumbs--default",
+      "title": "Components/Breadcrumbs",
+      "name": "Default",
+      "importPath": "./src/components/Breadcrumbs/Breadcrumbs.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-button--danger",
+      "title": "Components/Button",
+      "name": "Danger",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-button--default",
+      "title": "Components/Button",
+      "name": "Default",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-button--invisible",
+      "title": "Components/Button",
+      "name": "Invisible",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-button--primary",
+      "title": "Components/Button",
+      "name": "Primary",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-button--sizes",
+      "title": "Components/Button",
+      "name": "Sizes",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-button--with-leading-icon",
+      "title": "Components/Button",
+      "name": "With Leading Icon",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-button--with-trailing-icon",
+      "title": "Components/Button",
+      "name": "With Trailing Icon",
+      "importPath": "./src/components/Button/Button.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-calendar--default",
+      "title": "Components/Calendar",
+      "name": "Default",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-calendar--monday-start",
+      "title": "Components/Calendar",
+      "name": "Week starts Monday",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-calendar--with-range",
+      "title": "Components/Calendar",
+      "name": "With min / max",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-calendar--with-selection",
+      "title": "Components/Calendar",
+      "name": "With selection",
+      "importPath": "./src/components/Calendar/Calendar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-card--default",
+      "title": "Components/Card",
+      "name": "Default",
+      "importPath": "./src/components/Card/Card.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-card--muted",
+      "title": "Components/Card",
+      "name": "Muted",
+      "importPath": "./src/components/Card/Card.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-checkbox--checked",
+      "title": "Components/Checkbox",
+      "name": "Checked",
+      "importPath": "./src/components/Checkbox/Checkbox.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-checkbox--default",
+      "title": "Components/Checkbox",
+      "name": "Default",
+      "importPath": "./src/components/Checkbox/Checkbox.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-checkbox--with-caption",
+      "title": "Components/Checkbox",
+      "name": "With caption",
+      "importPath": "./src/components/Checkbox/Checkbox.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-datatable--default",
+      "title": "Components/DataTable",
+      "name": "Default",
+      "importPath": "./src/components/DataTable/DataTable.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-datatable--search-only",
+      "title": "Components/DataTable",
+      "name": "Search only",
+      "importPath": "./src/components/DataTable/DataTable.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-datepicker--default",
+      "title": "Components/DatePicker",
+      "name": "Default",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest",
+        "play-fn"
+      ],
+      "hasPlay": true
+    },
+    {
+      "id": "components-datepicker--disabled",
+      "title": "Components/DatePicker",
+      "name": "Disabled",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-datepicker--with-range",
+      "title": "Components/DatePicker",
+      "name": "With min / max",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-datepicker--with-value",
+      "title": "Components/DatePicker",
+      "name": "With value",
+      "importPath": "./src/components/DatePicker/DatePicker.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-dialog--default",
+      "title": "Components/Dialog",
+      "name": "Default",
+      "importPath": "./src/components/Dialog/Dialog.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest",
+        "play-fn"
+      ],
+      "hasPlay": true
+    },
+    {
+      "id": "components-divider--horizontal",
+      "title": "Components/Divider",
+      "name": "Horizontal",
+      "importPath": "./src/components/Divider/Divider.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-divider--labelled",
+      "title": "Components/Divider",
+      "name": "Labelled",
+      "importPath": "./src/components/Divider/Divider.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-divider--vertical",
+      "title": "Components/Divider",
+      "name": "Vertical",
+      "importPath": "./src/components/Divider/Divider.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-emptystate--default",
+      "title": "Components/EmptyState",
+      "name": "Default",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-emptystate--large",
+      "title": "Components/EmptyState",
+      "name": "Large",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-emptystate--search-results",
+      "title": "Components/EmptyState",
+      "name": "Search results (composed)",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-emptystate--title-only",
+      "title": "Components/EmptyState",
+      "name": "Title only",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-emptystate--with-actions",
+      "title": "Components/EmptyState",
+      "name": "With actions",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-emptystate--with-icon",
+      "title": "Components/EmptyState",
+      "name": "With icon",
+      "importPath": "./src/components/EmptyState/EmptyState.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-formcontrol--required-with-caption",
+      "title": "Components/FormControl",
+      "name": "Required with caption",
+      "importPath": "./src/components/FormControl/FormControl.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-formcontrol--text-field",
+      "title": "Components/FormControl",
+      "name": "Text Field",
+      "importPath": "./src/components/FormControl/FormControl.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-formcontrol--with-error",
+      "title": "Components/FormControl",
+      "name": "With error",
+      "importPath": "./src/components/FormControl/FormControl.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-grid--align",
+      "title": "Components/Grid",
+      "name": "Align",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-grid--fixed-columns",
+      "title": "Components/Grid",
+      "name": "Fixed columns",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-grid--gaps",
+      "title": "Components/Grid",
+      "name": "Gaps",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-grid--item-span",
+      "title": "Components/Grid",
+      "name": "Grid.Item span",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-grid--responsive-columns",
+      "title": "Components/Grid",
+      "name": "Responsive columns",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-grid--row-gap-override",
+      "title": "Components/Grid",
+      "name": "Row gap override",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-grid--stat-cards",
+      "title": "Components/Grid",
+      "name": "Stat cards (composed)",
+      "importPath": "./src/components/Grid/Grid.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-heading--level-1",
+      "title": "Components/Heading",
+      "name": "Level 1",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-heading--level-2",
+      "title": "Components/Heading",
+      "name": "Level 2",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-heading--level-3",
+      "title": "Components/Heading",
+      "name": "Level 3",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-heading--level-4",
+      "title": "Components/Heading",
+      "name": "Level 4",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-heading--semantics-vs-size",
+      "title": "Components/Heading",
+      "name": "Semantics vs size (as)",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-heading--truncate",
+      "title": "Components/Heading",
+      "name": "Truncate",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-heading--type-scale",
+      "title": "Components/Heading",
+      "name": "Type scale (composed)",
+      "importPath": "./src/components/Heading/Heading.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-icon--default",
+      "title": "Components/Icon",
+      "name": "Default",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-icon--gallery",
+      "title": "Components/Icon",
+      "name": "Gallery",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-icon--in-button",
+      "title": "Components/Icon",
+      "name": "In Button",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-icon--in-icon-button",
+      "title": "Components/Icon",
+      "name": "In Icon Button",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-icon--labeled",
+      "title": "Components/Icon",
+      "name": "Labeled",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-icon--sizes",
+      "title": "Components/Icon",
+      "name": "Sizes",
+      "importPath": "./src/components/Icon/Icon.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-iconbutton--danger",
+      "title": "Components/IconButton",
+      "name": "Danger",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-iconbutton--default",
+      "title": "Components/IconButton",
+      "name": "Default",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-iconbutton--invisible",
+      "title": "Components/IconButton",
+      "name": "Invisible",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-iconbutton--primary",
+      "title": "Components/IconButton",
+      "name": "Primary",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-iconbutton--sizes",
+      "title": "Components/IconButton",
+      "name": "Sizes",
+      "importPath": "./src/components/IconButton/IconButton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-label--default",
+      "title": "Components/Label",
+      "name": "Default",
+      "importPath": "./src/components/Label/Label.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-label--sizes",
+      "title": "Components/Label",
+      "name": "Sizes",
+      "importPath": "./src/components/Label/Label.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-label--variants",
+      "title": "Components/Label",
+      "name": "Variants",
+      "importPath": "./src/components/Label/Label.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-link--always-underlined",
+      "title": "Components/Link",
+      "name": "Always underlined",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-link--default",
+      "title": "Components/Link",
+      "name": "Default",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-link--external",
+      "title": "Components/Link",
+      "name": "External",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-link--muted",
+      "title": "Components/Link",
+      "name": "Muted",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-link--no-underline",
+      "title": "Components/Link",
+      "name": "No underline",
+      "importPath": "./src/components/Link/Link.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-menu--default",
+      "title": "Components/Menu",
+      "name": "Default",
+      "importPath": "./src/components/Menu/Menu.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest",
+        "play-fn"
+      ],
+      "hasPlay": true
+    },
+    {
+      "id": "components-numberinput--default",
+      "title": "Components/NumberInput",
+      "name": "Default",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-numberinput--disabled",
+      "title": "Components/NumberInput",
+      "name": "Disabled",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-numberinput--empty",
+      "title": "Components/NumberInput",
+      "name": "Empty",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-numberinput--with-range",
+      "title": "Components/NumberInput",
+      "name": "With min / max / step",
+      "importPath": "./src/components/NumberInput/NumberInput.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-pagination--default",
+      "title": "Components/Pagination",
+      "name": "Default",
+      "importPath": "./src/components/Pagination/Pagination.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest",
+        "play-fn"
+      ],
+      "hasPlay": true
+    },
+    {
+      "id": "components-pagination--many-pages",
+      "title": "Components/Pagination",
+      "name": "Many pages",
+      "importPath": "./src/components/Pagination/Pagination.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-popover--default",
+      "title": "Components/Popover",
+      "name": "Default",
+      "importPath": "./src/components/Popover/Popover.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-popover--top-end",
+      "title": "Components/Popover",
+      "name": "Top End",
+      "importPath": "./src/components/Popover/Popover.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-progressbar--default",
+      "title": "Components/ProgressBar",
+      "name": "Default",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-progressbar--indeterminate",
+      "title": "Components/ProgressBar",
+      "name": "Indeterminate",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-progressbar--small",
+      "title": "Components/ProgressBar",
+      "name": "Small",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-progressbar--variants",
+      "title": "Components/ProgressBar",
+      "name": "Variants",
+      "importPath": "./src/components/ProgressBar/ProgressBar.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-radiogroup--default",
+      "title": "Components/RadioGroup",
+      "name": "Default",
+      "importPath": "./src/components/Radio/Radio.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-radiogroup--with-captions",
+      "title": "Components/RadioGroup",
+      "name": "With captions",
+      "importPath": "./src/components/Radio/Radio.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-segmentedcontrol--default",
+      "title": "Components/SegmentedControl",
+      "name": "Default",
+      "importPath": "./src/components/SegmentedControl/SegmentedControl.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest",
+        "play-fn"
+      ],
+      "hasPlay": true
+    },
+    {
+      "id": "components-segmentedcontrol--small",
+      "title": "Components/SegmentedControl",
+      "name": "Small",
+      "importPath": "./src/components/SegmentedControl/SegmentedControl.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-segmentedcontrol--with-disabled",
+      "title": "Components/SegmentedControl",
+      "name": "With disabled segment",
+      "importPath": "./src/components/SegmentedControl/SegmentedControl.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-select--default",
+      "title": "Components/Select",
+      "name": "Default",
+      "importPath": "./src/components/Select/Select.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest",
+        "play-fn"
+      ],
+      "hasPlay": true
+    },
+    {
+      "id": "components-select--with-disabled-option",
+      "title": "Components/Select",
+      "name": "With disabled option",
+      "importPath": "./src/components/Select/Select.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-select--with-placeholder",
+      "title": "Components/Select",
+      "name": "With placeholder",
+      "importPath": "./src/components/Select/Select.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-skeleton--card",
+      "title": "Components/Skeleton",
+      "name": "Card",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-skeleton--circle",
+      "title": "Components/Skeleton",
+      "name": "Circle",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-skeleton--default",
+      "title": "Components/Skeleton",
+      "name": "Default",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-skeleton--rect",
+      "title": "Components/Skeleton",
+      "name": "Rect",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-skeleton--text",
+      "title": "Components/Skeleton",
+      "name": "Text",
+      "importPath": "./src/components/Skeleton/Skeleton.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-spinner--default",
+      "title": "Components/Spinner",
+      "name": "Default",
+      "importPath": "./src/components/Spinner/Spinner.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-spinner--large",
+      "title": "Components/Spinner",
+      "name": "Large",
+      "importPath": "./src/components/Spinner/Spinner.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-spinner--small",
+      "title": "Components/Spinner",
+      "name": "Small",
+      "importPath": "./src/components/Spinner/Spinner.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-stack--horizontal",
+      "title": "Components/Stack",
+      "name": "Horizontal",
+      "importPath": "./src/components/Stack/Stack.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-stack--toolbar",
+      "title": "Components/Stack",
+      "name": "Toolbar (Stack.Item grow)",
+      "importPath": "./src/components/Stack/Stack.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-stack--vertical",
+      "title": "Components/Stack",
+      "name": "Vertical",
+      "importPath": "./src/components/Stack/Stack.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-switch--default",
+      "title": "Components/Switch",
+      "name": "Default",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-switch--disabled",
+      "title": "Components/Switch",
+      "name": "Disabled",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-switch--on",
+      "title": "Components/Switch",
+      "name": "On",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-switch--small",
+      "title": "Components/Switch",
+      "name": "Small",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-switch--with-caption",
+      "title": "Components/Switch",
+      "name": "With caption",
+      "importPath": "./src/components/Switch/Switch.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-table--basic",
+      "title": "Components/Table",
+      "name": "Basic",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-table--densities",
+      "title": "Components/Table",
+      "name": "Densities",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-table--in-container",
+      "title": "Components/Table",
+      "name": "In a titled container",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-table--sortable",
+      "title": "Components/Table",
+      "name": "Sortable",
+      "importPath": "./src/components/Table/Table.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-tabs--default",
+      "title": "Components/Tabs",
+      "name": "Default",
+      "importPath": "./src/components/Tabs/Tabs.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest",
+        "play-fn"
+      ],
+      "hasPlay": true
+    },
+    {
+      "id": "components-tag--default",
+      "title": "Components/Tag",
+      "name": "Default",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-tag--removable",
+      "title": "Components/Tag",
+      "name": "Removable",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-tag--sizes",
+      "title": "Components/Tag",
+      "name": "Sizes",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-tag--status-pills",
+      "title": "Components/Tag",
+      "name": "Status Pills",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-tag--variants",
+      "title": "Components/Tag",
+      "name": "Variants",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-tag--with-icon",
+      "title": "Components/Tag",
+      "name": "With Icon",
+      "importPath": "./src/components/Tag/Tag.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--aligned",
+      "title": "Components/Text",
+      "name": "Aligned",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--as-label",
+      "title": "Components/Text",
+      "name": "As label (htmlFor)",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--composed",
+      "title": "Components/Text",
+      "name": "Composed (with Heading)",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--default",
+      "title": "Components/Text",
+      "name": "Default",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--inline-elements",
+      "title": "Components/Text",
+      "name": "Inline elements (as)",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--large",
+      "title": "Components/Text",
+      "name": "Large",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--muted",
+      "title": "Components/Text",
+      "name": "Muted",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--small",
+      "title": "Components/Text",
+      "name": "Small",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--tones",
+      "title": "Components/Text",
+      "name": "Tones",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--truncate",
+      "title": "Components/Text",
+      "name": "Truncate",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-text--weights",
+      "title": "Components/Text",
+      "name": "Weights",
+      "importPath": "./src/components/Text/Text.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-textarea--default",
+      "title": "Components/Textarea",
+      "name": "Default",
+      "importPath": "./src/components/Textarea/Textarea.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-textarea--invalid",
+      "title": "Components/Textarea",
+      "name": "Invalid",
+      "importPath": "./src/components/Textarea/Textarea.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-textinput--default",
+      "title": "Components/TextInput",
+      "name": "Default",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-textinput--invalid",
+      "title": "Components/TextInput",
+      "name": "Invalid",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-textinput--sizes",
+      "title": "Components/TextInput",
+      "name": "Sizes",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-textinput--with-leading-visual",
+      "title": "Components/TextInput",
+      "name": "With leading visual",
+      "importPath": "./src/components/TextInput/TextInput.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-toast--default",
+      "title": "Components/Toast",
+      "name": "Default",
+      "importPath": "./src/components/Toast/Toast.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest",
+        "play-fn"
+      ],
+      "hasPlay": true
+    },
+    {
+      "id": "components-tooltip--bottom",
+      "title": "Components/Tooltip",
+      "name": "Bottom",
+      "importPath": "./src/components/Tooltip/Tooltip.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    },
+    {
+      "id": "components-tooltip--default",
+      "title": "Components/Tooltip",
+      "name": "Default",
+      "importPath": "./src/components/Tooltip/Tooltip.stories.tsx",
+      "tags": [
+        "dev",
+        "test",
+        "manifest"
+      ],
+      "hasPlay": false
+    }
+  ]
+}
