@@ -2,7 +2,7 @@
 
 The design-to-code MCP server for the [tenet-ui](https://github.com/apurvkhare/tenet-ui) design system, built to the design in `mcp-masterclass/design/ds-mcp-server/DESIGN.md` (rev 3). The server supplies context and judgment; the agent writes the code and runs the checks.
 
-Status: **build order steps 1–4 done** — ingest pipeline, five catalog tools, resources, Streamable HTTP with self-hosted auth, path one (ingest_design → match_components → resolve_tokens → plan_component) with form elicitation, `run_checks` judging the capture script's results, path two (`audit_code`, `audit_page`), `plan_tests`, the three prompts, the hooks plugin and the first dashboard. The talk needs these four. Next: Figma (step 5), external OAuth and the eval harness (step 6).
+Status: **build order steps 1–4 done** — ingest pipeline, five catalog tools, resources, Streamable HTTP with self-hosted auth, path one (ingest_design → match_components → resolve_tokens → plan_component) with form elicitation, `run_checks` judging the capture script's results, path two (`audit_code`, `audit_page`), `plan_tests`, the three prompts, the hooks plugin and the first dashboard. The talk needs these four. Step 5 (Figma) is dropped: no Figma source exists for tenet-ui. Next: step 6 — the eval harness, the skill moved into the plugin, external OAuth.
 
 ## Run it
 
@@ -134,4 +134,4 @@ Every snapshot carries a `manifest.json` (each source with `sourceRef`, content 
 
 ## Next
 
-DESIGN.md §15 steps 5 and 6: Figma (URL elicitation, connect page, token storage, Figma design context as an ingest source); external OAuth (PRM against a real AS, CIMD), the skill moved into this repo's plugin, the dual-path eval harness over golden screenshots and golden source files. `design_to_plan` as a Task once the composite is worth it; a live vision run once credentials are available (the vision path is wired but has never been exercised against the model).
+DESIGN.md §15 step 6 (step 5, Figma, is dropped — no Figma source for tenet-ui): the dual-path eval harness over golden screenshots and golden source files, the skill moved into this repo's plugin next to the hooks, external OAuth (PRM against a real authorization server, CIMD) if the server is ever shared beyond one team. `design_to_plan` as a Task once the composite is worth it; a live vision run once credentials are available (the vision path is wired but has never been exercised against the model).
