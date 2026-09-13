@@ -1,4 +1,7 @@
+import type { Principal } from '../auth/tokens.js';
 import type { CatalogStore, ResolvedVersion, VersionData } from '../catalog/store.js';
+import type { VisionFn } from '../design/vision.js';
+import type { DesignStore } from '../store/design-store.js';
 
 export interface ToolContext {
   store: CatalogStore;
@@ -7,6 +10,12 @@ export interface ToolContext {
   traceId: string;
   /** Public base URL of this server, for resource links. */
   publicUrl: string;
+  /** Present on transports that carry a principal (HTTP, stdio); design tools need all three. */
+  principal?: Principal;
+  designs?: DesignStore;
+  sealKey?: Buffer;
+  /** Perception; undefined when no model credentials are configured. */
+  vision?: VisionFn;
 }
 
 export interface Versioned {
@@ -16,10 +25,10 @@ export interface Versioned {
 
 /** Resolve dsVersion from the argument, validating it against the mirrored header when both are present. */
 export function pickVersion(ctx: ToolContext, dsVersion: string | undefined): Versioned {
-  if (ctx.dsVersionHeader && dsVersion && ctx.dsVersionHeader !== dsVersion) {
+  if (ctx.dsVersionHeader && dsVersion && dsVersion !== 'latest' && ctx.dsVersionHeader !== dsVersion) {
     throw new ToolError(`DsVersion header (${ctx.dsVersionHeader}) does not match dsVersion argument (${dsVersion})`, 'version_mismatch');
   }
-  const resolved = ctx.store.resolve(dsVersion ?? ctx.dsVersionHeader);
+  const resolved = ctx.store.resolve(dsVersion && dsVersion !== 'latest' ? dsVersion : ctx.dsVersionHeader ?? dsVersion);
   return { resolved, data: ctx.store.load(resolved.effective) };
 }
 

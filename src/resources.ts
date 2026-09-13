@@ -4,11 +4,15 @@ import { join } from 'node:path';
 import type { CatalogStore, VersionData } from './catalog/store.js';
 import { A11Y_CONTRACT } from './tools/catalog-tools.js';
 import { ToolError } from './tools/context.js';
+import type { DesignStore } from './store/design-store.js';
+import type { DesignRow, MatchRow, PlanRow } from './tools/design-tools.js';
 
-export interface ResourceContent { uri: string; mimeType: string; text: string }
+export interface ResourceContent { uri: string; mimeType: string; text?: string; blob?: Buffer }
+export interface ReadContext { designs?: DesignStore; sub?: string }
 
-export function readResource(store: CatalogStore, uri: string): ResourceContent {
+export function readResource(store: CatalogStore, uri: string, rc: ReadContext = {}): ResourceContent {
   const u = new URL(uri);
+  if (u.protocol === 'design:') return readDesignResource(u, uri, rc);
   if (u.protocol !== 'ds:') throw new ToolError(`unsupported scheme ${u.protocol}`, 'not_found');
   // ds://versions  |  ds://{v}/components/{name}  |  ds://{v}/tokens/{group}.json  |  ds://{v}/guidelines/{topic}  |  ds://{v}/gaps
   const host = u.host;
@@ -114,4 +118,34 @@ export function listResources(store: CatalogStore): Array<{ uri: string; name: s
     out.push({ uri: `ds://${v}/guidelines/audit-rules`, name: `${v} audit rule catalog`, mimeType: 'text/markdown' });
   }
   return out;
+}
+
+// ---- design:// (private, principal-bound; DESIGN.md §6) -----------------------------------------
+function readDesignResource(u: URL, uri: string, rc: ReadContext): ResourceContent {
+  if (!rc.designs || !rc.sub) throw new ToolError('design resources are not available on this transport', 'not_found');
+  const designId = u.host;
+  const parts = u.pathname.replace(/^\/+/, '').split('/');
+  const design = rc.designs.get<DesignRow>('design', rc.sub, designId);
+  if (!design) throw new ToolError(`no resource at ${uri}`, 'not_found'); // another principal's design: not-found, never forbidden
+  const [artifact, id] = parts;
+  if (artifact === 'layout.json') return { uri, mimeType: 'application/json', text: json({ designId, dsVersion: design.data.dsVersion, source: design.data.source, vision: design.data.vision, layout: design.data.layout }) };
+  if (artifact === 'screenshot.png') {
+    const blob = rc.designs.getBlob(rc.sub, designId, 'screenshot');
+    if (!blob) throw new ToolError(`no screenshot for ${designId} (ingested from a layout)`, 'not_found');
+    return { uri, mimeType: design.data.mediaType ?? 'image/png', blob };
+  }
+  const matchId = artifact === 'matches' ? id?.replace(/\.json$/, '') : artifact === 'match.json' ? design.data.matches.at(-1) : undefined;
+  if (matchId) {
+    const m = rc.designs.get<MatchRow>('match', rc.sub, matchId);
+    if (!m || m.data.designId !== designId) throw new ToolError(`no resource at ${uri}`, 'not_found');
+    return { uri, mimeType: 'application/json', text: json({ matchId, ...m.data }) };
+  }
+  const planId = artifact === 'plans' ? id?.replace(/\.(md|json)$/, '') : artifact === 'plan.md' || artifact === 'plan.json' ? design.data.plans.at(-1) : undefined;
+  if (planId) {
+    const p = rc.designs.get<PlanRow>('plan', rc.sub, planId);
+    if (!p || p.data.designId !== designId) throw new ToolError(`no resource at ${uri}`, 'not_found');
+    const wantJson = (id ?? artifact ?? '').endsWith('.json');
+    return wantJson ? { uri, mimeType: 'application/json', text: json({ planId, ...p.data.plan }) } : { uri, mimeType: 'text/markdown', text: p.data.markdown };
+  }
+  throw new ToolError(`no resource at ${uri}; artifacts: layout.json, screenshot.png, match.json, matches/{id}.json, plan.md, plans/{id}.md|.json`, 'not_found');
 }

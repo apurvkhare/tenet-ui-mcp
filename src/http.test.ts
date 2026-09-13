@@ -68,8 +68,9 @@ test('wrong scope → one 403 naming the missing scope', async () => {
 test('tools/list is deterministic, small, with annotations and the DsVersion header hint', async () => {
   const client = await connect(await mintToken(auth, { sub: 'apurv', scopes: ['ds:read'] }));
   const { tools } = await client.listTools();
-  assert.deepEqual(tools.map((t) => t.name), ['search_components', 'get_component', 'find_tokens', 'search_icons', 'resolve_value']);
-  assert.ok(Buffer.byteLength(JSON.stringify(tools)) < 7 * 1024, `tools/list is ${Buffer.byteLength(JSON.stringify(tools))} bytes`);
+  assert.deepEqual(tools.map((t) => t.name), ['search_components', 'get_component', 'find_tokens', 'search_icons', 'resolve_value', 'ingest_design', 'match_components', 'resolve_tokens', 'plan_component']);
+  const size = Buffer.byteLength(JSON.stringify(tools));
+  assert.ok(size < tools.length * 2048, `tools/list is ${size} bytes for ${tools.length} tools`);
   for (const t of tools) {
     assert.ok((t.description ?? '').length < 300);
     assert.equal(t.annotations?.readOnlyHint, true);

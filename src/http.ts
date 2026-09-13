@@ -6,6 +6,8 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { AuthError, SCOPES, authConfigFromEnv, mintToken, requireScopes, verifyBearer, type AuthConfig, type Principal } from './auth/tokens.js';
 import type { CatalogStore } from './catalog/store.js';
 import { createMcpServer, SERVER_INFO, TOOL_SCOPES } from './server.js';
+import type { DesignStore } from './store/design-store.js';
+import type { VisionFn } from './design/vision.js';
 import { emit, traceFromHeader } from './telemetry.js';
 
 export interface HttpOptions {
@@ -16,6 +18,9 @@ export interface HttpOptions {
   /** Optional client-credentials client for CI (DESIGN.md §9 "Machine" row, self-hosted flavour). */
   clientCredentials?: { clientId: string; clientSecret: string; scopes: string[] };
   maxBodyBytes?: number;
+  designs?: DesignStore;
+  sealKey?: Buffer;
+  vision?: VisionFn;
 }
 
 const MAX_BODY = 6 * 1024 * 1024; // ingest_design images are ≤ 5 MB base64
@@ -79,7 +84,7 @@ export function createHttpServer(opts: HttpOptions): Server {
       }
 
       const dsVersionHeader = header(req, 'dsversion') ?? header(req, 'x-ds-version');
-      const server = createMcpServer(opts.store, { principal, traceId: trace.traceId, dsVersionHeader, publicUrl: opts.publicUrl });
+      const server = createMcpServer(opts.store, { principal, traceId: trace.traceId, dsVersionHeader, publicUrl: opts.publicUrl, designs: opts.designs, sealKey: opts.sealKey, vision: opts.vision });
       const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
       res.on('close', () => { void transport.close(); void server.close(); });
       await server.connect(transport);

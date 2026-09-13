@@ -2,7 +2,8 @@
 // can be unit-tested without a transport; server.ts wraps them for MCP.
 import { z } from 'zod';
 import { resolveValue, type Theme, type ValueKind } from '../catalog/resolve.js';
-import { COMPONENT_SYNONYMS, TOKEN_GROUP_SYNONYMS, similarity, tokenize } from '../catalog/synonyms.js';
+import { nearestNames, rankComponents, whenToUse } from '../catalog/search.js';
+import { TOKEN_GROUP_SYNONYMS, tokenize } from '../catalog/synonyms.js';
 import type { CatalogComponent } from '../ingest/extract/catalog.js';
 import type { TokenRecord } from '../ingest/extract/package-data.js';
 import { capJson, firstSentence } from './caps.js';
@@ -22,7 +23,7 @@ export interface ToolDef<In extends z.ZodRawShape = z.ZodRawShape> {
   cap: number;
   inputSchema: In;
   outputSchema: z.ZodRawShape;
-  run: (args: z.infer<z.ZodObject<In>>, ctx: ToolContext) => ToolResult;
+  run: (args: z.infer<z.ZodObject<In>>, ctx: ToolContext) => ToolResult | Promise<ToolResult>;
 }
 
 const dsVersionArg = z.string().default('latest').describe('Lockfile version, "0.4", or "latest".').meta({ 'x-mcp-header': 'DsVersion' });
@@ -47,47 +48,18 @@ export const searchComponents: ToolDef<{ query: z.ZodString; dsVersion: typeof d
   outputSchema: { results: z.array(componentHit), nearest: z.array(z.string()).optional(), hint: z.string().optional(), ...dsMeta },
   run(args, ctx) {
     const v = pickVersion(ctx, args.dsVersion);
-    const words = tokenize(args.query);
-    const q = args.query.toLowerCase().trim();
-    const scored = v.data.components
-      .filter((c) => c.kind === 'component')
-      .map((c) => {
-        let score = 0;
-        const on = new Set<string>();
-        const idWords = c.id.split('-');
-        const nameLower = c.name.toLowerCase();
-        if (c.id === q.replace(/\s+/g, '-') || nameLower === q) { score += 1; on.add('name'); }
-        else if (nameLower.startsWith(q) || c.id.startsWith(q)) { score += 0.8; on.add('name'); }
-        else if (nameLower.includes(q) || c.id.includes(q)) { score += 0.6; on.add('name'); }
-        for (const w of words) {
-          if (idWords.includes(w)) { score += 0.5; on.add('name'); }
-          for (const syn of COMPONENT_SYNONYMS[w] ?? []) if (syn === c.id) { score += 0.7 - 0.1 * (COMPONENT_SYNONYMS[w]!.indexOf(syn)); on.add(`synonym:${w}`); }
-        }
-        for (const syn of COMPONENT_SYNONYMS[q] ?? []) if (syn === c.id) { score += 0.9 - 0.15 * COMPONENT_SYNONYMS[q]!.indexOf(syn); on.add(`synonym:${q}`); }
-        const desc = c.description.toLowerCase();
-        const whenToUse = guidelineWhenToUse(v, c)?.toLowerCase() ?? '';
-        for (const w of words) {
-          if (desc.includes(w)) { score += 0.25; on.add('description'); }
-          if (whenToUse.includes(w)) { score += 0.2; on.add('guidelines'); }
-        }
-        if (c.status === 'deprecated') score *= 0.6;
-        return { c, score: Math.round(score * 100) / 100, on: [...on] };
-      })
-      .filter((x) => x.score > 0)
-      .sort((a, b) => b.score - a.score || a.c.id.localeCompare(b.c.id))
-      .slice(0, args.limit);
-
     const meta = versionMeta(v);
+    const scored = rankComponents(v.data, args.query, args.limit);
     if (!scored.length) {
-      const nearest = v.data.components.filter((c) => c.kind === 'component').map((c) => ({ id: c.id, s: similarity(q, c.id) + similarity(q, c.name) })).sort((a, b) => b.s - a.s).slice(0, 5).map((x) => x.id);
+      const nearest = nearestNames(v.data, args.query);
       return {
         structured: { results: [], nearest, hint: `no component matches "${args.query}"; nearest names listed — try one of them, or describe the role (e.g. "status pill", "confirm dialog")`, ...meta },
         text: `No component matches "${args.query}" in ${v.resolved.effective}. Nearest: ${nearest.join(', ')}.`,
       };
     }
-    const results = scored.map(({ c, score, on }) => ({
-      id: c.id, name: c.name, status: c.status, score, summary: firstSentence(c.description) || firstSentence(guidelineWhenToUse(v, c)),
-      importPath: c.importPath, stories: c.stories.length, deprecated: c.status === 'deprecated' ? true : undefined, matchedOn: on,
+    const results = scored.map(({ component: c, score, matchedOn }) => ({
+      id: c.id, name: c.name, status: c.status, score, summary: firstSentence(c.description) || firstSentence(whenToUse(v.data, c)),
+      importPath: c.importPath, stories: c.stories.length, deprecated: c.status === 'deprecated' ? true : undefined, matchedOn,
     }));
     const capped = capJson({ results, ...meta }, this.cap, 'lower `limit` or refine `query`');
     return {
@@ -97,12 +69,6 @@ export const searchComponents: ToolDef<{ query: z.ZodString; dsVersion: typeof d
     };
   },
 };
-
-function guidelineWhenToUse(v: ReturnType<typeof pickVersion>, c: CatalogComponent): string | undefined {
-  const page = v.data.guidelines?.pages.find((p) => p.scope === 'component' && p.id === c.id);
-  const pre = page?.sections.find((s) => s.level <= 1)?.body ?? page?.sections[0]?.body;
-  return pre?.replace(/\*\*When to use:\*\*\s*/i, '').split('\n')[0];
-}
 
 // ---- get_component -----------------------------------------------------------------------------
 const SECTIONS = ['api', 'examples', 'a11y', 'guidelines', 'source'] as const;
@@ -139,7 +105,7 @@ export const getComponent: ToolDef<{ name: z.ZodString; dsVersion: typeof dsVers
     const meta = versionMeta(v);
     const c = ctx.store.findComponent(v.data, args.name);
     if (!c) {
-      const candidates = v.data.components.map((x) => ({ id: x.id, s: Math.max(similarity(args.name, x.id), similarity(args.name, x.name)) })).sort((a, b) => b.s - a.s).slice(0, 5).map((x) => x.id);
+      const candidates = nearestNames(v.data, args.name);
       return { structured: { found: false, candidates, ...meta }, text: `No component "${args.name}" in ${v.resolved.effective}. Did you mean: ${candidates.join(', ')}?` };
     }
     const wanted = new Set<Section>(args.full ? [...SECTIONS] : (args.sections ?? ['api', 'examples', 'guidelines']));

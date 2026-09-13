@@ -2,7 +2,7 @@
 
 The design-to-code MCP server for the [tenet-ui](https://github.com/apurvkhare/tenet-ui) design system, built to the design in `mcp-masterclass/design/ds-mcp-server/DESIGN.md` (rev 3). The server supplies context and judgment; the agent writes the code and runs the checks.
 
-Status: **build order step 1 done** (ingest, catalog tools, resources, Streamable HTTP, self-hosted auth, structured output, telemetry). Next: ingest → match → plan (step 2).
+Status: **build order steps 1 and 2 done** — ingest pipeline, five catalog tools, resources, Streamable HTTP with self-hosted auth, and path one (ingest_design → match_components → resolve_tokens → plan_component) with form elicitation. Next: run_checks over the capture script's results (step 3), then audit and tests (step 4).
 
 ## Run it
 
@@ -26,7 +26,7 @@ Environment: `PORT`, `HOST`, `PUBLIC_URL` (the `aud` of tokens and the resource 
 
 ## What the server serves
 
-**Tools** (all `ds:read`, read-only, idempotent; fixed order; `tools/list` stays under 7 KB; every tool returns `structuredContent` + a text summary + `resource_link`s + `_meta.traceId`):
+**Catalog tools** (`ds:read`, read-only, idempotent; fixed order; every tool returns `structuredContent` + a text summary + `resource_link`s + `_meta.traceId`):
 
 | Tool | Cap | What it does |
 |---|---|---|
@@ -38,6 +38,21 @@ Environment: `PORT`, `HOST`, `PUBLIC_URL` (the `aud` of tokens and the resource 
 
 Every tool takes `dsVersion` (JSON schema carries `x-mcp-header: DsVersion`; a `DsVersion` request header is validated against the argument). Resolution: exact → newest patch of that minor → nearest earlier minor → latest of that major → latest, and the effective version is echoed in every result.
 
+**Path one, design to code** (`design:ingest`; DESIGN.md §4):
+
+| Tool | Cap | What it does |
+|---|---|---|
+| `ingest_design` | 6 KB | A screenshot (≤ 5 MB PNG/JPEG/WebP/GIF, sniffed) goes to the vision model with a fixed template and an output schema in the catalog's vocabulary; or the host passes a `layout` tree and no model is called. Stores the design; returns `designId`. |
+| `match_components` | 8 KB | Ranks catalog components per region (role and label synonyms, the analyser's candidates, structural cues such as icon-only, bordered vs plain containers, children) and records confidence. Where the top two are within 0.15 it asks, at most 8 questions; `strategy: auto` never asks and lists them in `unresolved[]`. Returns `matchId`. |
+| `resolve_tokens` | 6 KB | Every raw value the analyser read → nearest token with delta. Off-scale values become questions: snap, use an alternative, keep as a documented exception, or propose a token. |
+| `plan_component` | 24 KB | The plan: tree with exact imports, prop mapping per node (variant from colour and state, heading level from size, placeholders, wrappers), token references, a11y per node, files, contract rules, catalog excerpts, story and test ideas. A plan, never source. |
+
+**Elicitation** follows the MRTR shape of DESIGN.md §8 at the result level, because the MCP SDK does not ship it yet: a tool that needs an answer returns `structuredContent.resultType = "input_required"` with `inputRequests` (form elicitation params) and a sealed `requestState` (AES-GCM; principal, ten-minute expiry, argument digest, partial result). The client calls the same tool again with `inputResponses` and the untouched `requestState`. Another principal, a tampered blob, changed arguments, or an expired state are rejected. An agent can answer the questions itself or show them to the user.
+
+**Design store:** rows (`dsg_…`, `mtc_…`, `pln_…`) are bound to the caller's `sub`, expire after 24 h, live under `DATA_DIR` (default `.data/`). Another principal gets not-found, never forbidden. Private resources: `design://{designId}/layout.json`, `screenshot.png`, `match.json`, `matches/{matchId}.json`, `plan.md`, `plans/{planId}.md|.json`.
+
+**Vision:** `@anthropic-ai/sdk`, model `VISION_MODEL` (default `claude-opus-5`), structured output via `betaZodOutputFormat`, server-side refusal fallbacks on. Enabled when `ANTHROPIC_API_KEY` (or an `ant auth login` profile with `VISION=on`) is present; otherwise `ingest_design` accepts layouts only and says so.
+
 **Resources:** `ds://versions`, `ds://{v}/components/{name}` (markdown), `ds://{v}/tokens/{group}.json`, `ds://{v}/guidelines/{topic}` (the nine system pages, any component id, `contract`, `audit-rules`), `ds://{v}/gaps`, `ds://{v}/changelog`, `ds://{v}/deprecations`.
 
 **Discovery:** `GET /healthz`, `GET /.well-known/oauth-protected-resource`, `GET /.well-known/oauth-authorization-server`. No token → `401` with `WWW-Authenticate: Bearer resource_metadata=…`; missing scope → one `403 insufficient_scope` naming every missing scope.
@@ -46,7 +61,7 @@ Every tool takes `dsVersion` (JSON schema carries `x-mcp-header: DsVersion`; a `
 
 ## Protocol note
 
-`@modelcontextprotocol/sdk` 1.30 implements MCP **2025-11-25**: initialize handshake, `tools/list`, structured output, resource templates, Tasks. The stateless, no-handshake `server/discover` and MRTR elicitation that DESIGN.md §8 describes for the 2026-07-28 revision are not in the SDK yet. The server is stateless today (one `McpServer` per request, no session id), so the handshake is a formality and the move is contained in `src/http.ts`.
+`@modelcontextprotocol/sdk` 1.30 implements MCP **2025-11-25**: initialize handshake, `tools/list`, structured output, resource templates, Tasks. The stateless, no-handshake `server/discover` and MRTR elicitation that DESIGN.md §8 describes for the 2026-07-28 revision are not in the SDK yet. The server is stateless today (one `McpServer` per request, no session id), so the handshake is a formality and the move is contained in `src/http.ts`; elicitation already uses the MRTR result shape. `tools/list` is about 16 KB for nine tools with output schemas — the 7 KB figure in DESIGN.md §6 is not reachable with per-tool output schemas and is tracked as a budget of 2 KB per tool in the tests.
 
 ## Layout
 
@@ -55,7 +70,10 @@ src/ingest/            the data pipeline (DESIGN.md §10) — see below
 src/catalog/store.ts   snapshot reads + dsVersion resolution
 src/catalog/resolve.ts nearest-token resolution (ΔE / distance)
 src/catalog/synonyms.ts what people call components and token groups
-src/tools/             the five tools as plain functions (unit-tested without a transport)
+src/tools/             tools as plain functions (unit-tested without a transport): catalog-tools, design-tools
+src/design/            layout schema, vision call, matcher, token resolution, plan builder
+src/store/             the design store (principal-bound rows, 24 h TTL)
+src/auth/seal.ts       requestState AEAD sealing
 src/resources.ts       ds:// resources
 src/server.ts          McpServer factory: registration order, structured output, _meta, telemetry
 src/http.ts            Streamable HTTP: Origin, bearer, scopes, PRM, AS metadata, client credentials
@@ -88,4 +106,4 @@ Every snapshot carries a `manifest.json` (each source with `sourceRef`, content 
 
 ## Next
 
-DESIGN.md §15 step 2: `ingest_design` (vision call constrained to the catalog vocabulary, or a host-supplied layout), the design store and handles, `match_components` with the first elicitation, `plan_component`. Then step 3 (`resolve_tokens`, `run_checks` over the capture script's `results.json`) and step 4 (`audit_code`, `audit_page`, `plan_tests`, hooks).
+DESIGN.md §15 step 3: the contract resource is in place; add `run_checks` as inline judgment over the capture script's `results.json` (types, lint, tokens, deprecations, tests, axe, SSIM against the release baselines). Then step 4: `audit_code` with the migration registry, `audit_page` over `snapshot.json`, `plan_tests`, the hooks plugin. `design_to_plan` as a Task once the composite is worth it.
