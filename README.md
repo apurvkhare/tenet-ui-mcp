@@ -22,13 +22,13 @@ npm run token -- --sub apurv --scope ds:read        # prints a bearer token for 
 
 Claude Code, Cursor or any Streamable HTTP client: endpoint `http://127.0.0.1:3000/mcp`, header `Authorization: Bearer <token>`. For a local stdio client: `npm run stdio`.
 
-Environment: `PORT`, `HOST`, `PUBLIC_URL` (the `aud` of tokens and the resource in PRM), `AUTH_MODE` (`none` | `hs256`), `AUTH_HMAC_KEY`, `AUTH_CLIENT_ID` / `AUTH_CLIENT_SECRET` / `AUTH_CLIENT_SCOPES` (optional client-credentials client for CI at `POST /oauth/token`), `ALLOWED_ORIGINS`, `SNAPSHOTS_DIR`, `DATA_DIR` (design store + event spool, default `.data/`), `TELEMETRY=off`.
+Environment: `PORT`, `HOST`, `PUBLIC_URL` (the `aud` of tokens and the resource in PRM), `AUTH_MODE` (`none` | `hs256`), `AUTH_HMAC_KEY`, `AUTH_CLIENT_ID` / `AUTH_CLIENT_SECRET` / `AUTH_CLIENT_SCOPES` (optional client-credentials client for CI at `POST /oauth/token`), `ALLOWED_ORIGINS`, `SNAPSHOTS_DIR`, `DATA_DIR` (design store + event spool, default `.data/`), `TELEMETRY=off`, `TELEMETRY_SALT` (key for the principal hash in telemetry; defaults to `AUTH_HMAC_KEY`).
 
 Dashboard: `GET /dashboard` (HTML) and `GET /metrics.json?days=7`, bearer-authenticated (header or `?token=`), read the event spool the server writes for its own calls and the companion plugin posts to `POST /events`.
 
 ## What the server serves
 
-**Catalog tools** (`ds:read`, read-only, idempotent; fixed order; every tool returns `structuredContent` + a text summary + `resource_link`s + `_meta.traceId`):
+**Catalog tools** (`ds:read`, read-only, idempotent; fixed order; every tool returns `structuredContent` + a text summary + `resource_link`s + `_meta.traceId`). A result trimmed to its cap carries `truncated: true` and `truncatedNote` saying how to get the rest. Annotations are per tool: the catalog tools and `plan_tests` are read-only; the tools that write to the design store (`ingest_design`, `match_components`, `resolve_tokens`, `plan_component`, `run_checks`, `audit_code`, `audit_page`) are not read-only and not destructive, and only `resolve_tokens` is idempotent.
 
 | Tool | Cap | What it does |
 |---|---|---|
@@ -77,11 +77,11 @@ Every tool takes `dsVersion`. Its JSON schema carries `x-mcp-header: DsVersion`,
 
 **Vision:** `@anthropic-ai/sdk`, model `VISION_MODEL` (default `claude-opus-5`), structured output via `betaZodOutputFormat`, server-side refusal fallbacks on. Enabled when `ANTHROPIC_API_KEY` (or an `ant auth login` profile with `VISION=on`) is present; otherwise `ingest_design` accepts layouts only and says so.
 
-**Resources:** `ds://versions`, `ds://{v}/components/{name}` (markdown), `ds://{v}/tokens/{group}.json`, `ds://{v}/guidelines/{topic}` (the nine system pages, any component id, `contract`, `audit-rules`), `ds://{v}/gaps`, `ds://{v}/changelog`, `ds://{v}/deprecations`.
+**Resources:** `ds://versions`, `ds://{v}/components/{name}` (markdown), `ds://{v}/tokens/{group}.json`, `ds://{v}/guidelines/{topic}` (the nine system pages, any component id, `contract`, `audit-rules`), `ds://{v}/gaps`, `ds://{v}/changelog`, `ds://{v}/deprecations`, `ds://{v}/baselines` (the release's story screenshots) and `ds://{v}/baselines/{storyId}.{theme}.png`. `get_component` links each story to its light baseline.
 
 **Discovery:** `GET /healthz`, `GET /.well-known/oauth-protected-resource` (also at the path-aware `/.well-known/oauth-protected-resource/mcp`), `GET /.well-known/oauth-authorization-server`. MCP clients call `server/discover` for versions, capabilities and server info. No token → `401` with `WWW-Authenticate: Bearer resource_metadata=…`; missing scope → one `403 insufficient_scope` naming every missing scope.
 
-**Telemetry:** one JSON line per request / tool call / resource read on stderr with a W3C trace id. The trace comes from `params._meta.traceparent` (SEP-414) when the client sends one, else from the `traceparent` header, else a fresh one; it is echoed back in the response header and in each result's `_meta.traceId`. Names, durations, statuses, versions, byte counts. Never arguments or findings.
+**Telemetry:** one JSON line per request / tool call / resource read on stderr with a W3C trace id. The trace comes from `params._meta.traceparent` (SEP-414) when the client sends one, else from the `traceparent` header, else a fresh one; it is echoed back in the response header and in each result's `_meta.traceId`. Names, durations, statuses, versions, byte counts, and the principal as a keyed hash (`p_…`), never the raw `sub`. Never arguments or findings.
 
 ## Protocol note
 

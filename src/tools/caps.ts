@@ -4,10 +4,14 @@ export const bytes = (v: unknown): number => Buffer.byteLength(JSON.stringify(v)
 
 /**
  * Shrink `value` under `cap` bytes: first clip long strings, then drop trailing items from the
- * largest arrays. Returns the (possibly trimmed) value and a note for the caller to surface.
+ * largest arrays. A trimmed value carries `truncated: true` and `truncatedNote` (what was trimmed
+ * and how to get the rest), and still fits the cap.
  */
-export function capJson<T extends Record<string, unknown>>(value: T, cap: number, hint: string): { value: T; truncated: boolean; note?: string } {
+export function capJson<T extends Record<string, unknown>>(value: T, cap: number, hint: string): { value: T & { truncated?: true; truncatedNote?: string }; truncated: boolean; note?: string } {
   if (bytes(value) <= cap) return { value, truncated: false };
+  const note = `trimmed to fit ${cap} bytes; ${hint}`;
+  const marker = { truncated: true as const, truncatedNote: note };
+  cap -= bytes(marker);
   let v: Record<string, unknown> = structuredClone(value);
   const clip = (o: unknown, max: number): unknown => {
     if (typeof o === 'string') return o.length > max ? `${o.slice(0, max - 1)}…` : o;
@@ -25,7 +29,7 @@ export function capJson<T extends Record<string, unknown>>(value: T, cap: number
     if (!arr || arr.length <= 1) break;
     arr.pop();
   }
-  return { value: v as T, truncated: true, note: `trimmed to fit ${cap} bytes; ${hint}` };
+  return { value: { ...v, ...marker } as unknown as T & { truncated: true; truncatedNote: string }, truncated: true, note };
 }
 
 function largestArray(o: unknown, best: { arr: unknown[] | undefined; size: number } = { arr: undefined, size: 0 }): unknown[] | undefined {

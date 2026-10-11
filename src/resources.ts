@@ -16,7 +16,7 @@ export function readResource(store: CatalogStore, uri: string, rc: ReadContext =
   if (u.protocol === 'design:') return readDesignResource(u, uri, rc);
   if (u.protocol === 'audit:') return readAuditResource(u, uri, rc);
   if (u.protocol !== 'ds:') throw new ToolError(`unsupported scheme ${u.protocol}`, 'not_found');
-  // ds://versions  |  ds://{v}/components/{name}  |  ds://{v}/tokens/{group}.json  |  ds://{v}/guidelines/{topic}  |  ds://{v}/gaps
+  // ds://versions  |  ds://{v}/components/{name}  |  ds://{v}/tokens/{group}.json  |  ds://{v}/guidelines/{topic}  |  ds://{v}/gaps  |  ds://{v}/baselines[/{file}]
   const host = u.host;
   const path = u.pathname.replace(/^\/+/, '').split('/');
   if (host === 'versions' && !path[0]) return { uri, mimeType: 'application/json', text: json(versionsResource(store)) };
@@ -29,10 +29,25 @@ export function readResource(store: CatalogStore, uri: string, rc: ReadContext =
   if (kind === 'gaps' && !rest) return { uri, mimeType: 'application/json', text: json(data.gaps ?? { version: data.version, summary: {}, components: [] }) };
   if (kind === 'changelog' && !rest) return { uri, mimeType: 'text/markdown', text: changelogMarkdown(data) };
   if (kind === 'deprecations' && !rest) return { uri, mimeType: 'application/json', text: json(data.deprecations ?? { deprecations: [] }) };
+  if (kind === 'baselines') return baselineResource(data, uri, rest);
   throw new ToolError(`no resource at ${uri}`, 'not_found');
 }
 
 const json = (v: unknown): string => JSON.stringify(v, null, 2);
+
+
+// The release's story screenshots (DESIGN.md §10): the manifest at ds://{v}/baselines, one PNG per
+// story per theme at ds://{v}/baselines/{storyId}.{theme}.png. Only files named in the manifest are served.
+function baselineResource(data: VersionData, uri: string, file: string | undefined): ResourceContent {
+  const b = data.baselines;
+  if (!b) throw new ToolError(`no baselines shipped with ${data.version}`, 'not_found');
+  if (!file) return { uri, mimeType: 'application/json', text: json({ dsVersion: data.version, viewport: b.viewport, count: b.entries.length, entries: b.entries.map((e) => ({ storyId: e.storyId, theme: e.theme, uri: `ds://${data.version}/baselines/${e.file}` })) }) };
+  const e = b.entries.find((x) => x.file === file);
+  if (!e) throw new ToolError(`no baseline ${file} in ${data.version}; read ds://${data.version}/baselines for the list`, 'not_found');
+  const path = join(b.dir, e.file);
+  if (!existsSync(path)) throw new ToolError(`baseline file missing: ${e.file}`, 'not_found');
+  return { uri, mimeType: 'image/png', blob: readFileSync(path) };
+}
 
 export function versionsResource(store: CatalogStore): unknown {
   const index = store.getIndex();
@@ -118,6 +133,7 @@ export function listResources(store: CatalogStore): Array<{ uri: string; name: s
     out.push({ uri: `ds://${v}/deprecations`, name: `${v} deprecations`, mimeType: 'application/json', description: 'Migration registry: deprecated components and props with replacements.' });
     out.push({ uri: `ds://${v}/guidelines/contract`, name: `${v} component contract`, mimeType: 'text/markdown' });
     out.push({ uri: `ds://${v}/guidelines/audit-rules`, name: `${v} audit rule catalog`, mimeType: 'text/markdown' });
+    if (store.load(v).baselines) out.push({ uri: `ds://${v}/baselines`, name: `${v} story baselines`, mimeType: 'application/json', description: 'Release screenshots per story and theme, with the URI of each PNG.' });
   }
   return out;
 }

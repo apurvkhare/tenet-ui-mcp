@@ -194,7 +194,7 @@ export const planComponent: ToolDef<{ matchId: z.ZodString; name: z.ZodString; o
     name: z.string().min(1).max(60).regex(/^[A-Z][A-Za-z0-9]*$/, 'PascalCase component name'),
     options: z.object({ directory: z.string().max(200).optional(), stories: z.boolean().optional(), tests: z.boolean().optional(), typescript: z.boolean().optional() }).optional(),
   },
-  outputSchema: { planId: z.string(), plan: shape('{name, dsVersion, imports[], tree[], files[], contract[], a11y[], catalog[], exceptions[], decisions[], stories[], tests[], notes[]}'), truncated: z.boolean().optional(), ...dsMeta },
+  outputSchema: { planId: z.string(), plan: shape('{name, dsVersion, imports[], tree[], files[], contract[], a11y[], catalog[], exceptions[], decisions[], stories[], tests[], notes[]}'), ...dsMeta },
   run(args, ctx) {
     const store = needStore(ctx);
     const match = loadMatch(ctx, args.matchId);
@@ -208,7 +208,6 @@ export const planComponent: ToolDef<{ matchId: z.ZodString; name: z.ZodString; o
     const created = store.create<PlanRow>('plan', sub(ctx), { designId: design.id, matchId: match.id, plan, markdown });
     store.update(design, { ...design.data, plans: [...design.data.plans, created.id] });
     const capped = capJson({ planId: created.id, plan, ...meta } as Record<string, unknown>, this.cap, `read design://${design.id}/plans/${created.id}.md for the full plan`);
-    if (capped.truncated) capped.value.truncated = true;
     const components = plan.catalog.map((c) => c.component);
     return {
       structured: capped.value,

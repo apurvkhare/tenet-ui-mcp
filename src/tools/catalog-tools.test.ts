@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { CatalogStore } from '../catalog/store.js';
-import { bytes } from './caps.js';
+import { bytes, capJson } from './caps.js';
 import { findTokens, getComponent, resolveValueTool, searchComponents, searchIcons, CATALOG_TOOLS } from './catalog-tools.js';
 import type { ToolContext } from './context.js';
 
@@ -13,6 +13,17 @@ test('every tool has a description under 300 chars and answers under its cap', a
   assert.ok(bytes(r.structured) <= getComponent.cap, `get_component ${bytes(r.structured)} > ${getComponent.cap}`);
   const s = await searchComponents.run({ query: 'input', dsVersion: 'latest', limit: 10 }, ctx);
   assert.ok(bytes(s.structured) <= searchComponents.cap);
+  const trimmed = capJson({ results: Array.from({ length: 50 }, (_, i) => ({ id: `item-${i}`, summary: 'x'.repeat(80) })) }, 1024, 'lower `limit`');
+  assert.equal(trimmed.value.truncated, true);
+  assert.match(String(trimmed.value.truncatedNote), /trimmed to fit 1024 bytes; lower `limit`/);
+  assert.ok(bytes(trimmed.value) <= 1024, 'the marker fits inside the cap');
+  assert.equal(capJson({ a: 1 }, 1024, 'x').value.truncated, undefined);
+});
+
+test('get_component links each story to its release baseline', async () => {
+  const r = await getComponent.run({ name: 'tag', dsVersion: '0.4.0', sections: ['examples'], full: false }, ctx);
+  const stories = (r.structured.examples as { stories: Array<{ baseline?: string }> }).stories;
+  assert.ok(stories.length && stories.every((s) => s.baseline?.startsWith('ds://0.4.0/baselines/') && s.baseline.endsWith('.light.png')));
 });
 
 test('search_components: synonyms, ranking, zero-result nearest names', async () => {
@@ -80,6 +91,10 @@ test('find_tokens: group synonyms, theme values, contrast pairs', async () => {
   assert.ok(m[0]?.contrast);
   const grouped = await findTokens.run({ group: 'radius', dsVersion: 'latest', theme: 'both', limit: 20 }, ctx);
   assert.ok((grouped.structured.results as Array<{ group: string }>).every((r) => r.group === 'borderRadius'));
+  const link = await findTokens.run({ query: 'link', dsVersion: 'latest', theme: 'both', limit: 8 }, ctx);
+  assert.ok(!(link.structured.groups as string[]).includes('fgColor'), '"link" must not route through the "ink" synonym');
+  const border = await findTokens.run({ query: 'border radius', dsVersion: 'latest', theme: 'both', limit: 8 }, ctx);
+  assert.ok((border.structured.groups as string[]).includes('borderRadius'));
   const none = await findTokens.run({ dsVersion: 'latest', theme: 'both', limit: 8 }, ctx);
   assert.ok((none.structured.groups as string[]).includes('space'));
 });

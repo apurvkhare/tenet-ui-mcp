@@ -67,6 +67,9 @@ test('2026-07-28: no initialize, server/discover answers, list results carry cac
   const d = discover.body.result as { supportedVersions: string[]; capabilities: Record<string, unknown>; ttlMs: number; cacheScope: string };
   assert.ok(d.supportedVersions.includes(MODERN));
   assert.ok(d.capabilities.tools && d.capabilities.resources && d.capabilities.prompts);
+  const caps = d.capabilities as Record<string, { listChanged?: boolean } | undefined>;
+  assert.deepEqual([caps.tools?.listChanged, caps.resources?.listChanged, caps.prompts?.listChanged], [false, false, false], 'the lists never change at runtime');
+  assert.equal(caps.logging, undefined, 'no logging capability (deprecated, never emitted)');
   assert.equal(((d as unknown as { _meta: Record<string, { name: string }> })._meta['io.modelcontextprotocol/serverInfo'])!.name, 'tenet-ui-mcp', 'servers identify themselves in every result _meta');
   assert.deepEqual([d.ttlMs, d.cacheScope], [3_600_000, 'private']);
   const list = await rpc(token, 'tools/list');
@@ -165,7 +168,9 @@ test('tools/list is deterministic, small, with annotations and the x-mcp-header 
   assert.ok(size < tools.length * 2048, `tools/list is ${size} bytes for ${tools.length} tools`);
   for (const t of tools) {
     assert.ok((t.description ?? '').length < 300);
-    assert.equal(t.annotations?.readOnlyHint, true);
+    const writes = ['ingest_design', 'match_components', 'resolve_tokens', 'plan_component', 'audit_code', 'audit_page', 'run_checks'].includes(t.name);
+    assert.equal(t.annotations?.readOnlyHint, !writes, `${t.name} readOnlyHint`);
+    if (writes) assert.equal(t.annotations?.destructiveHint, false);
     assert.ok(t.outputSchema, `${t.name} has no outputSchema`);
   }
   const get = tools.find((t) => t.name === 'get_component')!;
@@ -214,6 +219,15 @@ test('resources: list, templates, read markdown / json, not-found is an error', 
   assert.match(txt(color), /title: Color/);
   const gaps = await client.readResource({ uri: 'ds://0.3.0/gaps' });
   assert.ok(JSON.parse(txt(gaps)).summary['no-guideline'] > 0);
+  assert.ok(resourceTemplates.some((t) => t.uriTemplate === 'ds://{version}/baselines/{file}'));
+  const list = JSON.parse(txt(await client.readResource({ uri: 'ds://0.4.0/baselines' }))) as { count: number; entries: Array<{ uri: string }> };
+  assert.ok(list.count > 0);
+  const png = await client.readResource({ uri: list.entries[0]!.uri });
+  const blob = (png.contents[0] as { blob?: string; mimeType?: string });
+  assert.equal(blob.mimeType, 'image/png');
+  assert.equal(Buffer.from(blob.blob!, 'base64').subarray(1, 4).toString(), 'PNG');
+  await assert.rejects(client.readResource({ uri: 'ds://0.4.0/baselines/..%2Fmanifest.json' }), /no baseline/);
+  await assert.rejects(client.readResource({ uri: 'ds://0.3.0/baselines' }), /not found|no baselines/i);
   await assert.rejects(client.readResource({ uri: 'ds://0.4.0/components/nope' }), /no component/);
   await client.close();
 });

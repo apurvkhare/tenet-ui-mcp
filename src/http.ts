@@ -11,7 +11,7 @@ import type { CatalogStore } from './catalog/store.js';
 import { createMcpServer, SERVER_INFO, TOOL_SCOPES } from './server.js';
 import type { DesignStore } from './store/design-store.js';
 import type { VisionFn } from './design/vision.js';
-import { emit, traceFromHeader } from './telemetry.js';
+import { emit, principalHash, traceFromHeader } from './telemetry.js';
 import { DASHBOARD_HTML, HookEventSchema, type MetricsStore } from './metrics.js';
 
 export interface HttpOptions {
@@ -102,7 +102,7 @@ export function createHttpServer(opts: HttpOptions): Server {
       } catch (err) {
         if (!(err instanceof AuthError)) throw err;
         status = 403;
-        emit({ event: 'auth', traceId: trace.traceId, status: 403, code: err.code, sub: principal.sub });
+        emit({ event: 'auth', traceId: trace.traceId, status: 403, code: err.code, principal: principalHash(principal.sub) });
         res.setHeader('WWW-Authenticate', `Bearer error="insufficient_scope", scope="${err.missingScopes.join(' ')}", resource_metadata="${prmUrl}"`);
         return sendJson(res, 403, { error: 'insufficient_scope', scope: err.missingScopes.join(' ') });
       }
@@ -168,7 +168,7 @@ async function observability(req: IncomingMessage, res: ServerResponse, url: URL
     for (const it of items) {
       const r = HookEventSchema.safeParse(it);
       if (!r.success) { rejected.push(r.error.issues[0]?.message ?? 'invalid'); continue; }
-      opts.metrics.record({ ...r.data, sub: principal.sub, traceId: r.data.traceId ?? traceId });
+      opts.metrics.record({ ...r.data, principal: principalHash(principal.sub), traceId: r.data.traceId ?? traceId });
       accepted++;
     }
     sendJson(res, 202, { accepted, rejected: rejected.length, ...(rejected.length ? { reasons: rejected.slice(0, 3) } : {}) });

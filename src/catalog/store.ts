@@ -24,7 +24,11 @@ export interface VersionData {
   changelog: { entries: Array<{ version: string; date?: string; body: string }> } | undefined;
   guidelines: GuidelinesRevision | undefined;
   guidelinesDir: string | undefined;
+  /** Story baseline screenshots from the release (served as ds://{v}/baselines/{file}); absent when the release shipped none. */
+  baselines: { dir: string; viewport?: { width: number; height: number }; entries: BaselineEntry[] } | undefined;
 }
+
+export interface BaselineEntry { storyId: string; name?: string; theme: string; file: string; sha256?: string }
 
 export type ResolveStrategy = 'exact' | 'newest-patch-of-minor' | 'nearest-earlier-minor' | 'latest-of-major' | 'latest';
 export interface ResolvedVersion {
@@ -127,6 +131,7 @@ export class CatalogStore {
       changelog: readJsonIfExists<{ entries: Array<{ version: string; date?: string; body: string }> }>(join(dir, 'changelog.json')),
       guidelines,
       guidelinesDir: manifest.guidelinesRevision ? join(this.snapshotsDir, 'guidelines', manifest.guidelinesRevision) : undefined,
+      baselines: baselinesIn(join(dir, 'baselines')),
     };
     this.cache.set(version, data);
     return data;
@@ -161,4 +166,15 @@ export class CatalogStore {
   guidelinePage(data: VersionData, id: string, scope?: GuidelinePage['scope']): GuidelinePage | undefined {
     return data.guidelines?.pages.find((p) => p.id === id && (!scope || p.scope === scope));
   }
+}
+
+function baselinesIn(dir: string): VersionData['baselines'] {
+  const m = readJsonIfExists<{ viewport?: { width: number; height: number }; entries: BaselineEntry[] }>(join(dir, 'manifest.json'));
+  return m ? { dir, viewport: m.viewport, entries: m.entries } : undefined;
+}
+
+/** URI of a story's baseline screenshot, when the release shipped one. */
+export function baselineUri(data: VersionData, storyId: string, theme = 'light'): string | undefined {
+  const e = data.baselines?.entries.find((x) => x.storyId === storyId && x.theme === theme);
+  return e ? `ds://${data.version}/baselines/${e.file}` : undefined;
 }

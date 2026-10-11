@@ -7,7 +7,7 @@ import { McpServer, ResourceTemplate, TRACEPARENT_META_KEY, type CacheHint, type
 import { z } from 'zod';
 import type { CatalogStore } from './catalog/store.js';
 import { listResources, readResource } from './resources.js';
-import { emit, traceFromHeader } from './telemetry.js';
+import { emit, principalHash, traceFromHeader } from './telemetry.js';
 import { CATALOG_TOOLS } from './tools/catalog-tools.js';
 import { DESIGN_TOOLS } from './tools/design-tools.js';
 import { CHECK_TOOLS } from './tools/checks-tools.js';
@@ -24,6 +24,25 @@ export const SERVER_INFO = { name: 'tenet-ui-mcp', version: '0.2.0', title: 'ten
 
 export const ALL_TOOLS = [...CATALOG_TOOLS, ...DESIGN_TOOLS, ...AUDIT_TOOLS, ...TEST_TOOLS, ...CHECK_TOOLS];
 export const TOOL_SCOPES: Record<string, string> = Object.fromEntries(ALL_TOOLS.map((t) => [t.name, t.scope]));
+
+/**
+ * Tools that write rows to the design store. Every write adds a handle or fills the match's token
+ * map, never removes anything, so none is destructive; resolve_tokens rewrites the same field from
+ * the same inputs and is idempotent, the others mint a new handle per call.
+ */
+const WRITES: Record<string, { idempotent: boolean }> = {
+  ingest_design: { idempotent: false },
+  match_components: { idempotent: false },
+  resolve_tokens: { idempotent: true },
+  plan_component: { idempotent: false },
+  audit_code: { idempotent: false },
+  audit_page: { idempotent: false },
+  run_checks: { idempotent: false },
+};
+export function annotationsFor(name: string): { readOnlyHint: boolean; destructiveHint?: boolean; idempotentHint: boolean; openWorldHint: boolean } {
+  const w = WRITES[name];
+  return w ? { readOnlyHint: false, destructiveHint: false, idempotentHint: w.idempotent, openWorldHint: false } : { readOnlyHint: true, idempotentHint: true, openWorldHint: false };
+}
 
 export interface RequestScope {
   principal: Principal;
@@ -66,6 +85,9 @@ export function createMcpServer(store: CatalogStore, scope: RequestScope): McpSe
       'Design to code: ingest_design → match_components → resolve_tokens → plan_component → write → capture → run_checks. The server decides close matches and off-scale values itself and says why; never ask the user to choose. Existing UI: audit_code + audit_page (capture.mjs page) → fix by severity → run_checks. Tests: plan_tests → write → run_checks.',
     ].join(' '),
     cacheHints: CACHE_HINTS,
+    // The lists never change while the server runs (a new design-system version means a restart),
+    // so say so instead of the SDK's default listChanged: true. No logging capability (deprecated).
+    capabilities: { tools: { listChanged: false }, resources: { listChanged: false }, prompts: { listChanged: false } },
   });
   const baseCtx: ToolContext = { store, traceId: scope.traceId, publicUrl: scope.publicUrl, principal: scope.principal, designs: scope.designs, vision: scope.vision };
   const readCtx = { designs: scope.designs, sub: scope.principal.sub };
@@ -77,8 +99,9 @@ export function createMcpServer(store: CatalogStore, scope: RequestScope): McpSe
         title: tool.title,
         description: tool.description,
         inputSchema: z.object(tool.inputSchema),
-        outputSchema: z.object(tool.outputSchema),
-        annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+        // capJson marks a trimmed result; every tool can carry the marker.
+        outputSchema: z.object({ ...tool.outputSchema, truncated: z.boolean().optional(), truncatedNote: z.string().optional() }),
+        annotations: annotationsFor(tool.name),
       },
       async (args, mcpCtx): Promise<CallToolResult> => {
         const t0 = performance.now();
@@ -88,16 +111,16 @@ export function createMcpServer(store: CatalogStore, scope: RequestScope): McpSe
           const structured = { ...r.structured } as Record<string, unknown>;
           delete structured._meta;
           const result: CallToolResult = {
-            content: [{ type: 'text', text: r.text }, ...(r.links ?? []).map((l) => ({ type: 'resource_link' as const, uri: l.uri, name: l.name, description: l.description, mimeType: l.mimeType }))],
+            content: [{ type: 'text', text: typeof structured.truncatedNote === 'string' ? `${r.text} (Truncated: ${structured.truncatedNote}.)` : r.text }, ...(r.links ?? []).map((l) => ({ type: 'resource_link' as const, uri: l.uri, name: l.name, description: l.description, mimeType: l.mimeType }))],
             structuredContent: structured,
             _meta: { traceId, dsVersion: structured.dsVersion, guidelinesRevision: structured.guidelinesRevision, bytes: bytes(structured), cap: tool.cap },
           };
-          emit({ event: 'tool', traceId, tool: tool.name, status: 'ok', durationMs: Math.round(performance.now() - t0), dsVersion: structured.dsVersion, bytes: bytes(structured), sub: scope.principal.sub, ...toolMetrics(tool.name, args as Record<string, unknown>, structured) });
+          emit({ event: 'tool', traceId, tool: tool.name, status: 'ok', durationMs: Math.round(performance.now() - t0), dsVersion: structured.dsVersion, bytes: bytes(structured), principal: principalHash(scope.principal.sub), ...toolMetrics(tool.name, args as Record<string, unknown>, structured) });
           return result;
         } catch (err) {
           const code = err instanceof ToolError ? err.code : 'internal';
           const message = err instanceof Error ? err.message : String(err);
-          emit({ event: 'tool', traceId, tool: tool.name, status: 'error', code, durationMs: Math.round(performance.now() - t0), sub: scope.principal.sub });
+          emit({ event: 'tool', traceId, tool: tool.name, status: 'error', code, durationMs: Math.round(performance.now() - t0), principal: principalHash(scope.principal.sub) });
           return { isError: true, content: [{ type: 'text', text: `${tool.name}: ${message}` }], _meta: { traceId, code, ...(err instanceof ToolError && err.data ? { data: err.data } : {}) } };
         }
       },
@@ -106,7 +129,7 @@ export function createMcpServer(store: CatalogStore, scope: RequestScope): McpSe
 
   const read = (uri: URL, mcpCtx: ServerContext) => {
     const c = readResource(store, uri.href, readCtx);
-    emit({ event: 'resource', traceId: traceOf(mcpCtx, scope.traceId), uri: uri.href, bytes: c.blob ? c.blob.length : Buffer.byteLength(c.text ?? ''), sub: scope.principal.sub });
+    emit({ event: 'resource', traceId: traceOf(mcpCtx, scope.traceId), uri: uri.href, bytes: c.blob ? c.blob.length : Buffer.byteLength(c.text ?? ''), principal: principalHash(scope.principal.sub) });
     return {
       contents: [c.blob ? { uri: c.uri, mimeType: c.mimeType, blob: c.blob.toString('base64') } : { uri: c.uri, mimeType: c.mimeType, text: c.text ?? '' }],
       ...readCacheHint(uri.href, store),
@@ -121,6 +144,7 @@ export function createMcpServer(store: CatalogStore, scope: RequestScope): McpSe
   const templates: Array<[string, string, string, string]> = [
     ['component', 'ds://{version}/components/{name}', 'text/markdown', 'One component: import, props table (types are the truth), stories, accessibility, guidelines.'],
     ['tokens-group', 'ds://{version}/tokens/{group}.json', 'application/json', 'Every token of a group with light/dark values and documented contrast pairs.'],
+    ['baseline', 'ds://{version}/baselines/{file}', 'image/png', 'A story\'s release screenshot, `{storyId}.{theme}.png` (theme light or dark), at the baseline viewport. The list is at ds://{version}/baselines.'],
     ['guideline', 'ds://{version}/guidelines/{topic}', 'text/markdown', 'System guidelines (color, typography, layout, forms, feedback, data-display, iconography, accessibility, content), a component id, `contract`, or `audit-rules`.'],
     // {+artifact}: reserved expansion, so `matches/{matchId}.json` and `plans/{planId}.md` (two segments) match too.
     ['design', 'design://{designId}/{+artifact}', 'application/json', 'Private, principal-bound: layout.json, screenshot.png, matches/{matchId}.json, plans/{planId}.md, match.json / plan.md (latest).'],
@@ -135,6 +159,7 @@ export function createMcpServer(store: CatalogStore, scope: RequestScope): McpSe
         group: (value) => [...new Set(store.load(store.latest()).tokens.map((t) => t.path?.[0] ?? ''))].filter((g) => g.startsWith(value)),
         topic: (value) => ['contract', 'audit-rules', ...(store.load(store.latest()).guidelines?.pages.filter((p) => p.scope === 'system').map((p) => p.id) ?? [])].filter((t) => t.startsWith(value)),
         artifact: (value) => ['layout.json', 'screenshot.png', 'match.json', 'plan.md'].filter((a) => a.startsWith(value)),
+        file: (value) => (store.load(store.latest()).baselines?.entries.map((e) => e.file) ?? []).filter((f) => f.startsWith(value)).slice(0, 20),
         report: (value) => ['findings.json', 'delta.json', 'report.json'].filter((a) => a.startsWith(value)),
       },
     }), { description, mimeType }, (uri, _variables, mcpCtx) => read(uri, mcpCtx));

@@ -35,7 +35,7 @@ type Line = Record<string, unknown> & { ts: string; event: string };
 export class MetricsStore {
   constructor(readonly dir: string) { mkdirSync(dir, { recursive: true }); }
 
-  record(e: Event | (HookEvent & { sub?: string })): void {
+  record(e: Event | (HookEvent & { principal?: string })): void {
     const line: Line = { ts: new Date().toISOString(), ...e } as Line;
     appendFileSync(join(this.dir, `${line.ts.slice(0, 10)}.jsonl`), JSON.stringify(line) + '\n');
   }
@@ -68,7 +68,7 @@ export class MetricsStore {
       const b = ls.map((l) => num(l.bytes)).filter(Boolean).sort((a, b2) => a - b2);
       const byDay: Record<string, number> = {};
       for (const l of ls) byDay[str(l.ts).slice(0, 10)] = (byDay[str(l.ts).slice(0, 10)] ?? 0) + 1;
-      perTool[k] = { calls: ls.length, errors: ls.filter((l) => l.status === 'error').length, p50: pct(d, 0.5), p95: pct(d, 0.95), bytesP50: pct(b, 0.5), principals: new Set(ls.map((l) => str(l.sub))).size, byDay };
+      perTool[k] = { calls: ls.length, errors: ls.filter((l) => l.status === 'error').length, p50: pct(d, 0.5), p95: pct(d, 0.95), bytesP50: pct(b, 0.5), principals: new Set(ls.map((l) => str(l.principal))).size, byDay };
     }
     // Is it right.
     // The server decides close matches and off-scale values itself; these count how often, and how.
@@ -104,7 +104,7 @@ export class MetricsStore {
 
     return {
       window: { days, from: lines[0]?.ts, to: lines.at(-1)?.ts, events: lines.length },
-      used: { calls: tools.length, requests: requests.length, principals: new Set(tools.map((l) => str(l.sub))).size, sessions: new Set(hooks.map((l) => str(l.sessionId))).size, perTool },
+      used: { calls: tools.length, requests: requests.length, principals: new Set(tools.map((l) => str(l.principal))).size, sessions: new Set(hooks.map((l) => str(l.sessionId))).size, perTool },
       right: { matches: matches.length, closeCallsDecided: decided, decidedByScoreOnly: decidedByScore, lowConfidenceMatches: lowConfidence, snappedBeyondTolerance: snappedBeyond },
       helps: { runChecks: checkRuns.length, firstRunPassRate: firstRunPass, firstRunByCheck, audits: audits.length, findingsPerAudit, findingsFixedInSession: fixedInSession, sessionsGreen: sessions.filter((l) => l.green === true).length, sessionsTotal: sessions.length, roundsToGreenP50: pct(roundsToGreen, 0.5), accepted: sessions.filter((l) => l.accepted === true).length, suppressedFindings: sessions.reduce((n, l) => n + num(l.suppressed), 0) },
       agentUsedIt: { fileWrites: fileWrites.length, writesAfter: after, lookupsBeforeWrite: sessions.reduce((n, l) => n + num(l.lookupsBeforeWrite), 0), hooksSeen: hooks.length > 0 },

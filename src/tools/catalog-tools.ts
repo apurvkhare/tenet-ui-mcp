@@ -2,6 +2,7 @@
 // can be unit-tested without a transport; server.ts wraps them for MCP.
 import { z } from 'zod';
 import { resolveValue, type Theme, type ValueKind } from '../catalog/resolve.js';
+import { baselineUri } from '../catalog/store.js';
 import { nearestNames, rankComponents, whenToUse } from '../catalog/search.js';
 import { TOKEN_GROUP_SYNONYMS, tokenize } from '../catalog/synonyms.js';
 import type { CatalogComponent } from '../ingest/extract/catalog.js';
@@ -92,12 +93,11 @@ export const getComponent: ToolDef<{ name: z.ZodString; dsVersion: typeof dsVers
     candidates: z.array(z.string()).optional(),
     component: shape('{id,name,exportName,status,a11yReviewed,importPath,import,description,related[],deprecated?}').optional(),
     api: shape('{propsType,refType,extends[],props[{name,type,required,description,default?,deprecated?,typeRef?,inheritedFrom?}],subcomponents[]}').optional(),
-    examples: shape('{stories[{id,name,url,hasPlay}],baselines}').optional(),
+    examples: shape('{stories[{id,name,url,hasPlay,baseline?}],baselines}').optional(),
     a11y: shape('{reviewed,notes[],contract[]}').optional(),
     guidelines: shape('{revision,updated,sections[{heading,body}]}').optional(),
     source: loose.optional(),
     omitted: z.array(shape('{section,hint}')).optional(),
-    truncated: z.boolean().optional(),
     ...dsMeta,
   },
   run(args, ctx) {
@@ -125,7 +125,7 @@ export const getComponent: ToolDef<{ name: z.ZodString; dsVersion: typeof dsVers
     if (wanted.has('examples')) {
       const storyIds = new Set(c.stories.map((s) => s.id));
       const baselines = v.data.manifest.counts.baselines ? c.stories.length * (v.data.manifest.sources.find((s) => s.kind === 'baselines') ? 2 : 0) : 0;
-      out.examples = { stories: c.stories.map((s) => ({ id: s.id, name: s.name, url: storybookUrlFor(v.data, s.id), hasPlay: v.data.stories?.stories.find((x) => x.id === s.id)?.hasPlay })), baselines: storyIds.size ? baselines : 0 };
+      out.examples = { stories: c.stories.map((s) => ({ id: s.id, name: s.name, url: storybookUrlFor(v.data, s.id), hasPlay: v.data.stories?.stories.find((x) => x.id === s.id)?.hasPlay, baseline: baselineUri(v.data, s.id) })), baselines: storyIds.size ? baselines : 0 };
     }
     if (wanted.has('a11y')) {
       const notes = page?.sections.flatMap((s) => s.body.split('\n').filter((l) => /a11y|accessib|aria|keyboard|focus|screen reader|label/i.test(l)).map((l) => l.replace(/^[-*]\s*/, '').trim())).slice(0, 12) ?? [];
@@ -136,7 +136,6 @@ export const getComponent: ToolDef<{ name: z.ZodString; dsVersion: typeof dsVers
     const omitted = SECTIONS.filter((s) => !wanted.has(s)).map((s) => ({ section: s, hint: `get_component(name: "${c.id}", sections: ["${s}"])` }));
     if (omitted.length) out.omitted = omitted;
     const capped = capJson(out, cap, 'request fewer `sections`, or `full: true`');
-    if (capped.truncated) capped.value.truncated = true;
     const deprecatedProps = c.props.filter((p) => p.deprecated).map((p) => `${p.name} (${p.deprecated})`);
     return {
       structured: capped.value,
@@ -180,8 +179,9 @@ export const findTokens: ToolDef<{ query: z.ZodOptional<z.ZodString>; group: z.Z
     const words = tokenize(args.query ?? '');
     const wantedGroups = new Set<string>();
     if (args.group) for (const g of groups) if (g.toLowerCase() === args.group.toLowerCase() || (TOKEN_GROUP_SYNONYMS[args.group.toLowerCase()] ?? []).includes(g)) wantedGroups.add(g);
-    const q = (args.query ?? '').toLowerCase();
-    for (const key of Object.keys(TOKEN_GROUP_SYNONYMS)) if (q.includes(key)) for (const g of TOKEN_GROUP_SYNONYMS[key]!) wantedGroups.add(g);
+    // Whole words only: "link" must not route to the "ink" (fgColor) synonym. Keys may be two words.
+    const q = ` ${(args.query ?? '').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean).join(' ')} `;
+    for (const key of Object.keys(TOKEN_GROUP_SYNONYMS)) if (q.includes(` ${key} `)) for (const g of TOKEN_GROUP_SYNONYMS[key]!) wantedGroups.add(g);
     if (!args.query && !args.group) return { structured: { results: [], groups, hint: 'pass `query` or `group`', ...meta }, text: `Groups in ${v.resolved.effective}: ${groups.join(', ')}.` };
 
     const scored = v.data.tokens

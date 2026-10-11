@@ -86,7 +86,7 @@ export const runChecks: ToolDef<{ files: z.ZodDefault<z.ZodArray<z.ZodObject<{ p
       const refPng = ref && ctx.designs && ctx.principal ? ctx.designs.getBlob(ctx.principal.sub, ref.id, 'screenshot') : undefined;
       if (!shots.length) checks.visual = { status: 'skipped', detail: results?.checks.visual?.reason ?? 'no screenshots in results' };
       else if (!withData.length) checks.visual = { status: 'skipped', detail: 'screenshots have no embedded bytes; run the capture script with --embed-screenshots' };
-      else if (!ref) checks.visual = { status: 'skipped', detail: `${withData.length} screenshot(s) received but no designId to compare against; compare with the baseline resource yourself` };
+      else if (!ref) checks.visual = { status: 'skipped', detail: `${withData.length} screenshot(s) received but no designId to compare against; look at each one beside its story baseline (ds://${v.data.version}/baselines/{storyId}.{theme}.png, listed at ds://${v.data.version}/baselines)` };
       else if (!refPng) checks.visual = { status: 'skipped', detail: `design ${ref.id} was ingested from a layout, not an image; nothing to compare pixels against` };
       else {
         visual = compareScreens(ref, refPng, withData, findings, v.data.version);

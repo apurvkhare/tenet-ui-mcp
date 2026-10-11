@@ -24,9 +24,9 @@ test('HookEventSchema rejects free text and oversized fields', () => {
 test('MetricsStore.summary answers the §7 questions from a spool of server and hook events', () => {
   const store = new MetricsStore(mkdtempSync(join(tmpdir(), 'tenet-metrics-')));
   const day = new Date().toISOString();
-  const tool = (tool: string, extra: Record<string, unknown> = {}): void => store.record({ event: 'tool', traceId: 't', tool, status: 'ok', durationMs: 10, bytes: 1000, sub: 'a', dsVersion: '0.4.0', ...extra });
+  const tool = (tool: string, extra: Record<string, unknown> = {}): void => store.record({ event: 'tool', traceId: 't', tool, status: 'ok', durationMs: 10, bytes: 1000, principal: 'p_a', dsVersion: '0.4.0', ...extra });
   tool('search_components', { zeroResults: true });
-  tool('search_components', { zeroResults: false, sub: 'b' });
+  tool('search_components', { zeroResults: false, principal: 'p_b' });
   tool('get_component', { full: true });
   tool('get_component', { full: false, durationMs: 90 });
   tool('match_components', { decisions: 2, decidedByScore: 1 });
