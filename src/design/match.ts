@@ -1,6 +1,8 @@
 // match_components (DESIGN.md §4): rank catalog components per region using structure, synonyms,
-// role and the analyser's candidates; record confidence; where the top two are within 0.15,
-// prepare one question. Visual similarity to the baselines is a later refinement.
+// role and the analyser's candidates; record confidence. Where the top two are within 0.15 the
+// server decides: the guideline tests below settle the pair from structural cues, and the result
+// names the pick, the rule it applied, the confidence and the runner-up. It never asks the user.
+// Visual similarity to the baselines is a later refinement.
 import { rankComponents } from '../catalog/search.js';
 import type { VersionData } from '../catalog/store.js';
 import { childrenOf, type Layout, type Region } from './layout.js';
@@ -13,19 +15,24 @@ export interface Assignment {
   component: string | null;
   confidence: number;
   candidates: Candidate[];
-  source: 'auto' | 'answered' | 'unresolved' | 'none';
+  /** auto: a clear winner; decided: a close call the server settled (see `decision`); none: no system component. */
+  source: 'auto' | 'decided' | 'none';
+  decision?: Decision;
   note?: string;
 }
-export interface Question {
-  key: string;
-  regionId: string;
-  message: string;
-  options: Array<{ value: string; title: string }>;
-  defaultValue: string;
+/** How a close call was settled: by a guideline test, or (when no test applies) by the higher score. */
+export interface Decision {
+  basis: 'guideline' | 'score';
+  rule: string;
+  reason: string;
+  cites: string[];
+  runnerUp: { component: string; confidence: number };
 }
 
-const THRESHOLD = 0.15;
-export const MAX_QUESTIONS = 8;
+/** Top two within this are a close call, settled by `decide`. */
+export const CLOSE_CALL = 0.15;
+/** Confidence of a pick that a guideline test settled. */
+const GUIDELINE_CONFIDENCE = 0.85;
 
 export function scoreRegion(data: VersionData, layout: Layout, region: Region): Candidate[] {
   const have = (id: string): boolean => data.byId.has(id) && data.byId.get(id)!.kind === 'component';
@@ -127,36 +134,129 @@ export function scoreRegion(data: VersionData, layout: Layout, region: Region): 
 }
 
 export function assignRegions(data: VersionData, layout: Layout): Assignment[] {
-  return layout.regions.map((region) => {
-    const candidates = scoreRegion(data, layout, region);
-    const top = candidates[0];
-    if (!top) return { regionId: region.id, role: region.role, label: region.label, component: null, confidence: 0, candidates, source: 'none', note: `no system component for role "${region.role}"; keep as plain markup and flag for review` };
-    return { regionId: region.id, role: region.role, label: region.label, component: top.component, confidence: top.confidence, candidates, source: 'auto' };
-  });
+  const byId = new Map<string, Assignment>();
+  // Parents before children, so a child's decision can see what its ancestors became.
+  const visit = (parent: string | null): void => {
+    for (const region of childrenOf(layout, parent)) {
+      const candidates = scoreRegion(data, layout, region);
+      const top = candidates[0];
+      const a: Assignment = top
+        ? { regionId: region.id, role: region.role, label: region.label, component: top.component, confidence: top.confidence, candidates, source: 'auto' }
+        : { regionId: region.id, role: region.role, label: region.label, component: null, confidence: 0, candidates, source: 'none', note: `no system component for role "${region.role}"; keep as plain markup and flag for review` };
+      const second = candidates[1];
+      if (top && second && top.confidence - second.confidence < CLOSE_CALL) {
+        const d = decide(data, layout, region, top, second, byId);
+        a.component = d.pick;
+        a.confidence = d.basis === 'guideline' ? Math.max(GUIDELINE_CONFIDENCE, top.confidence) : top.confidence;
+        a.source = 'decided';
+        a.decision = { basis: d.basis, rule: d.rule, reason: d.reason, cites: d.cites, runnerUp: d.pick === top.component ? { component: second.component, confidence: second.confidence } : { component: top.component, confidence: top.confidence } };
+      }
+      byId.set(region.id, a);
+      visit(region.id);
+    }
+  };
+  visit(null);
+  // Regions whose parent is missing from the layout are still assigned, in input order.
+  for (const region of layout.regions) if (!byId.has(region.id)) { byId.set(region.id, { regionId: region.id, role: region.role, label: region.label, component: null, confidence: 0, candidates: [], source: 'none', note: 'parent region not found in the layout' }); }
+  return layout.regions.map((r) => byId.get(r.id)!);
 }
 
-/** Where the top two candidates are within the threshold, one question each, at most MAX_QUESTIONS. */
-export function questionsFor(assignments: Assignment[], data: VersionData, layout: Layout, max = MAX_QUESTIONS): Question[] {
-  const out: Question[] = [];
-  for (const a of assignments) {
-    const [c1, c2] = a.candidates;
-    if (!c1 || !c2 || c1.confidence - c2.confidence >= THRESHOLD) continue;
-    if (out.length >= max) break;
-    const region = layout.regions.find((r) => r.id === a.regionId)!;
-    const describe = (id: string, conf: number): string => {
-      const c = data.byId.get(id);
-      return `${c?.name ?? id} (${conf.toFixed(2)}): ${firstLine(c?.description) || id}`;
-    };
-    out.push({
-      key: `region_${a.regionId}`,
-      regionId: a.regionId,
-      message: `Region ${a.regionId} (${region.label || region.role}${region.text[0] ? `, "${truncate(region.text[0], 40)}"` : ''}) matches two components.`,
-      options: [...a.candidates.slice(0, 3).map((c) => ({ value: c.component, title: describe(c.component, c.confidence) })), { value: 'auto', title: 'Let the server decide' }],
-      defaultValue: c1.component,
-    });
+// ---- deciding close calls --------------------------------------------------------------------------
+interface Verdict { pick: string; basis: 'guideline' | 'score'; rule: string; reason: string; cites: string[] }
+interface Cues { region: Region; kids: Region[]; ancestors: Array<{ region: Region; component: string | null }>; siblings: Region[]; layout: Layout }
+interface Rule {
+  /** Applies when the close pair is exactly these two components (in either order); `*` matches any. */
+  pair: [string, string];
+  rule: string;
+  topics: string[];
+  test: (c: Cues, pair: [string, string]) => { pick: string; reason: string } | undefined;
+}
+
+const ACTION_ROLES = new Set(['button', 'icon-button', 'link']);
+const isHeading = (r: Region): boolean => r.role === 'heading' || r.role === 'title';
+const near = (a: number, b: number): boolean => b > 0 && Math.abs(a - b) / b <= 0.15;
+const other = (pair: [string, string], id: string): string => (pair[0] === id ? pair[1] : pair[0]);
+
+/** Card vs a plain section: the test in ds://…/guidelines/layout (rules 9 and 10) and card. */
+const cardTest = (layoutPick: string): Rule['test'] => (c) => {
+  const plain = layoutPick;
+  const inCard = c.ancestors.find((a) => a.component === 'card');
+  if (inCard) return { pick: plain, reason: `inside ${inCard.region.id}, which is a Card; a Card never contains another Card (layout rule 10)` };
+  const vw = c.layout.viewport?.width ?? 0;
+  if (c.region.role === 'page' || (!c.region.parent && vw > 0 && c.region.bounds.width >= vw * 0.9)) return { pick: plain, reason: 'it wraps the page; a page is never a single full-width Card (layout rule 10)' };
+  const tiles = c.siblings.filter((s) => s.role === c.region.role && near(s.bounds.width, c.region.bounds.width) && near(s.bounds.height, c.region.bounds.height));
+  if (tiles.length >= 1) return { pick: 'card', reason: `one of ${tiles.length + 1} repeated tiles of the same size; summary tiles are Cards (layout rule 10)` };
+  const heading = c.kids.find(isHeading);
+  const action = c.kids.find((k) => ACTION_ROLES.has(k.role));
+  if (heading || action) return { pick: 'card', reason: `it has its own ${heading && action ? 'heading and action' : heading ? 'heading' : 'action'}, so it is a self-contained object that makes sense lifted out of the page (layout rule 9)` };
+  if (!c.region.style.borderColor) return { pick: plain, reason: 'no border and no heading or action of its own: it flows with the page, and removing the surface would lose nothing, so it is a plain section (layout rule 9)' };
+  return { pick: 'card', reason: 'a bordered surface is the Card\'s job; never a styled element with a hardcoded border (card guideline)' };
+};
+
+const RULES: Rule[] = [
+  {
+    pair: ['stack', '*'], rule: 'layout: a page is a Stack of sections', topics: ['layout', 'stack'],
+    test: (c) => (c.region.role === 'page' ? { pick: 'stack', reason: 'it is the page root; a page is `<Stack gap="spacious">` of sections (layout, page row)' } : undefined),
+  },
+  { pair: ['card', 'stack'], rule: 'layout §9-10: Card or plain section', topics: ['layout', 'card'], test: cardTest('stack') },
+  { pair: ['card', 'grid'], rule: 'layout §9-10: Card or plain section', topics: ['layout', 'card'], test: cardTest('grid') },
+  {
+    pair: ['badge', 'tag'], rule: 'badge: count or dot vs a labelled status word', topics: ['badge', 'tag'],
+    test: (c) => { const t = c.region.text.join(' ').trim(); return /^\d+\+?$/.test(t) || t === '' ? { pick: 'badge', reason: t ? `"${t}" is a count; a compact count or presence dot is a Badge` : 'no text: a presence dot is a Badge' } : { pick: 'tag', reason: `"${t.slice(0, 30)}" is a word; a labelled status word is a Tag, not a Badge` }; },
+  },
+  {
+    pair: ['menu', 'select'], rule: 'menu: actions vs picking a value', topics: ['menu', 'select'],
+    test: (c) => { const cue = `${c.region.label} ${c.region.text.join(' ')}`.toLowerCase(); const inForm = c.ancestors.some((a) => ['field', 'form'].includes(a.region.role) || a.component === 'form-control'); return !inForm && /\b(actions?|more|options)\b|⋯|…|\.\.\./.test(cue) ? { pick: 'menu', reason: 'it triggers actions (overflow or action wording) outside a form; a list of actions is a Menu' } : { pick: 'select', reason: inForm ? 'it picks a value inside a field; for picking a value use Select' : 'nothing marks it as a list of actions; it picks a value, which is Select' }; },
+  },
+  {
+    pair: ['segmented-control', 'tabs'], rule: 'segmented-control: 2 to 5 modes vs peer views', topics: ['segmented-control', 'tabs'],
+    test: (c) => { const n = c.kids.length || c.region.text.length; const states = new Set(c.region.states); if (n > 5) return { pick: 'tabs', reason: `${n} options; a SegmentedControl holds 2 to 5` }; return states.has('toggle') || states.has('mode') ? { pick: 'segmented-control', reason: 'a few mutually exclusive modes that take effect immediately are a SegmentedControl' } : { pick: 'tabs', reason: 'switching between peer views of the same context is Tabs' }; },
+  },
+  {
+    pair: ['switch', 'segmented-control'], rule: 'segmented-control: on/off is a Switch', topics: ['segmented-control', 'switch'],
+    test: (c) => (c.kids.length > 2 || c.region.text.length > 2 ? { pick: 'segmented-control', reason: 'more than two choices; on/off is a Switch, several modes are a SegmentedControl' } : { pick: 'switch', reason: 'a single on/off choice is a Switch' }),
+  },
+  {
+    pair: ['banner', 'toast'], rule: 'banner: anchored to content vs transient', topics: ['banner', 'toast'],
+    test: (c) => { const s = new Set(c.region.states); return s.has('transient') || s.has('floating') ? { pick: 'toast', reason: 'transient, floating feedback is a toast' } : { pick: 'banner', reason: 'it sits in the content flow; a message anchored to the content it describes is a Banner' }; },
+  },
+  {
+    pair: ['button', 'link'], rule: 'link: a link navigates, a button acts', topics: ['link', 'button'],
+    test: (c) => { const t = c.region.text.join(' ').toLowerCase(); return c.region.states.includes('link') || /^(learn more|see all|view|read more|go to|open )/.test(t) ? { pick: 'link', reason: 'navigational wording; a link navigates, a button acts' } : { pick: 'button', reason: 'it performs an action; a button acts, a link navigates' }; },
+  },
+  {
+    pair: ['button', 'icon-button'], rule: 'icon-button: no visible label', topics: ['icon-button', 'button'],
+    test: (c) => (c.region.text.length === 0 || c.region.states.includes('icon-only') ? { pick: 'icon-button', reason: 'no visible text label; an icon-only control is an IconButton with an aria-label' } : { pick: 'button', reason: 'it has a visible text label, so it is a Button' }),
+  },
+  {
+    pair: ['data-table', 'table'], rule: 'data-table: sorting, filtering or selection', topics: ['data-table', 'table'],
+    test: (c) => { const s = new Set(c.region.states); return s.has('sortable') || s.has('selectable') || s.has('paginated') || /filter|sort|search/.test(`${c.region.label} ${c.region.text.join(' ')}`.toLowerCase()) ? { pick: 'data-table', reason: 'it sorts, filters or selects rows, which is DataTable' } : { pick: 'table', reason: 'static rows without sorting, filtering or selection are a Table' }; },
+  },
+];
+
+function decide(data: VersionData, layout: Layout, region: Region, top: Candidate, second: Candidate, assigned: Map<string, Assignment>): Verdict {
+  const ancestors: Cues['ancestors'] = [];
+  for (let p = region.parent; p; ) { const r = layout.regions.find((x) => x.id === p); if (!r) break; ancestors.push({ region: r, component: assigned.get(r.id)?.component ?? null }); p = r.parent; }
+  const cues: Cues = { region, kids: childrenOf(layout, region.id), ancestors, siblings: childrenOf(layout, region.parent ?? null).filter((s) => s.id !== region.id), layout };
+  const pair: [string, string] = [top.component, second.component];
+  for (const rule of RULES) {
+    if (!rule.pair.every((id) => id === '*' || pair.includes(id))) continue;
+    const v = rule.test(cues, pair);
+    if (v && pair.includes(v.pick)) return { pick: v.pick, basis: 'guideline', rule: rule.rule, reason: v.reason, cites: cites(data, rule.topics) };
   }
-  return out;
+  return {
+    pick: top.component,
+    basis: 'score',
+    rule: 'structural score',
+    reason: `no guideline test separates ${nameOf(data, top.component)} from ${nameOf(data, other(pair, top.component))} here; picked the higher structural score (${top.score} vs ${second.score}: ${top.reasons.slice(0, 2).join(', ')})`,
+    cites: cites(data, [top.component]),
+  };
 }
 
-const firstLine = (s: string | undefined): string => (s ?? '').split(/\n|\. /)[0]!.trim().slice(0, 90);
-const truncate = (s: string, n: number): string => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
+const nameOf = (data: VersionData, id: string): string => data.byId.get(id)?.name ?? id;
+/** Guideline URIs the agent can read; the contract stands in when a page is missing. */
+function cites(data: VersionData, topics: string[]): string[] {
+  const pages = new Set(data.guidelines?.pages.map((p) => p.id) ?? []);
+  const out = topics.filter((t) => pages.has(t)).map((t) => `ds://${data.version}/guidelines/${t}`);
+  return out.length ? out : [`ds://${data.version}/guidelines/contract`];
+}

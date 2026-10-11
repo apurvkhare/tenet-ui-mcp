@@ -14,7 +14,7 @@ The rules `audit_code` and `run_checks` (lint) apply. The first six are `eslint-
 | `contract/missing-forward-ref` | warn | A component that renders an element does not `forwardRef` | Forward to the real element |
 | `contract/restyled-primitive` | error | A system component is re-styled with raw values | Use the variant or a token |
 | `contract/pixel-margin-layout` | error | Margins in px between siblings | `Stack` / `Grid` with a `gap` |
-| `a11y/missing-alt` | critical | `<img>` without `alt` | Never guess; ask |
+| `a11y/missing-alt` | critical | `<img>` without `alt` | Describe it from the surrounding text, or `alt=""` if decorative; never invent content |
 | `a11y/icon-only-without-name` | critical | Icon-only control without an accessible name | `aria-label`, or `IconButton` |
 | `a11y/click-on-non-interactive` | error | `onClick` on a div/span | `Button` / `Link` |
 | `types/unknown-export` | error | An import from the package this version does not export | The nearest export name |

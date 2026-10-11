@@ -1,8 +1,11 @@
-// Streamable HTTP endpoint (DESIGN.md §2 transport, §8, §9): POST /mcp, stateless, JSON responses
-// for the fast tools. Validates Origin, the bearer token and the tool's scope before the SDK sees
-// the request; serves Protected Resource Metadata and the built-in issuer's metadata.
+// Streamable HTTP endpoint (DESIGN.md §2 transport, §8, §9): POST /mcp, MCP 2026-07-28, stateless,
+// JSON responses (SSE only if a handler emits a notification before its result). Validates Origin,
+// the bearer token and the tool's scope before the SDK sees the request, then hands it to the SDK's
+// createMcpHandler, which builds one McpServer per request, answers server/discover, checks the
+// standard and Mcp-Param-* headers, and falls back to stateless 2025-era serving for clients that
+// still open with initialize. Serves Protected Resource Metadata and the built-in issuer's metadata.
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
-import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { createMcpHandler, getOAuthProtectedResourceMetadataUrl, TRACEPARENT_META_KEY, type AuthInfo } from '@modelcontextprotocol/server';
 import { AuthError, SCOPES, authConfigFromEnv, mintToken, requireScopes, verifyBearer, type AuthConfig, type Principal } from './auth/tokens.js';
 import type { CatalogStore } from './catalog/store.js';
 import { createMcpServer, SERVER_INFO, TOOL_SCOPES } from './server.js';
@@ -20,7 +23,6 @@ export interface HttpOptions {
   clientCredentials?: { clientId: string; clientSecret: string; scopes: string[] };
   maxBodyBytes?: number;
   designs?: DesignStore;
-  sealKey?: Buffer;
   vision?: VisionFn;
   /** Event spool behind /events, /metrics.json and /dashboard (DESIGN.md §7). */
   metrics?: MetricsStore;
@@ -33,17 +35,31 @@ export function createHttpServer(opts: HttpOptions): Server {
   const origin = new URL(opts.publicUrl).origin;
   const mcpUrl = new URL('/mcp', opts.publicUrl).href;
   const prmUrl = `${origin}/.well-known/oauth-protected-resource`;
+  const prmPathAware = new URL(getOAuthProtectedResourceMetadataUrl(new URL(mcpUrl))).pathname;
   const allowedOrigins = new Set(opts.allowedOrigins ?? []);
 
-  return createServer(async (req, res) => {
+  // One handler for the process; the factory runs per request with the principal we verified.
+  const handler = createMcpHandler((ctx) => createMcpServer(opts.store, {
+    principal: principalFrom(ctx.authInfo),
+    traceId: traceFromHeader(ctx.requestInfo?.headers.get('traceparent') ?? undefined).traceId,
+    publicUrl: opts.publicUrl,
+    designs: opts.designs,
+    vision: opts.vision,
+  }), {
+    maxRequestBodySize: opts.maxBodyBytes ?? MAX_BODY,
+    onerror: (err) => emit({ event: 'request', traceId: '-', status: 'sdk_error', detail: err.message }),
+  });
+
+  const server = createServer(async (req, res) => {
     const t0 = performance.now();
-    const trace = traceFromHeader(header(req, 'traceparent'));
+    let trace = traceFromHeader(header(req, 'traceparent'));
     res.setHeader('traceparent', trace.traceparent);
     const url = new URL(req.url ?? '/', origin);
     let status = 200;
     try {
       if (url.pathname === '/healthz') return sendJson(res, 200, { ok: true, server: SERVER_INFO.name, version: SERVER_INFO.version, latest: opts.store.latest(), versions: opts.store.versions() });
-      if (url.pathname === '/.well-known/oauth-protected-resource') return sendJson(res, 200, prm(mcpUrl, auth));
+      // RFC 9728: the root document (what the 401 challenge names) and the path-aware form for /mcp.
+      if (url.pathname === '/.well-known/oauth-protected-resource' || url.pathname === prmPathAware) return sendJson(res, 200, prm(mcpUrl, auth));
       if (url.pathname === '/.well-known/oauth-authorization-server') return sendJson(res, 200, asMetadata(origin, auth));
       if (url.pathname === '/oauth/token' && req.method === 'POST') return await tokenEndpoint(req, res, auth, opts);
       if (url.pathname === '/events' || url.pathname === '/metrics.json' || url.pathname === '/dashboard') { status = await observability(req, res, url, auth, opts, trace.traceId); return; }
@@ -70,6 +86,10 @@ export function createHttpServer(opts: HttpOptions): Server {
       let parsed: unknown;
       try { parsed = JSON.parse(body); } catch { status = 400; return sendJson(res, 400, { jsonrpc: '2.0', error: { code: -32700, message: 'parse error' }, id: null }); }
 
+      // SEP-414: a traceparent in the request's _meta names the trace; the HTTP header is the fallback.
+      const metaTrace = (parsed as { params?: { _meta?: Record<string, unknown> } } | null)?.params?._meta?.[TRACEPARENT_META_KEY];
+      if (typeof metaTrace === 'string' && /^00-[0-9a-f]{32}-/i.test(metaTrace)) { trace = traceFromHeader(metaTrace); res.setHeader('traceparent', trace.traceparent); }
+
       // Scope check per tool, before dispatch: one 403 with every missing scope (DESIGN.md §9).
       const messages = Array.isArray(parsed) ? parsed : [parsed];
       const required = new Set<string>();
@@ -87,14 +107,10 @@ export function createHttpServer(opts: HttpOptions): Server {
         return sendJson(res, 403, { error: 'insufficient_scope', scope: err.missingScopes.join(' ') });
       }
 
-      const dsVersionHeader = header(req, 'dsversion') ?? header(req, 'x-ds-version');
-      const server = createMcpServer(opts.store, { principal, traceId: trace.traceId, dsVersionHeader, publicUrl: opts.publicUrl, designs: opts.designs, sealKey: opts.sealKey, vision: opts.vision });
-      const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
-      res.on('close', () => { void transport.close(); void server.close(); });
-      await server.connect(transport);
-      (req as IncomingMessage & { auth?: unknown }).auth = { token: '', clientId: principal.clientId, scopes: principal.scopes, expiresAt: principal.expiresAt, extra: { sub: principal.sub } };
-      await transport.handleRequest(req, res, parsed);
-      status = res.statusCode;
+      const authInfo: AuthInfo = { token: '', clientId: principal.clientId, scopes: principal.scopes, expiresAt: principal.expiresAt, extra: { sub: principal.sub } };
+      const response = await handler.fetch(toWebRequest(req, url, body, trace.traceparent), { authInfo, parsedBody: parsed });
+      status = response.status;
+      await sendWeb(res, response);
     } catch (err) {
       status = 500;
       if (!res.headersSent) sendJson(res, 500, { error: 'internal', detail: err instanceof Error ? err.message : String(err) });
@@ -103,6 +119,29 @@ export function createHttpServer(opts: HttpOptions): Server {
       emit({ event: 'request', traceId: trace.traceId, method: req.method, path: url.pathname, status, durationMs: Math.round(performance.now() - t0) });
     }
   });
+  server.on('close', () => { void handler.close(); });
+  return server;
+}
+
+/** The principal http.ts verified, carried through the SDK as AuthInfo. */
+function principalFrom(authInfo: AuthInfo | undefined): Principal {
+  if (!authInfo) throw new Error('no AuthInfo: the HTTP layer verifies every request before the SDK sees it');
+  const sub = (authInfo.extra as { sub?: string } | undefined)?.sub ?? authInfo.clientId;
+  return { sub, clientId: authInfo.clientId, scopes: authInfo.scopes, expiresAt: authInfo.expiresAt };
+}
+
+// ---- Node request/response ↔ web Request/Response ------------------------------------------------
+const HOP_BY_HOP = new Set(['host', 'connection', 'content-length', 'transfer-encoding', 'keep-alive', 'upgrade']);
+function toWebRequest(req: IncomingMessage, url: URL, body: string, traceparent: string): Request {
+  const headers = new Headers();
+  for (const [k, v] of Object.entries(req.headers)) if (v !== undefined && !HOP_BY_HOP.has(k)) headers.set(k, Array.isArray(v) ? v.join(', ') : v);
+  headers.set('traceparent', traceparent);
+  return new Request(url, { method: req.method, headers, body });
+}
+async function sendWeb(res: ServerResponse, response: Response): Promise<void> {
+  res.writeHead(response.status, Object.fromEntries(response.headers));
+  if (response.body) for await (const chunk of response.body) res.write(chunk);
+  res.end();
 }
 
 // ---- observability: hook events in, metrics and the dashboard out (DESIGN.md §7) ----------------

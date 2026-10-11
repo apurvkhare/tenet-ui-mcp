@@ -11,7 +11,8 @@ test('toolMetrics derives names, counts and outcomes only', () => {
   assert.deepEqual(m, { versionFallback: true, outcome: 'fail', findings: 7, critical: 2, checks: { types: 'pass', lint: 'fail' }, round: 2, fixed: 3, remaining: 4, withPrevious: true });
   assert.ok(!JSON.stringify(m).includes('secret') && !JSON.stringify(m).includes('#fff'));
   assert.deepEqual(toolMetrics('search_components', { query: 'x' }, { results: [] }), { zeroResults: true });
-  assert.deepEqual(toolMetrics('match_components', {}, { resultType: 'input_required', questions: 2, assignments: [{ confidence: 0.4 }, { confidence: 0.9 }] }), { resultType: 'input_required', questions: 2, lowConfidence: 1 });
+  assert.deepEqual(toolMetrics('match_components', {}, { decisions: 2, assignments: [{ confidence: 0.4, decision: { basis: 'score', reason: 'private' } }, { confidence: 0.9, decision: { basis: 'guideline' } }] }), { decisions: 2, lowConfidence: 1, decidedByScore: 1 });
+  assert.deepEqual(toolMetrics('resolve_tokens', {}, { exceptions: 1, snappedBeyondTolerance: 3, tokenMap: [{ raw: '#ff00ff' }] }), { exceptions: 1, snappedBeyondTolerance: 3 });
 });
 
 test('HookEventSchema rejects free text and oversized fields', () => {
@@ -28,8 +29,9 @@ test('MetricsStore.summary answers the §7 questions from a spool of server and 
   tool('search_components', { zeroResults: false, sub: 'b' });
   tool('get_component', { full: true });
   tool('get_component', { full: false, durationMs: 90 });
-  tool('match_components', { resultType: 'input_required', questions: 2 });
-  tool('match_components', { resultType: 'complete', unresolved: 1, lowConfidence: 2 });
+  tool('match_components', { decisions: 2, decidedByScore: 1 });
+  tool('match_components', { decisions: 1, lowConfidence: 2 });
+  tool('resolve_tokens', { exceptions: 1, snappedBeyondTolerance: 2 });
   tool('run_checks', { outcome: 'fail', round: 1, checks: { types: 'pass', lint: 'fail', tests: 'skipped' }, findings: 5, critical: 1 });
   tool('run_checks', { outcome: 'pass', round: 2, checks: { types: 'pass', lint: 'pass' }, findings: 0, fixed: 5, remaining: 0 });
   tool('run_checks', { outcome: 'pass', round: 1, checks: { types: 'pass', lint: 'pass', tests: 'pass' }, findings: 0, versionFallback: true, dsVersion: '0.4.0' });
@@ -42,14 +44,14 @@ test('MetricsStore.summary answers the §7 questions from a spool of server and 
   store.record({ event: 'hook.session', sessionId: 's1', rounds: 2, green: true, accepted: true, suppressed: 1, writesAfterPlan: 1, writesAfterAudit: 1, lookupsBeforeWrite: 3, toolCalls: 6 });
   store.record({ event: 'hook.session', sessionId: 's2', rounds: 3, green: false, accepted: false, suppressed: 0 });
   const s = store.summary(7) as Record<string, Record<string, unknown>>;
-  assert.equal(s.used!.calls, 11);
+  assert.equal(s.used!.calls, 12);
   assert.equal(s.used!.principals, 2);
   assert.equal(s.used!.sessions, 2);
   const per = s.used!.perTool as Record<string, { calls: number; p95: number; principals: number }>;
   assert.equal(per.get_component!.calls, 2);
   assert.equal(per.get_component!.p95, 90);
   assert.equal(per.search_components!.principals, 2);
-  assert.deepEqual(s.right, { elicitationRounds: 1, completed: 1, unresolvedPicks: 1, lowConfidenceMatches: 2 });
+  assert.deepEqual(s.right, { matches: 2, closeCallsDecided: 3, decidedByScoreOnly: 1, lowConfidenceMatches: 2, snappedBeyondTolerance: 2 });
   const helps = s.helps as Record<string, unknown>;
   assert.equal(helps.runChecks, 3);
   assert.equal(helps.firstRunPassRate, 0.5);
@@ -60,8 +62,8 @@ test('MetricsStore.summary answers the §7 questions from a spool of server and 
   assert.equal(helps.roundsToGreenP50, 2);
   assert.equal(helps.suppressedFindings, 1);
   assert.deepEqual(s.agentUsedIt, { fileWrites: 2, writesAfter: { plan: 1, audit: 1 }, lookupsBeforeWrite: 3, hooksSeen: true });
-  assert.deepEqual(s.catalogWeak, { zeroResultSearches: 1, tokenExceptions: 0, lowConfidenceMatches: 2 });
-  assert.deepEqual(s.versions, { distribution: { '0.4.0': 11 }, fallbacks: 1 });
+  assert.deepEqual(s.catalogWeak, { zeroResultSearches: 1, tokenExceptions: 1, lowConfidenceMatches: 2 });
+  assert.deepEqual(s.versions, { distribution: { '0.4.0': 12 }, fallbacks: 1 });
   assert.equal((s.budget as { fullRate: number }).fullRate, 0.5);
   assert.equal((new MetricsStore(mkdtempSync(join(tmpdir(), 'tenet-empty-'))).summary().used as { calls: number }).calls, 0);
 });

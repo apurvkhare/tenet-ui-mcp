@@ -5,15 +5,12 @@ import type { DesignStore } from '../store/design-store.js';
 
 export interface ToolContext {
   store: CatalogStore;
-  /** The `DsVersion` request header, if the client mirrored it (DESIGN.md §8). */
-  dsVersionHeader?: string;
   traceId: string;
   /** Public base URL of this server, for resource links. */
   publicUrl: string;
   /** Present on transports that carry a principal (HTTP, stdio); design tools need all three. */
   principal?: Principal;
   designs?: DesignStore;
-  sealKey?: Buffer;
   /** Perception; undefined when no model credentials are configured. */
   vision?: VisionFn;
 }
@@ -23,12 +20,13 @@ export interface Versioned {
   data: VersionData;
 }
 
-/** Resolve dsVersion from the argument, validating it against the mirrored header when both are present. */
+/**
+ * Resolve dsVersion from the argument. Over Streamable HTTP the client mirrors it into the
+ * `Mcp-Param-DsVersion` header (SEP-2243, from `x-mcp-header`) and the SDK rejects a mismatch with
+ * 400 / -32020 before the tool runs, so the argument is the only source here.
+ */
 export function pickVersion(ctx: ToolContext, dsVersion: string | undefined): Versioned {
-  if (ctx.dsVersionHeader && dsVersion && dsVersion !== 'latest' && ctx.dsVersionHeader !== dsVersion) {
-    throw new ToolError(`DsVersion header (${ctx.dsVersionHeader}) does not match dsVersion argument (${dsVersion})`, 'version_mismatch');
-  }
-  const resolved = ctx.store.resolve(dsVersion && dsVersion !== 'latest' ? dsVersion : ctx.dsVersionHeader ?? dsVersion);
+  const resolved = ctx.store.resolve(dsVersion);
   return { resolved, data: ctx.store.load(resolved.effective) };
 }
 

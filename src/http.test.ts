@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict';
 import type { AddressInfo } from 'node:net';
 import { after, before, test } from 'node:test';
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 import { mintToken, type AuthConfig } from './auth/tokens.js';
 import { CatalogStore } from './catalog/store.js';
 import { createHttpServer } from './http.js';
 import { setTelemetrySink } from './telemetry.js';
 import { MetricsStore } from './metrics.js';
+import { DesignStore } from './store/design-store.js';
 import { mkdtempSync, readFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -30,18 +30,102 @@ before(async () => {
   await new Promise<void>((r) => probe.close(() => r()));
   baseUrl = `http://127.0.0.1:${port}`;
   auth = { mode: 'hs256', issuer: baseUrl, audience: `${baseUrl}/mcp`, key: new TextEncoder().encode(KEY) };
-  server = createHttpServer({ store, publicUrl: baseUrl, auth, clientCredentials: { clientId: 'ci', clientSecret: 'ci-secret', scopes: ['ds:read', 'checks:run'] }, metrics });
+  server = createHttpServer({ store, publicUrl: baseUrl, auth, clientCredentials: { clientId: 'ci', clientSecret: 'ci-secret', scopes: ['ds:read', 'checks:run'] }, metrics, designs: new DesignStore(mkdtempSync(join(tmpdir(), 'tenet-http-designs-'))) });
   await new Promise<void>((r) => server.listen(port, '127.0.0.1', () => r()));
 });
 after(async () => { await new Promise<void>((r) => server.close(() => r())); });
 
 const txt = (r: { contents: unknown[] }): string => (r.contents[0] as { text?: string } | undefined)?.text ?? '';
-const connect = async (token?: string): Promise<Client> => {
-  const client = new Client({ name: 'test', version: '0' });
+const MODERN = '2026-07-28';
+/** A 2026-07-28 client by default (no initialize); `legacy` opens with the 2025 handshake instead. */
+const connect = async (token?: string, era: 'modern' | 'legacy' = 'modern'): Promise<Client> => {
+  const client = new Client({ name: 'test', version: '0' }, era === 'modern' ? { versionNegotiation: { mode: { pin: MODERN } } } : {});
   const transport = new StreamableHTTPClientTransport(new URL('/mcp', baseUrl), token ? { requestInit: { headers: { authorization: `Bearer ${token}` } } } : {});
   await client.connect(transport);
   return client;
 };
+
+/** A hand-built 2026-07-28 request: the _meta envelope plus the SEP-2243 standard headers. */
+const rpc = async (token: string, method: string, params: Record<string, unknown> = {}, headers: Record<string, string> = {}): Promise<{ status: number; body: { result?: Record<string, unknown>; error?: { code: number; message: string } } }> => {
+  const name = (params.name ?? params.uri) as string | undefined;
+  const res = await fetch(`${baseUrl}/mcp`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', authorization: `Bearer ${token}`, 'mcp-protocol-version': MODERN, 'mcp-method': method, ...(name ? { 'mcp-name': name } : {}), ...headers },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params: { ...params, _meta: { 'io.modelcontextprotocol/protocolVersion': MODERN, 'io.modelcontextprotocol/clientInfo': { name: 'raw', version: '0' }, 'io.modelcontextprotocol/clientCapabilities': {}, ...(params._meta as object | undefined) } } }),
+  });
+  return { status: res.status, body: await res.json() as { result?: Record<string, unknown>; error?: { code: number; message: string } } };
+};
+
+test('2026-07-28: no initialize, server/discover answers, list results carry cache hints', async () => {
+  const token = await mintToken(auth, { sub: 'apurv', scopes: ['ds:read'] });
+  const client = await connect(token);
+  assert.equal(client.getNegotiatedProtocolVersion(), MODERN);
+  assert.equal(client.getServerVersion()?.name, 'tenet-ui-mcp');
+  await client.close();
+  const discover = await rpc(token, 'server/discover');
+  assert.equal(discover.status, 200);
+  const d = discover.body.result as { supportedVersions: string[]; capabilities: Record<string, unknown>; ttlMs: number; cacheScope: string };
+  assert.ok(d.supportedVersions.includes(MODERN));
+  assert.ok(d.capabilities.tools && d.capabilities.resources && d.capabilities.prompts);
+  assert.equal(((d as unknown as { _meta: Record<string, { name: string }> })._meta['io.modelcontextprotocol/serverInfo'])!.name, 'tenet-ui-mcp', 'servers identify themselves in every result _meta');
+  assert.deepEqual([d.ttlMs, d.cacheScope], [3_600_000, 'private']);
+  const list = await rpc(token, 'tools/list');
+  assert.deepEqual([list.body.result!.ttlMs, list.body.result!.cacheScope], [3_600_000, 'private']);
+  const pinned = await rpc(token, 'resources/read', { uri: 'ds://0.4.0/components/tag' });
+  assert.equal(pinned.body.result!.ttlMs, 24 * 3_600_000);
+  const latest = await rpc(token, 'resources/read', { uri: 'ds://latest/components/tag' });
+  assert.equal(latest.body.result!.ttlMs, 5 * 60_000);
+});
+
+test('Mcp-Param-DsVersion mirrors the dsVersion argument; a mismatch is 400 / -32020 before the tool runs', async () => {
+  const token = await mintToken(auth, { sub: 'apurv', scopes: ['ds:read'] });
+  const ok = await rpc(token, 'tools/call', { name: 'get_component', arguments: { name: 'Button', dsVersion: '0.3.0' } }, { 'mcp-param-dsversion': '0.3.0' });
+  assert.equal(ok.status, 200);
+  assert.equal((ok.body.result!.structuredContent as { dsVersion: string }).dsVersion, '0.3.0');
+  const bad = await rpc(token, 'tools/call', { name: 'get_component', arguments: { name: 'Button', dsVersion: '0.3.0' } }, { 'mcp-param-dsversion': '0.4.0' });
+  assert.equal(bad.status, 400);
+  assert.equal(bad.body.error?.code, -32020);
+  const missing = await rpc(token, 'tools/call', { name: 'get_component', arguments: { name: 'Button', dsVersion: '0.3.0' } });
+  assert.equal(missing.status, 400, 'a value in the body without its header is rejected');
+});
+
+test('SEP-414: a traceparent in _meta becomes the trace id of the call', async () => {
+  const token = await mintToken(auth, { sub: 'apurv', scopes: ['ds:read'] });
+  const traceId = 'a'.repeat(32);
+  const r = await rpc(token, 'tools/call', { name: 'search_icons', arguments: { query: 'search' }, _meta: { traceparent: `00-${traceId}-${'b'.repeat(16)}-01` } });
+  assert.equal((r.body.result!._meta as { traceId: string }).traceId, traceId);
+  assert.ok(events.some((e) => e.event === 'tool' && e.traceId === traceId));
+  assert.ok(events.some((e) => e.event === 'request' && e.traceId === traceId), 'the request event shares the trace');
+});
+
+test('a 2025-era client that opens with initialize is still served (stateless fallback)', async () => {
+  const client = await connect(await mintToken(auth, { sub: 'apurv', scopes: ['ds:read'] }), 'legacy');
+  assert.notEqual(client.getNegotiatedProtocolVersion(), MODERN);
+  const { tools } = await client.listTools();
+  assert.equal(tools.length, 13);
+  await client.close();
+});
+
+test('design path over the transport: decisions in the result, and every resource link it returns reads back', async () => {
+  const client = await connect(await mintToken(auth, { sub: 'apurv', scopes: ['ds:read', 'design:ingest'] }));
+  const regions = [
+    { id: 'p', role: 'page', parent: null, bounds: { x: 0, y: 0, width: 1280, height: 800 } },
+    { id: 's', role: 'section', parent: 'p', bounds: { x: 40, y: 40, width: 800, height: 400 }, style: { borderColor: '#ddd2bf' } },
+    { id: 'h', role: 'heading', text: ['Settings'], parent: 's', bounds: { x: 56, y: 56, width: 300, height: 28 } },
+    { id: 'c', role: 'container', parent: 's', bounds: { x: 56, y: 100, width: 700, height: 200 }, style: { background: '#f4eee3' } },
+  ];
+  const ing = await client.callTool({ name: 'ingest_design', arguments: { source: { type: 'layout', layout: { viewport: { width: 1280, height: 800 }, theme: 'light', regions } }, dsVersion: '0.4.0' } });
+  const designId = (ing.structuredContent as { designId: string }).designId;
+  const m = await client.callTool({ name: 'match_components', arguments: { designId } });
+  assert.notEqual(m.isError, true);
+  const ms = m.structuredContent as { matchId: string; assignments: Array<{ regionId: string; component: string; decision?: { runnerUp: { component: string } } }> };
+  assert.equal(ms.assignments.find((a) => a.regionId === 'c')!.component, 'stack');
+  const plan = await client.callTool({ name: 'plan_component', arguments: { matchId: ms.matchId, name: 'Settings' } });
+  const links = [...(m.content as Array<{ type: string; uri?: string }>), ...(plan.content as Array<{ type: string; uri?: string }>)].filter((c) => c.type === 'resource_link').map((c) => c.uri!);
+  assert.ok(links.some((u) => /\/plans\/pln_[0-9a-f]+\.md$/.test(u)) && links.some((u) => /\/matches\/mtc_[0-9a-f]+\.json$/.test(u)));
+  for (const uri of links) assert.ok(txt(await client.readResource({ uri })).length > 0, uri);
+  await client.close();
+});
 
 test('discovery: healthz, protected resource metadata, AS metadata', async () => {
   const health = await (await fetch(`${baseUrl}/healthz`)).json() as { ok: boolean; latest: string };
@@ -49,6 +133,8 @@ test('discovery: healthz, protected resource metadata, AS metadata', async () =>
   assert.equal(health.latest, '0.4.0');
   const prm = await (await fetch(`${baseUrl}/.well-known/oauth-protected-resource`)).json() as { resource: string; authorization_servers: string[]; scopes_supported: string[] };
   assert.equal(prm.resource, `${baseUrl}/mcp`);
+  const pathAware = await (await fetch(`${baseUrl}/.well-known/oauth-protected-resource/mcp`)).json() as { resource: string };
+  assert.equal(pathAware.resource, `${baseUrl}/mcp`);
   assert.deepEqual(prm.authorization_servers, [baseUrl]);
   assert.ok(prm.scopes_supported.includes('ds:read'));
   const as = await (await fetch(`${baseUrl}/.well-known/oauth-authorization-server`)).json() as { token_endpoint: string };
@@ -71,7 +157,7 @@ test('wrong scope → one 403 naming the missing scope', async () => {
   assert.match(res.headers.get('www-authenticate') ?? '', /insufficient_scope.*scope="ds:read"/);
 });
 
-test('tools/list is deterministic, small, with annotations and the DsVersion header hint', async () => {
+test('tools/list is deterministic, small, with annotations and the x-mcp-header DsVersion hint', async () => {
   const client = await connect(await mintToken(auth, { sub: 'apurv', scopes: ['ds:read'] }));
   const { tools } = await client.listTools();
   assert.deepEqual(tools.map((t) => t.name), ['search_components', 'get_component', 'find_tokens', 'search_icons', 'resolve_value', 'ingest_design', 'match_components', 'resolve_tokens', 'plan_component', 'audit_code', 'audit_page', 'plan_tests', 'run_checks']);
@@ -104,7 +190,7 @@ test('tools/call returns structuredContent, text, resource links and _meta.trace
   assert.ok((r._meta as { traceId?: string })?.traceId);
   const err = await client.callTool({ name: 'resolve_value', arguments: { values: [{ raw: '???' }] } });
   assert.notEqual(err.isError, true);
-  const bad = await client.callTool({ name: 'get_component', arguments: { name: 'Button', dsVersion: '0.4.0' } }, undefined, { });
+  const bad = await client.callTool({ name: 'get_component', arguments: { name: 'Button', dsVersion: '0.4.0' } });
   assert.equal((bad.structuredContent as { dsVersion: string }).dsVersion, '0.4.0');
   await client.close();
 });
@@ -156,6 +242,9 @@ test('prompts: the three paths are listed and render with the effective version'
   assert.match(text, /audit_code/);
   assert.match(text, /audit_page/);
   assert.match(text, /dsVersion "0\.4\.0"/);
+  const d2c = ((await client.getPrompt({ name: 'design-to-code', arguments: { dsVersion: '0.4.0' } })).messages[0]!.content as { text: string }).text;
+  assert.match(d2c, /without asking the user to choose anything/);
+  assert.doesNotMatch(d2c, /answer its questions|strategy auto|elicit/i);
   await client.close();
 });
 

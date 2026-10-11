@@ -1,10 +1,11 @@
 // resolve_tokens (DESIGN.md §4): every raw value the analyser read becomes the nearest token with
-// its delta; values beyond tolerance become exceptions or questions (snap, keep as exception, or
-// propose a new token), batched, at most eight per call.
-import { resolveValue, type Resolution, type Theme, type ValueKind } from '../catalog/resolve.js';
+// its delta. Values beyond tolerance are decided here, never asked: a dimension snaps to the
+// nearest step of its scale (the contract: every space, radius and font is a token); a colour
+// snaps when it is near a semantic token and otherwise becomes a documented exception, because
+// snapping a clearly different colour would change what it means. Each decision says why.
+import { resolveValue, TOLERANCE, type Resolution, type Theme, type ValueKind } from '../catalog/resolve.js';
 import type { VersionData } from '../catalog/store.js';
 import type { Layout } from './layout.js';
-import { MAX_QUESTIONS, type Question } from './match.js';
 
 export type Tolerance = 'strict' | 'normal' | 'loose';
 
@@ -17,64 +18,54 @@ export interface TokenEntry {
   cssVar?: string;
   tokenValue?: string;
   delta?: number;
-  status: 'exact' | 'snapped' | 'exception' | 'pending' | 'proposed';
+  status: 'exact' | 'snapped' | 'exception';
   suggestion?: string;
-  alternatives?: Resolution['alternatives'];
+  /** The nearest token after the pick, for an exception or a snap that was close. */
+  runnerUp?: { token: string; cssVar: string; tokenValue: string; delta: number };
+  /** Why a value beyond tolerance was snapped or kept, with the rule it follows. */
+  decision?: { rule: string; reason: string; cites: string[] };
   note?: string;
 }
 
 const KIND_FOR: Record<string, ValueKind> = { background: 'color', color: 'color', borderColor: 'color', borderRadius: 'radius', fontSize: 'fontSize', fontWeight: 'fontWeight', gap: 'space', padding: 'space' };
+/** A colour within this many times its ΔE tolerance is the same colour to the eye: snap. Beyond it, an exception. */
+export const COLOR_SNAP_FACTOR = 2;
+const COLOR_TOLERANCE = TOLERANCE.color!;
 
-export function resolveLayoutTokens(data: VersionData, layout: Layout, theme: Theme, tolerance: Tolerance): { entries: TokenEntry[]; questions: Question[] } {
+export function resolveLayoutTokens(data: VersionData, layout: Layout, theme: Theme, tolerance: Tolerance): { entries: TokenEntry[] } {
   const entries: TokenEntry[] = [];
-  const seenRaw = new Map<string, TokenEntry>();
   for (const region of layout.regions) {
     for (const [property, raw] of Object.entries(region.style)) {
       if (!raw) continue;
-      const kind = KIND_FOR[property] ?? 'auto';
-      const r = resolveValue(data.tokens, raw, kind, theme);
-      const snap = r.exact || (tolerance === 'loose' && r.token) || (tolerance === 'normal' && r.withinTolerance);
-      const entry: TokenEntry = {
-        regionId: region.id, property, raw, kind: r.kind, token: r.token, cssVar: r.cssVar, tokenValue: r.tokenValue, delta: r.delta,
-        status: r.exact ? 'exact' : snap ? 'snapped' : r.token ? 'pending' : 'exception',
-        suggestion: r.suggestion, alternatives: r.alternatives, note: r.note,
-      };
-      entries.push(entry);
-      const key = `${kind}:${raw.toLowerCase()}`;
-      if (!seenRaw.has(key)) seenRaw.set(key, entry);
+      const r = resolveValue(data.tokens, raw, KIND_FOR[property] ?? 'auto', theme);
+      entries.push(decideValue(data, region.id, property, r, tolerance));
     }
   }
-  // One question per distinct off-scale value, not per region.
-  const questions: Question[] = [];
-  for (const [key, e] of seenRaw) {
-    if (e.status !== 'pending' || questions.length >= MAX_QUESTIONS) continue;
-    const regions = entries.filter((x) => `${KIND_FOR[x.property] ?? 'auto'}:${x.raw.toLowerCase()}` === key).map((x) => x.regionId);
-    questions.push({
-      key: `value_${questions.length + 1}`,
-      regionId: e.regionId,
-      message: `${e.raw} (${e.property} on ${regions.length === 1 ? `region ${regions[0]}` : `${regions.length} regions`}) is ${e.kind === 'color' ? `ΔE ${e.delta}` : `${e.delta} off`} from the nearest token ${e.cssVar}.`,
-      options: [
-        { value: `snap:${e.token}`, title: `Snap to ${e.cssVar} (${e.tokenValue})` },
-        ...(e.alternatives ?? []).slice(0, 2).map((a) => ({ value: `snap:${a.token}`, title: `Use ${a.cssVar} (${a.tokenValue}, Δ${a.delta})` })),
-        { value: 'exception', title: `Keep ${e.raw} as a documented exception` },
-        { value: 'propose', title: 'Propose a new token to the design system' },
-      ],
-      defaultValue: `snap:${e.token}`,
-    });
-  }
-  return { entries, questions };
+  return { entries };
 }
 
-/** Apply an answer to every entry sharing the answered value. */
-export function applyTokenAnswer(entries: TokenEntry[], data: VersionData, answered: TokenEntry, choice: string): void {
-  const same = entries.filter((x) => x.raw.toLowerCase() === answered.raw.toLowerCase() && (KIND_FOR[x.property] ?? 'auto') === (KIND_FOR[answered.property] ?? 'auto'));
-  for (const e of same) {
-    if (choice === 'exception') { e.status = 'exception'; e.token = undefined; e.cssVar = undefined; e.suggestion = e.raw; e.note = 'kept as an exception by the user'; }
-    else if (choice === 'propose') { e.status = 'proposed'; e.suggestion = e.raw; e.note = 'user proposes a new token; keep the raw value with a TODO until the system adds it'; }
-    else if (choice.startsWith('snap:')) {
-      const name = choice.slice(5);
-      const t = data.tokens.find((x) => x.name === name);
-      if (t) { e.status = 'snapped'; e.token = t.name; e.cssVar = t.cssVar; e.tokenValue = String(t.themed ? t.light : t.value); e.suggestion = `var(${t.cssVar})`; e.note = 'snapped by the user'; }
-    } else if (choice === 'auto') { e.status = e.token ? 'snapped' : 'exception'; e.note = 'auto-resolved'; }
+function decideValue(data: VersionData, regionId: string, property: string, r: Resolution, tolerance: Tolerance): TokenEntry {
+  const base = { regionId, property, raw: r.raw, kind: r.kind, delta: r.delta, runnerUp: r.alternatives?.[0] };
+  const snapped = (rule: string, reason: string, topics: string[]): TokenEntry => ({ ...base, token: r.token, cssVar: r.cssVar, tokenValue: r.tokenValue, status: 'snapped', suggestion: r.suggestion, ...(rule ? { decision: { rule, reason, cites: cites(data, topics) } } : {}) });
+  const exception = (rule: string, reason: string, topics: string[]): TokenEntry => ({ ...base, token: undefined, cssVar: undefined, status: 'exception', suggestion: r.raw, decision: { rule, reason, cites: cites(data, topics) }, note: r.token ? `nearest token ${r.cssVar} (${r.tokenValue}), Δ${r.delta}` : r.note });
+
+  if (r.exact) return { ...base, token: r.token, cssVar: r.cssVar, tokenValue: r.tokenValue, status: 'exact', suggestion: r.suggestion };
+  if (!r.token) return exception('no token', r.kind === 'unknown' ? 'the value kind could not be inferred, so there is no scale to snap to; keep it out of the component and document it' : `no ${r.kind} token matches${r.note ? ` (${r.note})` : ''}; documented exception`, ['contract']);
+  if (tolerance === 'strict') return exception('tolerance strict', `strict tolerance keeps only exact matches; ${r.raw} is Δ${r.delta} from ${r.cssVar}`, ['contract']);
+  if (r.withinTolerance) return snapped('', '', []);
+  if (tolerance === 'loose') return snapped('tolerance loose', `loose tolerance snaps every value to its nearest token: ${r.cssVar} (${r.tokenValue}), Δ${r.delta}`, ['contract']);
+
+  if (r.kind === 'color') {
+    if ((r.delta ?? Infinity) <= COLOR_TOLERANCE * COLOR_SNAP_FACTOR) {
+      return snapped('color §1: semantic tokens only', `ΔE ${r.delta} from ${r.cssVar} is within ${COLOR_SNAP_FACTOR}× the colour tolerance, the same colour to the eye; app code never writes a colour literal, so it snaps`, ['color', 'contract']);
+    }
+    return exception('color §1: no semantic token carries this colour', `ΔE ${r.delta} from the nearest semantic token ${r.cssVar} is a visibly different colour; snapping would change what it means, so it stays a documented exception for the design team (propose a token if it recurs)`, ['color', 'contract']);
   }
+  // Space, radius, font size and weight: the scale is the law (contract, Styling; layout rule 2).
+  return snapped('contract: every space, radius and font is a token', `${r.raw} is off the scale by ${r.delta}; the contract allows only scale steps, so it snaps to the nearest one, ${r.cssVar} (${r.tokenValue})${base.runnerUp ? `; next nearest ${base.runnerUp.cssVar} (${base.runnerUp.tokenValue}, Δ${base.runnerUp.delta})` : ''}`, r.kind === 'space' ? ['layout', 'contract'] : r.kind === 'fontSize' || r.kind === 'fontWeight' ? ['typography', 'contract'] : ['contract']);
+}
+
+function cites(data: VersionData, topics: string[]): string[] {
+  const pages = new Set(data.guidelines?.pages.map((p) => p.id) ?? []);
+  return topics.filter((t) => t === 'contract' || pages.has(t)).map((t) => `ds://${data.version}/guidelines/${t}`);
 }

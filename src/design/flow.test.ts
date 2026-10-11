@@ -1,7 +1,7 @@
-// Path one end to end with a host-supplied layout: ingest → match (elicitation) → resolve_tokens
-// (elicitation) → plan, plus principal isolation and requestState tamper checks.
+// Path one end to end with a host-supplied layout: ingest → match → resolve_tokens → plan, plus
+// principal isolation. The server decides every close match and off-scale value and explains it;
+// nothing in this path asks the user.
 import assert from 'node:assert/strict';
-import { randomBytes } from 'node:crypto';
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -11,11 +11,13 @@ import { readResource } from '../resources.js';
 import { DesignStore } from '../store/design-store.js';
 import type { ToolContext } from '../tools/context.js';
 import { ingestDesign, matchComponents, planComponent, resolveTokens } from '../tools/design-tools.js';
+import { normalizeLayout } from './layout.js';
+import { assignRegions, type Assignment } from './match.js';
+import { resolveLayoutTokens } from './tokens.js';
 
 const store = new CatalogStore('snapshots');
 const designs = new DesignStore(mkdtempSync(join(tmpdir(), 'tenet-designs-')));
-const sealKey = randomBytes(32);
-const ctxFor = (sub: string): ToolContext => ({ store, traceId: 't', publicUrl: 'http://127.0.0.1:3000', principal: { sub, scopes: ['ds:read', 'design:ingest'], clientId: sub }, designs, sealKey });
+const ctxFor = (sub: string): ToolContext => ({ store, traceId: 't', publicUrl: 'http://127.0.0.1:3000', principal: { sub, scopes: ['ds:read', 'design:ingest'], clientId: sub }, designs });
 const ctx = ctxFor('apurv');
 
 const tokens = store.load('0.4.0').tokens;
@@ -40,7 +42,6 @@ const layout = {
 };
 
 let designId = '';
-let requestState = '';
 let matchId = '';
 
 test('ingest_design stores a host-supplied layout and summarises it', async () => {
@@ -60,63 +61,120 @@ test('ingest_design with an image needs vision; bad bytes are rejected first', a
   await assert.rejects(async () => ingestDesign.run({ source: { type: 'image', data: png.toString('base64') }, dsVersion: 'latest' }, ctx), /vision is not configured/);
 });
 
-test('match_components asks about the Card-vs-Stack region and assigns the rest', async () => {
-  const r = await matchComponents.run({ designId, strategy: 'ask' }, ctx);
-  const s = r.structured as { resultType: string; inputRequests: Record<string, { params: { message: string; requestedSchema: { properties: { choice: { oneOf: Array<{ const: string }>; default: string } } } } }>; requestState: string; assignments: Array<{ regionId: string; component: string; confidence: number }> };
-  assert.equal(s.resultType, 'input_required');
-  const keys = Object.keys(s.inputRequests);
-  assert.ok(keys.includes('region_r10'), `expected a question about r10, got ${keys.join(', ')}`);
-  const q = s.inputRequests.region_r10!;
-  const options = q.params.requestedSchema.properties.choice.oneOf.map((o) => o.const);
-  assert.ok(options.includes('card') && options.includes('stack') && options.includes('auto'));
-  assert.ok(s.requestState.startsWith('v1.'));
+test('match_components decides the Card-vs-Stack close call from the layout guideline and never asks', async () => {
+  const r = await matchComponents.run({ designId }, ctx);
+  const s = r.structured as Record<string, unknown> & { matchId: string; decisions: number; assignments: Assignment[] };
+  for (const k of ['resultType', 'inputRequests', 'requestState', 'unresolved', 'questions']) assert.ok(!(k in s), `no ${k} in the result`);
+  assert.match(s.matchId, /^mtc_/);
   const by = Object.fromEntries(s.assignments.map((a) => [a.regionId, a]));
+  const r10 = by.r10!;
+  assert.equal(r10.component, 'stack');
+  assert.equal(r10.source, 'decided');
+  assert.equal(r10.decision!.basis, 'guideline');
+  assert.equal(r10.decision!.runnerUp.component, 'card');
+  assert.match(r10.decision!.reason, /inside r2, which is a Card; a Card never contains another Card/);
+  assert.ok(r10.decision!.cites.includes('ds://0.4.0/guidelines/layout'));
+  assert.ok(r10.confidence >= 0.85);
+  assert.equal(by.r1!.component, 'stack', 'the page root is a Stack');
+  assert.equal(by.r2!.component, 'card');
   assert.equal(by.r3!.component, 'heading');
   assert.equal(by.r7!.component, 'button');
   assert.equal(by.r8!.component, 'icon-button');
   assert.equal(by.r9!.component, 'badge');
   assert.equal(by.r6!.component, 'text-input');
   assert.equal(by.r5!.component, 'form-control');
-  requestState = s.requestState;
-});
-
-test('requestState: tampering, another principal, and changed arguments are rejected', async () => {
-  const answers = { region_r10: { action: 'accept' as const, content: { choice: 'card' } } };
-  await assert.rejects(async () => matchComponents.run({ designId, strategy: 'ask', inputResponses: answers, requestState: requestState.slice(0, -4) + 'AAAA' }, ctx), /seal verification failed/);
-  await assert.rejects(async () => matchComponents.run({ designId, strategy: 'ask', inputResponses: answers, requestState }, ctxFor('someone-else')), /not found/);
-  await assert.rejects(async () => matchComponents.run({ designId, strategy: 'auto', inputResponses: answers, requestState }, ctx), /arguments changed/);
-});
-
-test('answering completes the match; decline auto-resolves into unresolved[]', async () => {
-  const r = await matchComponents.run({ designId, strategy: 'ask', inputResponses: { region_r10: { action: 'accept', content: { choice: 'card' } } }, requestState }, ctx);
-  const s = r.structured as { resultType: string; matchId: string; assignments: Array<{ regionId: string; component: string; source: string; confidence: number }>; unresolved: unknown[] };
-  assert.equal(s.resultType, 'complete');
-  assert.match(s.matchId, /^mtc_/);
-  const r10 = s.assignments.find((a) => a.regionId === 'r10')!;
-  assert.equal(r10.component, 'card');
-  assert.equal(r10.source, 'answered');
+  assert.equal(s.decisions, s.assignments.filter((a) => a.source === 'decided').length);
+  assert.match(r.text, /r10 → stack over card/);
   matchId = s.matchId;
 
-  const auto = await matchComponents.run({ designId, strategy: 'auto' }, ctx);
-  const a = auto.structured as { resultType: string; unresolved: Array<{ regionId: string; options: string[] }> };
-  assert.equal(a.resultType, 'complete');
-  assert.ok(a.unresolved.some((u) => u.regionId === 'r10' && u.options.includes('card')));
+  const again = (await matchComponents.run({ designId }, ctx)).structured as { assignments: Assignment[] };
+  assert.deepEqual(again.assignments.map((a) => [a.component, a.decision?.reason]), s.assignments.map((a) => [a.component, a.decision?.reason]), 'decisions are deterministic');
+  await assert.rejects(async () => matchComponents.run({ designId }, ctxFor('someone-else')), /not found/);
 });
 
-test('resolve_tokens: exact values snap silently, the off-brand colour becomes a question', async () => {
+// One region per rule family, so each decision path is exercised on its own.
+const decided = (regions: unknown[], viewport = { width: 1280, height: 800 }): Record<string, Assignment> =>
+  Object.fromEntries(assignRegions(store.load('0.4.0'), normalizeLayout({ viewport, theme: 'light', regions } as never)).map((a) => [a.regionId, a]));
+const box = (x: number, y: number, width: number, height: number) => ({ x, y, width, height });
+
+test('Card or plain section: self-contained groups, repeated tiles and plain flow are decided by the layout test', () => {
+  const muted = val('bgColor-muted');
+  const by = decided([
+    { id: 'p', role: 'page', parent: null, bounds: box(0, 0, 1280, 800) },
+    // A tinted group with its own heading and action: self-contained, so a Card.
+    { id: 'g', role: 'container', label: 'Billing', parent: 'p', bounds: box(40, 40, 600, 200), style: { background: muted } },
+    { id: 'gh', role: 'heading', text: ['Billing'], parent: 'g', bounds: box(56, 56, 300, 28) },
+    { id: 'gb', role: 'button', text: ['Update card'], parent: 'g', bounds: box(56, 180, 120, 36) },
+    // A tinted block with only copy: it flows with the page, so a plain section.
+    { id: 'f', role: 'container', label: 'Intro', parent: 'p', bounds: box(40, 260, 600, 80), style: { background: muted } },
+    { id: 'ft', role: 'text', text: ['Welcome back.'], parent: 'f', bounds: box(56, 276, 300, 20) },
+    // Two tinted tiles of the same size in a row: summary tiles are Cards.
+    { id: 't1', role: 'container', label: 'Revenue', parent: 'p', bounds: box(700, 40, 240, 120), style: { background: muted } },
+    { id: 't2', role: 'container', label: 'Orders', parent: 'p', bounds: box(960, 40, 240, 120), style: { background: muted } },
+  ]);
+  for (const [id, component, reason] of [['g', 'card', /own heading and action/], ['f', 'stack', /flows with the page/], ['t1', 'card', /repeated tiles/], ['t2', 'card', /repeated tiles/]] as const) {
+    const a = by[id]!;
+    assert.equal(a.component, component, `${id}: ${a.decision?.reason ?? a.candidates.map((c) => c.component).join(',')}`);
+    if (a.decision) { assert.match(a.decision.reason, reason); assert.equal(a.decision.basis, 'guideline'); assert.ok(a.decision.runnerUp.component); }
+  }
+});
+
+test('other close pairs follow their guideline: count vs word, actions vs a value, sortable rows', () => {
+  const pick = (region: Record<string, unknown>): Assignment => decided([{ parent: null, bounds: box(0, 0, 120, 36), ...region }])[region.id as string]!;
+  for (const [region, component, runnerUp, reason] of [
+    [{ id: 's', role: 'status', text: ['Passing'] }, 'tag', 'badge', /labelled status word is a Tag/],
+    [{ id: 'c', role: 'status', text: ['12'] }, 'badge', 'tag', /"12" is a count/],
+    [{ id: 'd', role: 'dropdown', label: 'Row actions', text: ['More actions'] }, 'menu', 'select', /a list of actions is a Menu/],
+    [{ id: 't', role: 'table', label: 'Orders', states: ['sortable'] }, 'data-table', 'table', /sorts, filters or selects rows/],
+  ] as const) {
+    const a = pick(region);
+    assert.equal(a.source, 'decided', `${region.id} should be a close call`);
+    assert.equal(a.component, component);
+    assert.equal(a.decision!.runnerUp.component, runnerUp);
+    assert.equal(a.decision!.basis, 'guideline');
+    assert.match(a.decision!.reason, reason);
+    assert.ok(a.decision!.cites.length > 0);
+  }
+});
+
+test('resolve_tokens decides every value: exact, snapped with its delta and rule, or a documented exception; never asks', async () => {
   const r = await resolveTokens.run({ matchId, theme: 'light', tolerance: 'normal' }, ctx);
-  const s = r.structured as { resultType: string; inputRequests: Record<string, { params: { message: string } }>; requestState: string };
-  assert.equal(s.resultType, 'input_required');
-  const [key, q] = Object.entries(s.inputRequests)[0]!;
-  assert.match(q.params.message, /#ff00ff/);
-  const done = await resolveTokens.run({ matchId, theme: 'light', tolerance: 'normal', inputResponses: { [key]: { action: 'accept', content: { choice: 'exception' } } }, requestState: s.requestState }, ctx);
-  const d = done.structured as { resultType: string; tokenMap: Array<{ regionId: string; property: string; token?: string; status: string }>; exceptions: number };
-  assert.equal(d.resultType, 'complete');
+  const d = r.structured as Record<string, unknown> & { tokenMap: Array<{ regionId: string; property: string; token?: string; status: string; delta?: number; decision?: { rule: string; reason: string; cites: string[] } }>; exceptions: number };
+  for (const k of ['resultType', 'inputRequests', 'requestState', 'questions']) assert.ok(!(k in d), `no ${k} in the result`);
   assert.equal(d.exceptions, 1);
   const accent = d.tokenMap.find((t) => t.regionId === 'r7' && t.property === 'background')!;
   assert.equal(accent.token, 'bgColor-accent-emphasis');
   assert.equal(accent.status, 'exact');
-  assert.equal(d.tokenMap.find((t) => t.regionId === 'r11')!.status, 'exception');
+  const magenta = d.tokenMap.find((t) => t.regionId === 'r11')!;
+  assert.equal(magenta.status, 'exception');
+  assert.ok(magenta.delta! > 8);
+  assert.match(magenta.decision!.reason, /visibly different colour; snapping would change what it means/);
+  assert.ok(magenta.decision!.cites.includes('ds://0.4.0/guidelines/color'));
+  assert.match(r.text, /#ff00ff/);
+});
+
+test('off-scale rules: dimensions snap to the scale, near colours snap, far colours and strict stay exceptions', () => {
+  const data = store.load('0.4.0');
+  const accent = val('bgColor-accent-emphasis'); // #c2502e
+  const layout = normalizeLayout({ viewport: { width: 400, height: 200 }, theme: 'light', regions: [
+    { id: 'a', role: 'container', parent: null, bounds: box(0, 0, 400, 200), style: { padding: '19px', borderRadius: '9px', background: '#c5532f' } },
+    { id: 'b', role: 'text', parent: 'a', bounds: box(0, 0, 100, 20), style: { color: '#00ff00', fontSize: '15px' } },
+  ] } as never);
+  assert.notEqual(accent, '#c5532f');
+  const normal = Object.fromEntries(resolveLayoutTokens(data, layout, 'light', 'normal').entries.map((e) => [`${e.regionId}.${e.property}`, e]));
+  const pad = normal['a.padding']!;
+  assert.equal(pad.status, 'snapped');
+  assert.ok(pad.delta! > 2, 'beyond the space tolerance');
+  assert.match(pad.decision!.reason, /contract allows only scale steps/);
+  assert.ok(pad.decision!.cites.includes('ds://0.4.0/guidelines/layout'));
+  assert.equal(normal['a.background']!.status, 'snapped', 'ΔE within 2× tolerance snaps');
+  assert.equal(normal['a.background']!.token, 'bgColor-accent-emphasis');
+  assert.equal(normal['b.color']!.status, 'exception');
+  assert.ok(normal['b.color']!.decision!.reason.length > 20);
+  const strict = resolveLayoutTokens(data, layout, 'light', 'strict').entries;
+  assert.ok(strict.filter((e) => e.status !== 'exact').every((e) => e.status === 'exception' && e.decision?.rule === 'tolerance strict'));
+  const loose = resolveLayoutTokens(data, layout, 'light', 'loose').entries;
+  assert.ok(loose.every((e) => e.status !== 'exception'), 'loose snaps everything that has a nearest token');
 });
 
 test('plan_component: tree, imports, prop mapping, files, exceptions, catalog excerpts', async () => {
@@ -136,6 +194,11 @@ test('plan_component: tree, imports, prop mapping, files, exceptions, catalog ex
   assert.equal(heading.props.level, 2);
   assert.equal(p.files.length, 5);
   assert.equal(p.exceptions.length, 1);
+  const plan = s.plan as unknown as { decisions: Array<{ regionId: string; picked: string; runnerUp: string; reason: string }>; notes: string[] };
+  const r10 = plan.decisions.find((x) => x.regionId === 'r10')!;
+  assert.deepEqual([r10.picked, r10.runnerUp], ['stack', 'card']);
+  assert.ok(!('unresolved' in p));
+  assert.ok(plan.notes.some((n) => /do not ask anyone to choose/.test(n)));
   assert.ok(p.catalog.some((c) => c.component === 'button'));
   assert.ok(p.stories.includes('Default'));
   assert.ok(p.tests.some((t) => /axe/.test(t)));
@@ -147,6 +210,8 @@ test('design:// resources are private to the principal', () => {
   assert.equal(JSON.parse(mine.text!).layout.regions.length, 11);
   const plan = readResource(store, `design://${designId}/plan.md`, { designs, sub: 'apurv' });
   assert.match(plan.text!, /^# Plan: NotificationSettings/);
+  assert.match(plan.text!, /## Decisions \(close matches the server settled\)/);
+  assert.match(plan.text!, /## Documented exceptions/);
   const match = readResource(store, `design://${designId}/match.json`, { designs, sub: 'apurv' });
   assert.ok(JSON.parse(match.text!).assignments.length === 11);
   assert.throws(() => readResource(store, `design://${designId}/layout.json`, { designs, sub: 'someone-else' }), /no resource/);

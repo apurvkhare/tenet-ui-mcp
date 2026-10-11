@@ -36,14 +36,15 @@ export interface Plan {
   contract: string[];
   a11y: string[];
   catalog: Array<{ component: string; import: string; props: Array<{ name: string; type: string; required: boolean; default?: string; deprecated?: string }>; guidelines?: string }>;
-  exceptions: Array<{ regionId: string; property: string; raw: string; note?: string }>;
-  unresolved: Array<{ regionId: string; picked: string; options: string[] }>;
+  exceptions: Array<{ regionId: string; property: string; raw: string; reason?: string; note?: string }>;
+  /** Close matches the server decided, with the rule it applied; review them, nobody is asked. */
+  decisions: Array<{ regionId: string; picked: string; runnerUp: string; confidence: number; basis: 'guideline' | 'score'; reason: string; cites: string[] }>;
   stories: string[];
   tests: string[];
   notes: string[];
 }
 
-export function buildPlan(data: VersionData, layout: Layout, assignments: Assignment[], tokens: TokenEntry[] | undefined, opts: PlanOptions & { designId: string; matchId: string; unresolved: Plan['unresolved'] }): Plan {
+export function buildPlan(data: VersionData, layout: Layout, assignments: Assignment[], tokens: TokenEntry[] | undefined, opts: PlanOptions & { designId: string; matchId: string }): Plan {
   const byRegion = new Map(assignments.map((a) => [a.regionId, a]));
   const tokenFor = (regionId: string, property: string): TokenEntry | undefined => tokens?.find((t) => t.regionId === regionId && t.property === property);
   const used = new Set<string>();
@@ -59,7 +60,7 @@ export function buildPlan(data: VersionData, layout: Layout, assignments: Assign
       if (!t || !t.cssVar) continue;
       // Colours on a system component are owned by its variant; only layout-ish values are the agent's.
       if (comp && ['background', 'color', 'borderColor', 'borderRadius', 'fontSize', 'fontWeight'].includes(property) && ownsStyling(comp)) continue;
-      tokenRefs[property] = t.status === 'exception' || t.status === 'proposed' ? `${t.raw} /* exception */` : `var(${t.cssVar})`;
+      tokenRefs[property] = t.status === 'exception' ? `${t.raw} /* exception */` : `var(${t.cssVar})`;
     }
     const children = childrenOf(layout, region.id).map(node);
     const n: PlanNode = {
@@ -70,8 +71,8 @@ export function buildPlan(data: VersionData, layout: Layout, assignments: Assign
       props,
       text: region.text.length ? region.text : undefined,
       tokens: tokenRefs,
-      a11y: comp ? a11yFor(data, comp, region) : region.role === 'image' ? ['`alt` is required and must describe the image; never guess it — ask'] : [],
-      note: a?.note ?? (a && a.confidence < 0.6 ? `low confidence (${a.confidence}); alternatives: ${a.candidates.slice(1, 3).map((c) => c.component).join(', ')}` : undefined),
+      a11y: comp ? a11yFor(data, comp, region) : region.role === 'image' ? ['`alt` is required: describe the image from the design\'s own text (caption, heading, label); `alt=""` only when it is decorative; never invent content'] : [],
+      note: a?.decision ? `decided over ${a.decision.runnerUp.component}: ${a.decision.reason}` : a?.note ?? (a && a.confidence < 0.6 ? `low confidence (${a.confidence}); next candidates: ${a.candidates.slice(1, 3).map((c) => c.component).join(', ')}` : undefined),
       children,
     };
     return n;
@@ -90,7 +91,8 @@ export function buildPlan(data: VersionData, layout: Layout, assignments: Assign
     const c = data.byId.get(id)!;
     return { component: c.id, import: `import { ${[c.exportName, ...c.subcomponents.filter((s) => s.exportName).map((s) => s.exportName!)].join(', ')} } from '${c.importPath}';`, props: c.props.filter((p) => !p.inheritedFrom).slice(0, 12).map((p) => ({ name: p.name, type: p.type, required: p.required, default: p.default, deprecated: p.deprecated })), guidelines: c.guidelines ? `ds://${data.version}/guidelines/${c.id}` : undefined };
   });
-  const exceptions = (tokens ?? []).filter((t) => t.status === 'exception' || t.status === 'proposed' || t.status === 'pending').map((t) => ({ regionId: t.regionId, property: t.property, raw: t.raw, note: t.note }));
+  const exceptions = (tokens ?? []).filter((t) => t.status === 'exception').map((t) => ({ regionId: t.regionId, property: t.property, raw: t.raw, reason: t.decision?.reason, note: t.note }));
+  const decisions = assignments.filter((a) => a.decision && a.component).map((a) => ({ regionId: a.regionId, picked: a.component!, runnerUp: a.decision!.runnerUp.component, confidence: a.confidence, basis: a.decision!.basis, reason: a.decision!.reason, cites: a.decision!.cites }));
   const textNodes = layout.regions.filter((r) => r.text.length).length;
   return {
     name: opts.name,
@@ -105,13 +107,14 @@ export function buildPlan(data: VersionData, layout: Layout, assignments: Assign
     a11y: A11Y_CONTRACT,
     catalog,
     exceptions,
-    unresolved: opts.unresolved,
+    decisions,
     stories: storyIdeas(tree),
     tests: [`renders with default props (${textNodes} text nodes visible)`, ...interactiveNodes(tree).map((n) => `${n.name}: interaction on ${n.regionId} (${describeInteraction(n)})`), 'axe: no serious/critical violations in light and dark', 'keyboard: every interactive node reachable and operable'],
     notes: [
       'This is a plan, not source. Write the files in the repository\'s conventions, then run the skill\'s capture script and send results.json to run_checks.',
       `Import the stylesheet once at the app root: import '${data.manifest.package}/styles.css'.`,
-      ...(exceptions.length ? [`${exceptions.length} raw value(s) are exceptions or unresolved; keep them out of the component and document them.`] : []),
+      ...(exceptions.length ? [`${exceptions.length} raw value(s) are documented exceptions (no token carries them); keep them out of the component's API, mark each with a comment naming the exception, and report them.`] : []),
+      ...(decisions.length ? [`${decisions.length} close match(es) were decided by the server; each names its rule and runner-up. Build the pick; do not ask anyone to choose.`] : []),
     ],
   };
 }
@@ -280,8 +283,8 @@ export function planMarkdown(plan: Plan): string {
   lines.push('', '## Files', '', ...plan.files.map((f) => `- \`${f.path}\` — ${f.purpose}`));
   lines.push('', '## Contract', '', ...plan.contract.map((r) => `- ${r}`));
   lines.push('', '## Accessibility', '', ...plan.a11y.map((r) => `- ${r}`));
-  if (plan.exceptions.length) lines.push('', '## Exceptions / unresolved values', '', ...plan.exceptions.map((e) => `- ${e.regionId}.${e.property} = ${e.raw}${e.note ? ` (${e.note})` : ''}`));
-  if (plan.unresolved.length) lines.push('', '## Unresolved matches (auto-picked)', '', ...plan.unresolved.map((u) => `- ${u.regionId}: picked ${u.picked}; options ${u.options.join(', ')}`));
+  if (plan.exceptions.length) lines.push('', '## Documented exceptions', '', ...plan.exceptions.map((e) => `- ${e.regionId}.${e.property} = ${e.raw}${e.reason ? `: ${e.reason}` : ''}${e.note ? ` (${e.note})` : ''}`));
+  if (plan.decisions.length) lines.push('', '## Decisions (close matches the server settled)', '', ...plan.decisions.map((d) => `- ${d.regionId}: ${d.picked} over ${d.runnerUp} (confidence ${d.confidence}, ${d.basis}): ${d.reason}. See ${d.cites.join(', ')}`));
   lines.push('', '## Stories', '', ...plan.stories.map((s) => `- ${s}`), '', '## Tests', '', ...plan.tests.map((t) => `- ${t}`));
   lines.push('', '## Catalog excerpts', '');
   for (const c of plan.catalog) { lines.push(`### ${c.component}`, '', '```ts', c.import, '```', '', ...c.props.map((p) => `- \`${p.name}\`: ${p.type}${p.required ? ' (required)' : ''}${p.default ? ` = ${p.default}` : ''}${p.deprecated ? ` — DEPRECATED: ${p.deprecated}` : ''}`), ...(c.guidelines ? ['', `Guidelines: ${c.guidelines}`] : []), ''); }

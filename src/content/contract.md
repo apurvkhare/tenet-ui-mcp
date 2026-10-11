@@ -15,7 +15,7 @@ One list, used by the plan, the agent, the audit, and the checks (DESIGN.md §11
 
 - Semantic elements first.
 - Every interactive element has an accessible name.
-- Missing `alt` is critical, never guessed.
+- Missing `alt` is critical. Describe the image from the design's own text, or `alt=""` when decorative; never invent content.
 - Focus order follows visual order; focus is visible.
 - Colour pairs are checked against the documented contrast pairs (`tokens.contrast`).
 - No text in images; meaningful icons are labeled, decorative ones `aria-hidden`.

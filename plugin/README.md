@@ -6,7 +6,7 @@ visible in the host's hook settings.
 
 | Hook | Fires | Records |
 |---|---|---|
-| `PostToolUse` on the server's tools | after `search_components` … `run_checks` | tool name, trace id from the result, outcome (`pass`/`fail`, `input_required`) |
+| `PostToolUse` on the server's tools | after `search_components` … `run_checks` | tool name, trace id from the result, outcome (`pass`/`fail` for checks and audits, `isError`) |
 | `PostToolUse` on `Write` / `Edit` | after a file write | that a file changed, its extension, a hash of its path, and what it followed: a plan, an audit, a `run_checks` round, or a catalog lookup |
 | `Stop` | at the end of the turn | rounds of `run_checks` and whether the last one was green, writes after a plan / audit, lookups before a write, suppressed findings |
 

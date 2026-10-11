@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { randomBytes } from 'node:crypto';
 import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -14,7 +13,7 @@ import { buildTestPlan, testPlanMarkdown, testSkeleton } from './test-plan.js';
 const store = new CatalogStore('snapshots');
 const data = store.load('0.4.0');
 const designs = new DesignStore(mkdtempSync(join(tmpdir(), 'tenet-plan-tests-')));
-const ctx: ToolContext = { store, traceId: 't', publicUrl: 'http://x', principal: { sub: 'apurv', scopes: ['ds:read'], clientId: 'apurv' }, designs, sealKey: randomBytes(32) };
+const ctx: ToolContext = { store, traceId: 't', publicUrl: 'http://x', principal: { sub: 'apurv', scopes: ['ds:read'], clientId: 'apurv' }, designs };
 const articleCard = readFileSync(new URL('../checks/fixtures/ArticleCard.tsx.txt', import.meta.url), 'utf8');
 const stories = `import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ArticleCard } from './ArticleCard';
@@ -77,7 +76,7 @@ test('plan_tests tool: files path, matchId path (from a match without a plan), a
   assert.ok(r.links!.some((l) => l.name === 'IconButton'));
 
   const design = designs.create<DesignRow>('design', 'apurv', { dsVersion: '0.4.0', name: 'Settings', source: 'layout', layout: { viewport: { width: 10, height: 10 }, theme: 'light', regions: [], texts: [] } as never, matches: [], plans: [] });
-  const match = designs.create<MatchRow>('match', 'apurv', { designId: design.id, dsVersion: '0.4.0', strategy: 'auto', assignments: [{ regionId: 'r1', role: 'card', label: '', component: 'card', confidence: 0.9, candidates: [], source: 'auto' }, { regionId: 'r2', role: 'button', label: '', component: 'icon-button', confidence: 0.8, candidates: [], source: 'auto' }], unresolved: [] });
+  const match = designs.create<MatchRow>('match', 'apurv', { designId: design.id, dsVersion: '0.4.0', assignments: [{ regionId: 'r1', role: 'card', label: '', component: 'card', confidence: 0.9, candidates: [], source: 'auto' }, { regionId: 'r2', role: 'button', label: '', component: 'icon-button', confidence: 0.8, candidates: [], source: 'auto' }] });
   const m = await planTests.run({ matchId: match.id, runner: 'vitest', dsVersion: 'latest', skeleton: false, markdown: false }, ctx);
   const ms = m.structured as { component: string; source: string; primitives: string[]; gaps: string[]; cases: Array<{ primitive?: string }> };
   assert.equal(ms.source, 'match');

@@ -71,10 +71,11 @@ export class MetricsStore {
       perTool[k] = { calls: ls.length, errors: ls.filter((l) => l.status === 'error').length, p50: pct(d, 0.5), p95: pct(d, 0.95), bytesP50: pct(b, 0.5), principals: new Set(ls.map((l) => str(l.sub))).size, byDay };
     }
     // Is it right.
-    const mrtr = tools.filter((l) => typeof l.resultType === 'string');
-    const askedRounds = mrtr.filter((l) => l.resultType === 'input_required').length;
-    const answered = tools.filter((l) => l.tool === 'match_components' || l.tool === 'resolve_tokens').filter((l) => l.resultType === 'complete');
-    const unresolved = answered.reduce((n, l) => n + num(l.unresolved), 0);
+    // The server decides close matches and off-scale values itself; these count how often, and how.
+    const matches = tools.filter((l) => l.tool === 'match_components' && l.status === 'ok');
+    const decided = matches.reduce((n, l) => n + num(l.decisions), 0);
+    const decidedByScore = matches.reduce((n, l) => n + num(l.decidedByScore), 0);
+    const snappedBeyond = tools.filter((l) => l.tool === 'resolve_tokens').reduce((n, l) => n + num(l.snappedBeyondTolerance), 0);
     const lowConfidence = tools.filter((l) => l.tool === 'match_components').reduce((n, l) => n + num(l.lowConfidence), 0);
     // Does it help.
     const checkRuns = tools.filter((l) => l.tool === 'run_checks' && l.status === 'ok');
@@ -104,7 +105,7 @@ export class MetricsStore {
     return {
       window: { days, from: lines[0]?.ts, to: lines.at(-1)?.ts, events: lines.length },
       used: { calls: tools.length, requests: requests.length, principals: new Set(tools.map((l) => str(l.sub))).size, sessions: new Set(hooks.map((l) => str(l.sessionId))).size, perTool },
-      right: { elicitationRounds: askedRounds, completed: answered.length, unresolvedPicks: unresolved, lowConfidenceMatches: lowConfidence },
+      right: { matches: matches.length, closeCallsDecided: decided, decidedByScoreOnly: decidedByScore, lowConfidenceMatches: lowConfidence, snappedBeyondTolerance: snappedBeyond },
       helps: { runChecks: checkRuns.length, firstRunPassRate: firstRunPass, firstRunByCheck, audits: audits.length, findingsPerAudit, findingsFixedInSession: fixedInSession, sessionsGreen: sessions.filter((l) => l.green === true).length, sessionsTotal: sessions.length, roundsToGreenP50: pct(roundsToGreen, 0.5), accepted: sessions.filter((l) => l.accepted === true).length, suppressedFindings: sessions.reduce((n, l) => n + num(l.suppressed), 0) },
       agentUsedIt: { fileWrites: fileWrites.length, writesAfter: after, lookupsBeforeWrite: sessions.reduce((n, l) => n + num(l.lookupsBeforeWrite), 0), hooksSeen: hooks.length > 0 },
       catalogWeak: { zeroResultSearches: zeroResults, tokenExceptions: exceptions, lowConfidenceMatches: lowConfidence },
@@ -146,7 +147,7 @@ fetch('metrics.json'+location.search).then(r=>r.json()).then(m=>{
  document.getElementById('sub').textContent=(m.window.events||0)+' events, '+(m.window.from?m.window.from.slice(0,10)+' → '+m.window.to.slice(0,10):'no data yet');
  cards('used',{calls:m.used.calls,requests:m.used.requests,principals:m.used.principals,sessions:m.used.sessions});
  document.querySelector('#tools tbody').innerHTML=Object.entries(m.used.perTool).sort((a,b)=>b[1].calls-a[1].calls).map(([k,v])=>'<tr><td>'+k+'</td><td class="n">'+v.calls+'</td><td class="n">'+v.errors+'</td><td class="n">'+v.principals+'</td><td class="n">'+v.p50+'</td><td class="n">'+v.p95+'</td><td class="n">'+v.bytesP50+'</td></tr>').join('');
- cards('right',{'elicitation rounds':m.right.elicitationRounds,'completed':m.right.completed,'unresolved picks':m.right.unresolvedPicks,'low-confidence matches':m.right.lowConfidenceMatches});
+ cards('right',{'matches':m.right.matches,'close calls decided':m.right.closeCallsDecided,'decided by score only':m.right.decidedByScoreOnly,'low-confidence matches':m.right.lowConfidenceMatches,'snapped beyond tolerance':m.right.snappedBeyondTolerance});
  cards('helps',{'run_checks calls':m.helps.runChecks,'first-run pass rate':m.helps.firstRunPassRate,'audits':m.helps.audits,'findings / audit':m.helps.findingsPerAudit==null?undefined:Math.round(m.helps.findingsPerAudit*10)/10,'fixed in session':m.helps.findingsFixedInSession,'sessions green':m.helps.sessionsGreen+' / '+m.helps.sessionsTotal,'rounds to green p50':m.helps.roundsToGreenP50,'suppressed':m.helps.suppressedFindings});
  document.querySelector('#checks tbody').innerHTML=Object.entries(m.helps.firstRunByCheck).map(([k,v])=>'<tr><td>'+k+'</td><td class="n">'+v.pass+'</td><td class="n">'+v.fail+'</td><td class="n">'+v.skipped+'</td></tr>').join('')||'<tr><td colspan=4 class="note">no first runs yet</td></tr>';
  cards('agent',{'file writes':m.agentUsedIt.fileWrites,'after a plan':m.agentUsedIt.writesAfter.plan||0,'after an audit':m.agentUsedIt.writesAfter.audit||0,'after checks':m.agentUsedIt.writesAfter.checks||0,'lookups before write':m.agentUsedIt.lookupsBeforeWrite,'hooks reporting':m.agentUsedIt.hooksSeen?'yes':'no'});

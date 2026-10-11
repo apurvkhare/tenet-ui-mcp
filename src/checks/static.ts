@@ -111,7 +111,7 @@ export function staticChecks(data: VersionData, files: SourceFile[], theme: 'lig
         out.push({ check: 'a11y', rule: 'a11y/click-on-non-interactive', severity: 'error', file: f.path, line, column: m.index! + 1, message: `onClick on <${m[1]}>`, fix: { hint: 'use <Button> or <Link> so it is focusable and announced', primitive: 'Button', guideline: guideline('accessibility') }, id: fid(['a11y', 'click-on-non-interactive', f.path, line, m[1]]) });
       }
       for (const m of text.matchAll(/<img\b([^>]*)>/g)) {
-        if (!/\balt\s*=/.test(m[1]!)) out.push({ check: 'a11y', rule: 'a11y/missing-alt', severity: 'critical', file: f.path, line, column: m.index! + 1, message: '<img> without alt', fix: { hint: 'add alt describing the image, or alt="" if decorative — never guess: ask', guideline: guideline('accessibility') }, id: fid(['a11y', 'missing-alt', f.path, line]) });
+        if (!/\balt\s*=/.test(m[1]!)) out.push({ check: 'a11y', rule: 'a11y/missing-alt', severity: 'critical', file: f.path, line, column: m.index! + 1, message: '<img> without alt', fix: { hint: 'add alt describing the image from the surrounding text (caption, heading, label), or alt="" if decorative; never invent content', guideline: guideline('accessibility') }, id: fid(['a11y', 'missing-alt', f.path, line]) });
       }
       // Only judged when the tag closes on this line (nested `{<Icon />}` defeats a plain [^>]* match).
       const ib = text.indexOf('<IconButton');

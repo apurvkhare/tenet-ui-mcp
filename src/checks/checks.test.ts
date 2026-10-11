@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { randomBytes } from 'node:crypto';
 import { mkdtempSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -17,7 +16,7 @@ import { staticChecks } from './static.js';
 const store = new CatalogStore('snapshots');
 const data = store.load('0.4.0');
 const designs = new DesignStore(mkdtempSync(join(tmpdir(), 'tenet-checks-')));
-const ctx: ToolContext = { store, traceId: 't', publicUrl: 'http://x', principal: { sub: 'apurv', scopes: ['checks:run', 'design:ingest'], clientId: 'apurv' }, designs, sealKey: randomBytes(32) };
+const ctx: ToolContext = { store, traceId: 't', publicUrl: 'http://x', principal: { sub: 'apurv', scopes: ['checks:run', 'design:ingest'], clientId: 'apurv' }, designs };
 const here = new URL('.', import.meta.url);
 const sample = JSON.parse(readFileSync(new URL('./fixtures/results.sample.json', here), 'utf8'));
 const articleCard = readFileSync(new URL('./fixtures/ArticleCard.tsx.txt', here), 'utf8');

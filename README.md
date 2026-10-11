@@ -1,8 +1,8 @@
 # tenet-ui-mcp
 
-The design-to-code MCP server for the [tenet-ui](https://github.com/apurvkhare/tenet-ui) design system, built to the design in `mcp-masterclass/design/ds-mcp-server/DESIGN.md` (rev 3). The server supplies context and judgment; the agent writes the code and runs the checks.
+The design-to-code MCP server for the [tenet-ui](https://github.com/apurvkhare/tenet-ui) design system, built to the design in `mcp-masterclass/design/ds-mcp-server/DESIGN.md` (rev 4). The server supplies context and judgment; the agent writes the code and runs the checks. The server never asks the user anything: it decides and explains.
 
-Status: **build order steps 1–4 done** — ingest pipeline, five catalog tools, resources, Streamable HTTP with self-hosted auth, path one (ingest_design → match_components → resolve_tokens → plan_component) with form elicitation, `run_checks` judging the capture script's results, path two (`audit_code`, `audit_page`), `plan_tests`, the three prompts, the hooks plugin and the first dashboard. The talk needs these four. Step 5 (Figma) is dropped: no Figma source exists for tenet-ui. Next: step 6 — the eval harness, the skill moved into the plugin, external OAuth.
+Status: **build order steps 1 to 4 done**, on MCP 2026-07-28 with the TypeScript SDK v2: ingest pipeline, five catalog tools, resources, Streamable HTTP with self-hosted auth, path one (ingest_design → match_components → resolve_tokens → plan_component) with the server deciding close matches and off-scale values, `run_checks` judging the capture script's results, path two (`audit_code`, `audit_page`), `plan_tests`, the three prompts, the hooks plugin and the first dashboard. The talk needs these four. Step 5 (Figma) is dropped: no Figma source exists for tenet-ui. Next: step 6, the eval harness, the skill moved into the plugin, external OAuth.
 
 ## Run it
 
@@ -38,15 +38,15 @@ Dashboard: `GET /dashboard` (HTML) and `GET /metrics.json?days=7`, bearer-authen
 | `search_icons` | 2 KB | Icons by keyword with the exact import statement. |
 | `resolve_value` | 4 KB | Nearest token for raw values: colours by ΔE in Lab against semantic tokens, dimensions by distance, with tolerance and alternatives. |
 
-Every tool takes `dsVersion` (JSON schema carries `x-mcp-header: DsVersion`; a `DsVersion` request header is validated against the argument). Resolution: exact → newest patch of that minor → nearest earlier minor → latest of that major → latest, and the effective version is echoed in every result.
+Every tool takes `dsVersion`. Its JSON schema carries `x-mcp-header: DsVersion`, so a 2026-07-28 client mirrors it as the `Mcp-Param-DsVersion` request header and the SDK checks the header against the argument: a mismatch or a missing header is `400` with JSON-RPC error `-32020`. Resolution: exact → newest patch of that minor → nearest earlier minor → latest of that major → latest, and the effective version is echoed in every result.
 
 **Path one, design to code** (`design:ingest`; DESIGN.md §4):
 
 | Tool | Cap | What it does |
 |---|---|---|
 | `ingest_design` | 6 KB | A screenshot (≤ 5 MB PNG/JPEG/WebP/GIF, sniffed) goes to the vision model with a fixed template and an output schema in the catalog's vocabulary; or the host passes a `layout` tree and no model is called. Stores the design; returns `designId`. |
-| `match_components` | 8 KB | Ranks catalog components per region (role and label synonyms, the analyser's candidates, structural cues such as icon-only, bordered vs plain containers, children) and records confidence. Where the top two are within 0.15 it asks, at most 8 questions; `strategy: auto` never asks and lists them in `unresolved[]`. Returns `matchId`. |
-| `resolve_tokens` | 6 KB | Every raw value the analyser read → nearest token with delta. Off-scale values become questions: snap, use an alternative, keep as a documented exception, or propose a token. |
+| `match_components` | 8 KB | Ranks catalog components per region (role and label synonyms, the analyser's candidates, structural cues such as icon-only, bordered vs plain containers, children) and records confidence. Where the top two are within 0.15 it decides with the guideline test for that pair (Card or plain section, Tag or Badge, Menu or Select, Tabs or SegmentedControl, Banner or Toast, Button or Link, and others) and returns the pick with the rule, a short reason, the guideline pages it cites, the confidence and the runner-up. Never asks. Returns `matchId`. |
+| `resolve_tokens` | 6 KB | Every raw value the analyser read → nearest token with delta and the runner-up token. A value beyond tolerance is snapped to the nearest scale step with the delta, or kept as a documented exception with a reason when snapping would change its meaning (a colour visibly different from every semantic token) or `tolerance: strict` is set. Never asks. |
 | `plan_component` | 24 KB | The plan: tree with exact imports, prop mapping per node (variant from colour and state, heading level from size, placeholders, wrappers), token references, a11y per node, files, contract rules, catalog excerpts, story and test ideas. A plan, never source. |
 
 **Checks** (`checks:run`; DESIGN.md §5, §11, rev 3):
@@ -65,13 +65,13 @@ Every tool takes `dsVersion` (JSON schema carries `x-mcp-header: DsVersion`; a `
 
 **Reports** from `run_checks`, `audit_code` and `audit_page` share one shape and one store: `audit://{auditId}/findings.json` (every finding, beyond the inline page), `delta.json`, `report.json`; private to the principal, 24 h.
 
-**Prompts:** `design-to-code`, `audit-ui`, `test-ui` — the path, the anti-duplicate-call rule, the stop condition (no critical or serious finding, or three rounds).
+**Prompts:** `design-to-code`, `audit-ui`, `test-ui`: the path, the anti-duplicate-call rule, the stop condition (no critical or serious finding, or three rounds), and the rule that the agent acts on the server's decisions and reports them instead of asking the user to choose.
 
 **Hooks plugin** (`plugin/`, DESIGN.md §7 layer two): a Claude Code plugin with a `PostToolUse` hook on the server's tools, a `PostToolUse` hook on `Write`/`Edit`, and a `Stop` hook. It records tool name, trace id and outcome; that a file changed and what it followed (plan, audit, checks, catalog lookup); and at the end of the turn the rounds of `run_checks`, whether the last one was green, writes after a plan, lookups before a write, suppressed findings. Spooled locally under `~/.tenet-ui/hooks/` and posted to `POST /events` when `DS_SERVER_URL` and `DS_SERVER_TOKEN` are set. Never arguments, contents or paths in clear. See `plugin/README.md`.
 
-**Dashboard** (`GET /dashboard`): the eight questions of DESIGN.md §7 — calls and principals per tool, p50/p95 and bytes per tool, elicitation rounds and unresolved picks, first-run pass rate per check, findings per audit and fixed in session, rounds to green and writes after a plan (from hooks), zero-result searches and token exceptions, version distribution and fallbacks, `full: true` rate. Server events carry names, counts, durations, outcomes and per-check statuses only.
+**Dashboard** (`GET /dashboard`): the eight questions of DESIGN.md §7. Calls and principals per tool, p50/p95 and bytes per tool, close calls decided, decisions that fell back to the structural score, values snapped beyond tolerance, first-run pass rate per check, findings per audit and fixed in session, rounds to green and writes after a plan (from hooks), zero-result searches and token exceptions, version distribution and fallbacks, `full: true` rate. Server events carry names, counts, durations, outcomes and per-check statuses only.
 
-**Elicitation** follows the MRTR shape of DESIGN.md §8 at the result level, because the MCP SDK does not ship it yet: a tool that needs an answer returns `structuredContent.resultType = "input_required"` with `inputRequests` (form elicitation params) and a sealed `requestState` (AES-GCM; principal, ten-minute expiry, argument digest, partial result). The client calls the same tool again with `inputResponses` and the untouched `requestState`. Another principal, a tampered blob, changed arguments, or an expired state are rejected. An agent can answer the questions itself or show them to the user.
+**Decisions.** The server holds the design system's knowledge, so it decides and never puts a question to the user or the agent. No tool returns `input_required` or an elicitation form. A close match is settled by a guideline test over the design's structure: a region inside a Card is a plain section (Cards never nest), a page root is never a Card, repeated same-size tiles are Cards, an own heading or action makes a Card, a borderless block that flows with the page is plain. When no guideline test separates two candidates, the higher structural score wins and the decision says `basis: "score"`, so the dashboard can count those. Every decision lists the rule, the reason, the `ds://` guideline pages it cites, the confidence and the runner-up, and the plan carries them under "Decisions" and "Documented exceptions". Decisions are deterministic for a given design and `dsVersion`.
 
 **Design store:** rows (`dsg_…`, `mtc_…`, `pln_…`, `aud_…`) are bound to the caller's `sub`, expire after 24 h, live under `DATA_DIR` (default `.data/`). Another principal gets not-found, never forbidden. Private resources: `design://{designId}/layout.json`, `screenshot.png`, `match.json`, `matches/{matchId}.json`, `plan.md`, `plans/{planId}.md|.json`.
 
@@ -79,18 +79,27 @@ Every tool takes `dsVersion` (JSON schema carries `x-mcp-header: DsVersion`; a `
 
 **Resources:** `ds://versions`, `ds://{v}/components/{name}` (markdown), `ds://{v}/tokens/{group}.json`, `ds://{v}/guidelines/{topic}` (the nine system pages, any component id, `contract`, `audit-rules`), `ds://{v}/gaps`, `ds://{v}/changelog`, `ds://{v}/deprecations`.
 
-**Discovery:** `GET /healthz`, `GET /.well-known/oauth-protected-resource`, `GET /.well-known/oauth-authorization-server`. No token → `401` with `WWW-Authenticate: Bearer resource_metadata=…`; missing scope → one `403 insufficient_scope` naming every missing scope.
+**Discovery:** `GET /healthz`, `GET /.well-known/oauth-protected-resource` (also at the path-aware `/.well-known/oauth-protected-resource/mcp`), `GET /.well-known/oauth-authorization-server`. MCP clients call `server/discover` for versions, capabilities and server info. No token → `401` with `WWW-Authenticate: Bearer resource_metadata=…`; missing scope → one `403 insufficient_scope` naming every missing scope.
 
-**Telemetry:** one JSON line per request / tool call / resource read on stderr with a W3C trace id (from the `traceparent` header when the client sends one; echoed back). Names, durations, statuses, versions, byte counts. Never arguments or findings.
+**Telemetry:** one JSON line per request / tool call / resource read on stderr with a W3C trace id. The trace comes from `params._meta.traceparent` (SEP-414) when the client sends one, else from the `traceparent` header, else a fresh one; it is echoed back in the response header and in each result's `_meta.traceId`. Names, durations, statuses, versions, byte counts. Never arguments or findings.
 
 ## Protocol note
 
-`@modelcontextprotocol/sdk` 1.30 implements MCP **2025-11-25**: initialize handshake, `tools/list`, structured output, resource templates, Tasks. The stateless, no-handshake `server/discover` and MRTR elicitation that DESIGN.md §8 describes for the 2026-07-28 revision are not in the SDK yet. The server is stateless today (one `McpServer` per request, no session id), so the handshake is a formality and the move is contained in `src/http.ts`; elicitation already uses the MRTR result shape. `tools/list` is about 26 KB for thirteen tools with output schemas — the 7 KB figure in DESIGN.md §6 is not reachable with per-tool output schemas and is tracked as a budget of 2 KB per tool in the tests.
+The server runs on the TypeScript MCP SDK v2 (`@modelcontextprotocol/server` 2.3.1; tests use `@modelcontextprotocol/client` 2.3.1), which implements MCP **2026-07-28**:
+
+- **No initialize, no sessions.** Every request carries its protocol version, client info and capabilities in `_meta`. `src/http.ts` builds one `createMcpHandler` per process and the SDK makes a fresh `McpServer` per request from the same factory; `src/stdio.ts` uses `serveStdio` with that factory.
+- **`server/discover`** is answered by the SDK: supported versions, capabilities, instructions, and server info in the result's `_meta`.
+- **List caching (SEP-2549).** `tools/list`, `prompts/list`, `resources/templates/list` and `server/discover` carry `ttlMs` of one hour, `resources/list` five minutes, all `cacheScope: "private"`. A `ds://` read at an exact version is cached for 24 h; `latest` and `ds://versions` for five minutes; `design://` and `audit://` reads have `ttlMs: 0`.
+- **Header mirroring (SEP-2243).** The SDK requires `MCP-Protocol-Version`, `Mcp-Method` and `Mcp-Name`, and validates `Mcp-Param-DsVersion` against the `dsVersion` argument.
+- **Trace propagation (SEP-414).** `traceparent` in `_meta` is read through the SDK's `TRACEPARENT_META_KEY`.
+- **Older hosts.** A client on 2025-11-25 is still served through the SDK's stateless legacy path (`initialize` answered, no session id). Header mirroring does not apply to those requests, so the `dsVersion` argument alone decides.
+
+`tools/list` is about 26 KB for thirteen tools with output schemas. The 7 KB figure in DESIGN.md §6 is not reachable with per-tool output schemas and is tracked as a budget of 2 KB per tool in the tests.
 
 ## Layout
 
 ```
-src/ingest/            the data pipeline (DESIGN.md §10) — see below
+src/ingest/            the data pipeline (DESIGN.md §10), see below
 src/catalog/store.ts   snapshot reads + dsVersion resolution
 src/catalog/resolve.ts nearest-token resolution (ΔE / distance)
 src/catalog/synonyms.ts what people call components and token groups
@@ -98,12 +107,12 @@ src/tools/             tools as plain functions (unit-tested without a transport
 src/design/            layout schema, vision call, matcher, token resolution, plan builder, test-plan builder
 src/checks/            static scan + contract rules, source parser, judgment over capture results, page judgment, SSIM, shared report plumbing
 src/store/             the design store (principal-bound rows, 24 h TTL; designs, matches, plans, reports)
-src/auth/seal.ts       requestState AEAD sealing
 src/resources.ts       ds:// public, design:// and audit:// private resources
 src/prompts.ts         design-to-code, audit-ui, test-ui
 src/metrics.ts         event spool, the §7 summary, the dashboard page
-src/server.ts          McpServer factory: registration order, structured output, _meta, telemetry with derived metrics
-src/http.ts            Streamable HTTP: Origin, bearer, scopes, PRM, AS metadata, client credentials; /events, /metrics.json, /dashboard
+src/server.ts          McpServer factory: registration order, structured output, cache hints, _meta, telemetry with derived metrics
+src/http.ts            Streamable HTTP via createMcpHandler: Origin, bearer, scopes, PRM, AS metadata, client credentials; /events, /metrics.json, /dashboard
+src/stdio.ts           stdio via serveStdio, same server factory
 plugin/                the companion Claude Code plugin: hooks.json + ds-hook.mjs (layer two)
 src/auth/tokens.ts     HS256 issuer + verifier (jose); src/auth/cli.ts mints tokens
 src/content/           the component contract and audit rule catalog (ds://…/guidelines/contract, audit-rules)
@@ -134,4 +143,4 @@ Every snapshot carries a `manifest.json` (each source with `sourceRef`, content 
 
 ## Next
 
-DESIGN.md §15 step 6 (step 5, Figma, is dropped — no Figma source for tenet-ui): the dual-path eval harness over golden screenshots and golden source files, the skill moved into this repo's plugin next to the hooks, external OAuth (PRM against a real authorization server, CIMD) if the server is ever shared beyond one team. `design_to_plan` as a Task once the composite is worth it; a live vision run once credentials are available (the vision path is wired but has never been exercised against the model).
+DESIGN.md §15 step 6 (step 5, Figma, is dropped: no Figma source for tenet-ui): the dual-path eval harness over golden screenshots and golden source files, the skill moved into this repo's plugin next to the hooks, external OAuth (PRM against a real authorization server, CIMD) if the server is ever shared beyond one team. `design_to_plan` as a Task once the composite is worth it; a live vision run once credentials are available (the vision path is wired but has never been exercised against the model).

@@ -14,11 +14,11 @@ export interface Resolution {
   /** ΔE for colours, px (or unitless) distance for dimensions. */
   delta?: number;
   exact: boolean;
-  /** Below the kind's tolerance: snap without asking. */
+  /** Below the kind's tolerance: snap. */
   withinTolerance: boolean;
   /** `var(--space-3)` — what to write. */
   suggestion?: string;
-  /** Next-best candidates, for elicitation. */
+  /** Next-best candidates, reported as runners-up. */
   alternatives?: Array<{ token: string; cssVar: string; tokenValue: string; delta: number }>;
   note?: string;
 }
@@ -34,7 +34,7 @@ const GROUP_FOR_KIND: Record<Exclude<ValueKind, 'auto' | 'color' | 'unknown'>, s
   fontFamily: ['fontFamily'],
   letterSpacing: ['letterSpacing'],
 };
-const TOLERANCE: Record<string, number> = { color: 4, space: 2, fontSize: 1, radius: 1, borderWidth: 0.5, fontWeight: 50, lineHeight: 0.1, letterSpacing: 0.02 };
+export const TOLERANCE: Record<string, number> = { color: 4, space: 2, fontSize: 1, radius: 1, borderWidth: 0.5, fontWeight: 50, lineHeight: 0.1, letterSpacing: 0.02 };
 
 export function resolveValue(tokens: TokenRecord[], raw: string, kind: ValueKind, theme: Theme): Resolution {
   const value = raw.trim();
@@ -157,7 +157,7 @@ function resolveDimension(tokens: TokenRecord[], raw: string, value: string, kin
     withinTolerance: delta <= tol,
     suggestion: `var(${best.t.cssVar})`,
     alternatives: scored.slice(1, 3).map((s) => ({ token: s.t.name, cssVar: s.t.cssVar ?? '', tokenValue: s.v, delta: Math.round(s.d * 100) / 100 })),
-    note: delta === 0 ? undefined : `${value} is off the ${groups[0]} scale by ${delta}${kind === 'fontWeight' || kind === 'lineHeight' ? '' : 'px'}; ${delta <= tol ? 'snap' : 'keep as an exception or ask'}`,
+    note: delta === 0 ? undefined : `${value} is off the ${groups[0]} scale by ${delta}${kind === 'fontWeight' || kind === 'lineHeight' ? '' : 'px'}; ${delta <= tol ? 'snap' : 'beyond tolerance: resolve_tokens snaps it to the scale or documents it as an exception'}`,
   };
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "tenet-ui-mcp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Design-to-code MCP server for the tenet-ui design system: ingest pipeline, catalog tools, plan / audit / checks.",
   "type": "module",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",
-    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@modelcontextprotocol/server": "^2.3.1",
     "@types/pngjs": "^6.0.5",
     "jose": "^6.2.12",
     "pngjs": "^7.0.0",
@@ -27,6 +27,7 @@
     "zod": "^4.6.4"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "^2.3.1",
     "@types/node": "^22.15.0",
     "tsx": "^4.20.0"
   }

@@ -1,30 +1,21 @@
 // Path one, design to code (DESIGN.md §4): ingest_design → match_components → resolve_tokens →
-// plan_component. Human answers travel as MRTR-shaped results (§8): a tool that needs an answer
-// returns `resultType: "input_required"` with `inputRequests` and a sealed `requestState`; the
-// client calls the same tool again with `inputResponses` and the untouched `requestState`.
+// plan_component. The server holds the catalog, the guidelines, the contract and the token scale,
+// so it decides every close match and every off-scale value itself and explains each decision
+// (rule, reason, confidence, runner-up). Nothing in this path asks the user.
 import { z } from 'zod';
-import { argsDigest, seal, SealError, unseal } from '../auth/seal.js';
 import { nearestNames } from '../catalog/search.js';
 import { LayoutInputSchema, normalizeLayout, summarizeLayout, type Layout } from '../design/layout.js';
-import { assignRegions, questionsFor, type Assignment, type Question } from '../design/match.js';
+import { assignRegions, type Assignment } from '../design/match.js';
 import { buildPlan, planMarkdown, type Plan } from '../design/plan.js';
-import { applyTokenAnswer, resolveLayoutTokens, type TokenEntry, type Tolerance } from '../design/tokens.js';
+import { resolveLayoutTokens, type TokenEntry, type Tolerance } from '../design/tokens.js';
 import type { Row } from '../store/design-store.js';
 import { capJson } from './caps.js';
-import type { ToolDef, ToolResult } from './catalog-tools.js';
+import type { ToolDef } from './catalog-tools.js';
 import { pickVersion, ToolError, versionMeta, type ToolContext } from './context.js';
 
 const dsVersionArg = z.string().default('latest').describe('Lockfile version, "0.4", or "latest".').meta({ 'x-mcp-header': 'DsVersion' });
 const dsMeta = { dsVersion: z.string(), dsVersionNote: z.string().optional(), guidelinesRevision: z.string().optional() };
-const loose = z.unknown();
 const shape = (fields: string): z.ZodUnknown => z.unknown().describe(fields);
-const mrtr = {
-  resultType: z.enum(['complete', 'input_required']),
-  inputRequests: shape('{<key>: {method:"elicitation/create", params:{mode:"form", message, requestedSchema}}}').optional(),
-  requestState: z.string().optional(),
-};
-const inputResponsesArg = z.record(z.string(), z.object({ action: z.enum(['accept', 'decline', 'cancel']), content: z.record(z.string(), z.unknown()).optional() })).optional().describe('Answers to a previous input_required result, keyed like inputRequests.');
-const requestStateArg = z.string().optional().describe('The requestState from the input_required result, untouched.');
 
 // ---- rows ----------------------------------------------------------------------------------------
 export interface DesignRow {
@@ -41,18 +32,15 @@ export interface DesignRow {
 export interface MatchRow {
   designId: string;
   dsVersion: string;
-  strategy: 'auto' | 'ask';
   assignments: Assignment[];
-  unresolved: Array<{ regionId: string; picked: string; options: string[] }>;
   tokens?: { theme: 'light' | 'dark'; tolerance: Tolerance; entries: TokenEntry[]; exceptions: number };
 }
 export interface PlanRow { designId: string; matchId: string; plan: Plan; markdown: string }
 
-const TEN_MINUTES = 10 * 60 * 1000;
 const MAX_IMAGE = 5 * 1024 * 1024;
 
 function needStore(ctx: ToolContext): NonNullable<ToolContext['designs']> {
-  if (!ctx.designs || !ctx.principal || !ctx.sealKey) throw new ToolError('design tools are not enabled on this transport', 'unavailable');
+  if (!ctx.designs || !ctx.principal) throw new ToolError('design tools are not enabled on this transport', 'unavailable');
   return ctx.designs;
 }
 const sub = (ctx: ToolContext): string => ctx.principal!.sub;
@@ -74,45 +62,6 @@ function sniffImage(buf: Buffer): 'image/png' | 'image/jpeg' | 'image/webp' | 'i
   if (buf.subarray(0, 4).toString('ascii') === 'RIFF' && buf.subarray(8, 12).toString('ascii') === 'WEBP') return 'image/webp';
   if (buf.subarray(0, 4).toString('ascii') === 'GIF8') return 'image/gif';
   return undefined;
-}
-
-/** Build the MRTR input_required result. */
-function inputRequired(ctx: ToolContext, kind: string, args: unknown, questions: Question[], state: unknown, partial: Record<string, unknown>, meta: Record<string, unknown>): ToolResult {
-  const inputRequests: Record<string, unknown> = {};
-  for (const q of questions) {
-    inputRequests[q.key] = {
-      method: 'elicitation/create',
-      params: {
-        mode: 'form',
-        message: q.message,
-        requestedSchema: { type: 'object', properties: { choice: { type: 'string', title: 'Use which?', oneOf: q.options.map((o) => ({ const: o.value, title: o.title })), default: q.defaultValue } }, required: ['choice'] },
-      },
-    };
-  }
-  const requestState = seal(ctx.sealKey!, { sub: sub(ctx), exp: Date.now() + TEN_MINUTES, argsDigest: argsDigest(args), kind, state });
-  return {
-    structured: { resultType: 'input_required', inputRequests, requestState, ...partial, ...meta },
-    text: `${questions.length} question(s) need an answer: ${questions.map((q) => q.message).join(' ')} Reply by calling the same tool again with inputResponses {key: {action: "accept", content: {choice}}} and the requestState. Decline to auto-resolve; a client without form elicitation may auto-resolve everything.`,
-  };
-}
-
-/** Strip the MRTR fields so the digest covers only the original arguments. */
-const originalArgs = (args: Record<string, unknown>): Record<string, unknown> => { const { inputResponses: _i, requestState: _s, ...rest } = args; return rest; };
-
-function readAnswers(ctx: ToolContext, kind: string, args: Record<string, unknown>): { state: unknown; answers: Record<string, string> } | undefined {
-  const responses = args.inputResponses as Record<string, { action: string; content?: Record<string, unknown> }> | undefined;
-  const requestState = args.requestState as string | undefined;
-  if (!responses && !requestState) return undefined;
-  if (!responses || !requestState) throw new ToolError('pass both inputResponses and requestState to answer questions', 'invalid_arguments');
-  let payload;
-  try { payload = unseal<unknown>(ctx.sealKey!, requestState, { sub: sub(ctx), kind, argsDigest: argsDigest(originalArgs(args)) }); }
-  catch (err) { throw new ToolError(err instanceof SealError ? err.message : String(err), 'invalid_state'); }
-  const answers: Record<string, string> = {};
-  for (const [key, r] of Object.entries(responses)) {
-    if (r.action === 'cancel') throw new ToolError('elicitation cancelled by the user', 'cancelled', { partial: payload.state as Record<string, unknown> });
-    answers[key] = r.action === 'accept' && typeof r.content?.choice === 'string' ? r.content.choice : 'auto';
-  }
-  return { state: payload.state, answers };
 }
 
 // ---- ingest_design -------------------------------------------------------------------------------
@@ -166,104 +115,68 @@ export const ingestDesign: ToolDef<{ source: z.ZodDiscriminatedUnion<[z.ZodObjec
 };
 
 // ---- match_components ---------------------------------------------------------------------------
-export const matchComponents: ToolDef<{ designId: z.ZodString; strategy: z.ZodDefault<z.ZodEnum<{ ask: 'ask'; auto: 'auto' }>>; inputResponses: typeof inputResponsesArg; requestState: typeof requestStateArg }> = {
+export const matchComponents: ToolDef<{ designId: z.ZodString }> = {
   name: 'match_components',
   title: 'Match components',
-  description: 'Assign a catalog component to every region of a design with a confidence. Where two candidates are close it asks (form elicitation, ≤ 8 questions) unless strategy is auto. Returns a matchId.',
+  description: 'Assign a catalog component to every region of a design with a confidence. Close calls are decided from the guidelines and structure, with the rule, the reason and the runner-up. Never asks. Returns a matchId.',
   scope: 'design:ingest',
   cap: 8192,
-  inputSchema: {
-    designId: z.string().min(1),
-    strategy: z.enum(['ask', 'auto']).default('ask').describe('auto: never ask, list skipped questions in unresolved[]'),
-    inputResponses: inputResponsesArg,
-    requestState: requestStateArg,
-  },
-  outputSchema: { ...mrtr, matchId: z.string().optional(), designId: z.string(), assignments: z.array(shape('{regionId, role, label, component, confidence, candidates[{component, confidence, reasons[]}], source}')).optional(), unresolved: z.array(shape('{regionId, picked, options[]}')).optional(), questions: z.number().optional(), ...dsMeta },
+  inputSchema: { designId: z.string().min(1) },
+  outputSchema: { matchId: z.string(), designId: z.string(), assignments: z.array(shape('{regionId, role, label, component, confidence, candidates[{component, confidence, reasons[]}], source: auto|decided|none, decision?{basis, rule, reason, cites[], runnerUp{component, confidence}}}')), decisions: z.number(), ...dsMeta },
   run(args, ctx) {
     const store = needStore(ctx);
     const design = loadDesign(ctx, args.designId);
     const v = pickVersion(ctx, design.data.dsVersion);
     const meta = versionMeta(v);
-    const answered = readAnswers(ctx, 'match_components', args as Record<string, unknown>);
-    const assignments = answered ? (answered.state as { assignments: Assignment[] }).assignments : assignRegions(v.data, design.data.layout);
-    const questions = questionsFor(assignments, v.data, design.data.layout);
-    const unresolved: MatchRow['unresolved'] = [];
-
-    if (answered) {
-      for (const q of questions) {
-        const choice = answered.answers[q.key] ?? 'auto';
-        const a = assignments.find((x) => x.regionId === q.regionId)!;
-        if (choice === 'auto' || !a.candidates.some((c) => c.component === choice)) { a.source = 'unresolved'; unresolved.push({ regionId: a.regionId, picked: a.component ?? '', options: q.options.filter((o) => o.value !== 'auto').map((o) => o.value) }); }
-        else { a.component = choice; a.confidence = Math.max(a.confidence, 0.95); a.source = 'answered'; a.note = undefined; }
-      }
-    } else if (args.strategy === 'ask' && questions.length) {
-      return inputRequired(ctx, 'match_components', originalArgs(args as Record<string, unknown>), questions, { assignments }, { designId: design.id, questions: questions.length, assignments: assignments.map(compactAssignment) }, meta);
-    } else {
-      for (const q of questions) { const a = assignments.find((x) => x.regionId === q.regionId)!; a.source = 'unresolved'; unresolved.push({ regionId: a.regionId, picked: a.component ?? '', options: q.options.filter((o) => o.value !== 'auto').map((o) => o.value) }); }
-    }
-    // Questions beyond the cap were never asked: they are unresolved too.
-    for (const a of assignments) {
-      const [c1, c2] = a.candidates;
-      if (c1 && c2 && c1.confidence - c2.confidence < 0.15 && a.source === 'auto' && !questions.some((q) => q.regionId === a.regionId)) { a.source = 'unresolved'; unresolved.push({ regionId: a.regionId, picked: a.component ?? '', options: a.candidates.slice(0, 3).map((c) => c.component) }); }
-    }
-    const created = store.create<MatchRow>('match', sub(ctx), { designId: design.id, dsVersion: v.resolved.effective, strategy: args.strategy, assignments, unresolved });
+    const assignments = assignRegions(v.data, design.data.layout);
+    const created = store.create<MatchRow>('match', sub(ctx), { designId: design.id, dsVersion: v.resolved.effective, assignments });
     store.update(design, { ...design.data, matches: [...design.data.matches, created.id] });
-    const structured = { resultType: 'complete', matchId: created.id, designId: design.id, assignments: assignments.map(compactAssignment), unresolved, ...meta };
+    const decided = assignments.filter((a) => a.source === 'decided');
+    const structured = { matchId: created.id, designId: design.id, assignments: assignments.map(compactAssignment), decisions: decided.length, ...meta };
     const capped = capJson(structured, this.cap, `read design://${design.id}/matches/${created.id}.json for the full assignment tree`);
-    const counts = { answered: assignments.filter((a) => a.source === 'answered').length, none: assignments.filter((a) => a.source === 'none').length };
+    const none = assignments.filter((a) => a.source === 'none').length;
+    const why = decided.slice(0, 3).map((a) => `${a.regionId} → ${a.component} over ${a.decision!.runnerUp.component} (${a.decision!.reason})`).join('; ');
     return {
       structured: capped.value,
-      text: `Match ${created.id}: ${assignments.length} regions assigned (${counts.answered} answered, ${unresolved.length} unresolved, ${counts.none} without a system component). Next: resolve_tokens, then plan_component.`,
+      text: `Match ${created.id}: ${assignments.length} regions assigned, ${decided.length} close call(s) decided${why ? `: ${why}` : ''}${none ? `, ${none} without a system component` : ''}. Next: resolve_tokens, then plan_component.`,
       links: [{ uri: `design://${design.id}/matches/${created.id}.json`, name: 'match.json', mimeType: 'application/json' }],
     };
   },
 };
 
-const compactAssignment = (a: Assignment): Record<string, unknown> => ({ regionId: a.regionId, role: a.role, label: a.label || undefined, component: a.component, confidence: a.confidence, candidates: a.candidates.slice(0, 3).map((c) => ({ component: c.component, confidence: c.confidence, reasons: c.reasons.slice(0, 2) })), source: a.source, note: a.note });
+const compactAssignment = (a: Assignment): Record<string, unknown> => ({ regionId: a.regionId, role: a.role, label: a.label || undefined, component: a.component, confidence: a.confidence, candidates: a.candidates.slice(0, 3).map((c) => ({ component: c.component, confidence: c.confidence, reasons: c.reasons.slice(0, 2) })), source: a.source, decision: a.decision, note: a.note });
 
 // ---- resolve_tokens ------------------------------------------------------------------------------
-export const resolveTokens: ToolDef<{ matchId: z.ZodString; theme: z.ZodDefault<z.ZodEnum<{ light: 'light'; dark: 'dark' }>>; tolerance: z.ZodDefault<z.ZodEnum<{ strict: 'strict'; normal: 'normal'; loose: 'loose' }>>; inputResponses: typeof inputResponsesArg; requestState: typeof requestStateArg }> = {
+export const resolveTokens: ToolDef<{ matchId: z.ZodString; theme: z.ZodDefault<z.ZodEnum<{ light: 'light'; dark: 'dark' }>>; tolerance: z.ZodDefault<z.ZodEnum<{ strict: 'strict'; normal: 'normal'; loose: 'loose' }>> }> = {
   name: 'resolve_tokens',
   title: 'Resolve tokens',
-  description: 'Map every raw value in a matched design to the nearest token with its delta. Off-scale values become questions (snap, keep as exception, propose a token), batched, ≤ 8 per call.',
+  description: 'Map every raw value in a matched design to the nearest token with its delta. Off-scale values are decided, never asked: snapped to the scale with the delta, or kept as a documented exception, each with its rule.',
   scope: 'design:ingest',
   cap: 6144,
   inputSchema: {
     matchId: z.string().min(1),
     theme: z.enum(['light', 'dark']).default('light'),
-    tolerance: z.enum(['strict', 'normal', 'loose']).default('normal').describe('strict: exact only; loose: always snap'),
-    inputResponses: inputResponsesArg,
-    requestState: requestStateArg,
+    tolerance: z.enum(['strict', 'normal', 'loose']).default('normal').describe('strict: exact only, the rest are exceptions; normal: the system rules; loose: always snap'),
   },
-  outputSchema: { ...mrtr, matchId: z.string(), tokenMap: z.array(shape('{regionId, property, raw, token?, cssVar?, delta?, status, suggestion?}')).optional(), exceptions: z.number().optional(), questions: z.number().optional(), ...dsMeta },
+  outputSchema: { matchId: z.string(), tokenMap: z.array(shape('{regionId, property, raw, token?, cssVar?, delta?, status: exact|snapped|exception, suggestion?, runnerUp?, decision?{rule, reason, cites[]}}')), exceptions: z.number(), snappedBeyondTolerance: z.number(), ...dsMeta },
   run(args, ctx) {
     const store = needStore(ctx);
     const match = loadMatch(ctx, args.matchId);
     const design = loadDesign(ctx, match.data.designId);
     const v = pickVersion(ctx, match.data.dsVersion);
     const meta = versionMeta(v);
-    const answered = readAnswers(ctx, 'resolve_tokens', args as Record<string, unknown>);
-    const { entries, questions } = answered
-      ? { entries: (answered.state as { entries: TokenEntry[] }).entries, questions: [] as Question[] }
-      : resolveLayoutTokens(v.data, design.data.layout, args.theme, args.tolerance);
-    if (answered) {
-      const asked = resolveLayoutTokens(v.data, design.data.layout, args.theme, args.tolerance).questions;
-      for (const q of asked) {
-        const target = entries.find((e) => e.regionId === q.regionId && e.status === 'pending' && q.message.startsWith(e.raw));
-        if (target) applyTokenAnswer(entries, v.data, target, answered.answers[q.key] ?? 'auto');
-      }
-      for (const e of entries) if (e.status === 'pending') { e.status = e.token ? 'snapped' : 'exception'; e.note = 'auto-resolved (not asked)'; }
-    } else if (questions.length) {
-      return inputRequired(ctx, 'resolve_tokens', originalArgs(args as Record<string, unknown>), questions, { entries }, { matchId: match.id, questions: questions.length, exceptions: entries.filter((e) => e.status === 'exception').length }, meta);
-    }
-    const exceptions = entries.filter((e) => e.status === 'exception' || e.status === 'proposed').length;
+    const { entries } = resolveLayoutTokens(v.data, design.data.layout, args.theme, args.tolerance);
+    const exceptions = entries.filter((e) => e.status === 'exception').length;
+    const beyond = entries.filter((e) => e.status === 'snapped' && e.decision).length;
     const updated = store.update(match, { ...match.data, tokens: { theme: args.theme, tolerance: args.tolerance, entries, exceptions } });
-    const tokenMap = entries.map((e) => ({ regionId: e.regionId, property: e.property, raw: e.raw, token: e.token, cssVar: e.cssVar, delta: e.delta, status: e.status, suggestion: e.suggestion }));
-    const structured = { resultType: 'complete', matchId: updated.id, tokenMap, exceptions, ...meta };
+    const tokenMap = entries.map((e) => ({ regionId: e.regionId, property: e.property, raw: e.raw, token: e.token, cssVar: e.cssVar, delta: e.delta, status: e.status, suggestion: e.suggestion, runnerUp: e.decision ? e.runnerUp : undefined, decision: e.decision }));
+    const structured = { matchId: updated.id, tokenMap, exceptions, snappedBeyondTolerance: beyond, ...meta };
     const exact = entries.filter((e) => e.status === 'exact').length;
+    const snapped = entries.filter((e) => e.status === 'snapped').length;
+    const firstException = entries.find((e) => e.status === 'exception');
     return {
       structured: capJson(structured, this.cap, `read design://${design.id}/matches/${match.id}.json for every entry`).value,
-      text: `${entries.length} value(s): ${exact} exact, ${entries.filter((e) => e.status === 'snapped').length} snapped, ${exceptions} exception(s)/proposed. Next: plan_component.`,
+      text: `${entries.length} value(s): ${exact} exact, ${snapped} snapped (${beyond} beyond tolerance, each with its rule), ${exceptions} documented exception(s)${firstException ? `, e.g. ${firstException.raw}: ${firstException.decision?.reason}` : ''}. Next: plan_component.`,
       links: [{ uri: `design://${design.id}/matches/${match.id}.json`, name: 'match.json', mimeType: 'application/json' }],
     };
   },
@@ -281,20 +194,16 @@ export const planComponent: ToolDef<{ matchId: z.ZodString; name: z.ZodString; o
     name: z.string().min(1).max(60).regex(/^[A-Z][A-Za-z0-9]*$/, 'PascalCase component name'),
     options: z.object({ directory: z.string().max(200).optional(), stories: z.boolean().optional(), tests: z.boolean().optional(), typescript: z.boolean().optional() }).optional(),
   },
-  outputSchema: { planId: z.string(), plan: shape('{name, dsVersion, imports[], tree[], files[], contract[], a11y[], catalog[], exceptions[], unresolved[], stories[], tests[], notes[]}'), truncated: z.boolean().optional(), ...dsMeta },
+  outputSchema: { planId: z.string(), plan: shape('{name, dsVersion, imports[], tree[], files[], contract[], a11y[], catalog[], exceptions[], decisions[], stories[], tests[], notes[]}'), truncated: z.boolean().optional(), ...dsMeta },
   run(args, ctx) {
     const store = needStore(ctx);
     const match = loadMatch(ctx, args.matchId);
     const design = loadDesign(ctx, match.data.designId);
     const v = pickVersion(ctx, match.data.dsVersion);
     const meta = versionMeta(v);
-    let tokens = match.data.tokens?.entries;
-    if (!tokens) {
-      // No resolve_tokens call: snap within tolerance, leave the rest as exceptions.
-      const r = resolveLayoutTokens(v.data, design.data.layout, design.data.layout.theme === 'dark' ? 'dark' : 'light', 'normal');
-      tokens = r.entries.map((e) => (e.status === 'pending' ? { ...e, status: 'exception' as const, note: 'off-scale; resolve_tokens was not called' } : e));
-    }
-    const plan = buildPlan(v.data, design.data.layout, match.data.assignments, tokens, { ...args.options, name: args.name, designId: design.id, matchId: match.id, unresolved: match.data.unresolved });
+    // Without a resolve_tokens call the plan applies the same rules with the defaults.
+    const tokens = match.data.tokens?.entries ?? resolveLayoutTokens(v.data, design.data.layout, design.data.layout.theme === 'dark' ? 'dark' : 'light', 'normal').entries;
+    const plan = buildPlan(v.data, design.data.layout, match.data.assignments, tokens, { ...args.options, name: args.name, designId: design.id, matchId: match.id });
     const markdown = planMarkdown(plan);
     const created = store.create<PlanRow>('plan', sub(ctx), { designId: design.id, matchId: match.id, plan, markdown });
     store.update(design, { ...design.data, plans: [...design.data.plans, created.id] });
@@ -303,7 +212,7 @@ export const planComponent: ToolDef<{ matchId: z.ZodString; name: z.ZodString; o
     const components = plan.catalog.map((c) => c.component);
     return {
       structured: capped.value,
-      text: `Plan ${created.id} for ${args.name}: ${components.length} components (${components.join(', ')}), ${plan.files.length} files, ${plan.exceptions.length} exception(s), ${plan.unresolved.length} unresolved match(es). Write the files, run the capture script, then run_checks.`,
+      text: `Plan ${created.id} for ${args.name}: ${components.length} components (${components.join(', ')}), ${plan.files.length} files, ${plan.exceptions.length} documented exception(s), ${plan.decisions.length} decided close call(s). Write the files, run the capture script, then run_checks.`,
       links: [{ uri: `design://${design.id}/plans/${created.id}.md`, name: 'plan.md', mimeType: 'text/markdown' }, { uri: `ds://${v.resolved.effective}/guidelines/contract`, name: 'component contract', mimeType: 'text/markdown' }],
     };
   },
