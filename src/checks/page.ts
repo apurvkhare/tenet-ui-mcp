@@ -3,7 +3,7 @@
 // no token for the theme, contrast against the documented pairs, accessibility-tree problems,
 // focus order against visual order. The server never fetches a page.
 import { z } from 'zod';
-import { parseColor, resolveValue, type Theme } from '../catalog/resolve.js';
+import { colorRoleFor, parseColor, resolveValue, type Theme } from '../catalog/resolve.js';
 import type { VersionData } from '../catalog/store.js';
 import { axeFindings } from './judge.js';
 import type { CheckStatus } from './report.js';
@@ -132,7 +132,7 @@ export function judgePage(data: VersionData, snap: PageSnapshot, theme: Theme, w
       stats.distinctValues = sorted.length;
       let offTokens = 0;
       for (const gr of sorted) {
-        const r = resolveValue(data.tokens, gr.value, gr.kind, theme);
+        const r = resolveValue(data.tokens, gr.value, gr.kind, theme, colorRoleFor(gr.prop));
         if (r.exact || r.kind === 'unknown') continue;
         offTokens++;
         if (findings.filter((f) => f.check === 'tokens').length >= 40) break;

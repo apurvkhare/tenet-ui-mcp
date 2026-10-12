@@ -4,6 +4,18 @@ import type { TokenRecord } from '../ingest/extract/package-data.js';
 
 export type ValueKind = 'color' | 'space' | 'fontSize' | 'radius' | 'borderWidth' | 'fontWeight' | 'lineHeight' | 'shadow' | 'fontFamily' | 'letterSpacing' | 'auto';
 export type Theme = 'light' | 'dark';
+/** What a colour is used for. Semantic tokens are chosen by role (color guideline §1), so a background resolves among bgColor tokens only. */
+export type ColorRole = 'background' | 'foreground' | 'border';
+const GROUP_FOR_ROLE: Record<ColorRole, string> = { background: 'bgColor', foreground: 'fgColor', border: 'borderColor' };
+
+/** The role of a CSS or style-object property (`background-color`, `backgroundColor`, `color`, `borderColor`, `outline`); undefined when it has none (fill, stroke, shadows). */
+export function colorRoleFor(property: string | undefined): ColorRole | undefined {
+  const p = (property ?? '').toLowerCase().replace(/-/g, '');
+  if (/^(background|bg)/.test(p)) return 'background';
+  if (/^(border|outline)/.test(p)) return 'border';
+  if (/^(color|textcolor|caretcolor|webkittextfillcolor|fg)$/.test(p)) return 'foreground';
+  return undefined;
+}
 
 export interface Resolution {
   raw: string;
@@ -36,11 +48,11 @@ const GROUP_FOR_KIND: Record<Exclude<ValueKind, 'auto' | 'color' | 'unknown'>, s
 };
 export const TOLERANCE: Record<string, number> = { color: 4, space: 2, fontSize: 1, radius: 1, borderWidth: 0.5, fontWeight: 50, lineHeight: 0.1, letterSpacing: 0.02 };
 
-export function resolveValue(tokens: TokenRecord[], raw: string, kind: ValueKind, theme: Theme): Resolution {
+export function resolveValue(tokens: TokenRecord[], raw: string, kind: ValueKind, theme: Theme, role?: ColorRole): Resolution {
   const value = raw.trim();
   const k = kind === 'auto' ? inferKind(value) : kind;
   if (k === 'unknown' || k === 'auto') return { raw, kind: 'unknown', exact: false, withinTolerance: false, note: 'could not infer the value kind; pass `kind`' };
-  if (k === 'color') return resolveColor(tokens, raw, value, theme);
+  if (k === 'color') return resolveColor(tokens, raw, value, theme, role);
   if (k === 'shadow' || k === 'fontFamily') return resolveExactString(tokens, raw, value, k);
   return resolveDimension(tokens, raw, value, k);
 }
@@ -90,11 +102,16 @@ function colorValue(t: TokenRecord, theme: Theme): string | undefined {
   return typeof v === 'string' ? v : undefined;
 }
 
-function resolveColor(tokens: TokenRecord[], raw: string, value: string, theme: Theme): Resolution {
+function resolveColor(tokens: TokenRecord[], raw: string, value: string, theme: Theme, role: ColorRole | undefined): Resolution {
   const rgb = parseColor(value);
   if (!rgb) return { raw, kind: 'color', exact: false, withinTolerance: false, note: 'unparseable colour (hex, rgb() or a named colour expected)' };
   // Semantic tokens only: the base palette exists to be aliased, never used (typography.md / color.md).
-  const candidates = tokens.filter((t) => t.type === 'color' && t.path?.[0] !== 'base');
+  const semantic = tokens.filter((t) => t.type === 'color' && t.path?.[0] !== 'base');
+  // And of the right role: a background never takes an fgColor token, even one with the same value.
+  const group = role ? GROUP_FOR_ROLE[role] : undefined;
+  const ofRole = group ? semantic.filter((t) => t.path?.[0] === group) : [];
+  const candidates = ofRole.length ? ofRole : semantic;
+  const scope = ofRole.length ? `${group} token` : group ? `semantic token (no ${group} tokens in this version)` : 'semantic token';
   const scored = candidates
     .map((t) => { const v = colorValue(t, theme); const c = v ? parseColor(v) : undefined; return c ? { t, v: v!, d: deltaE(rgb, c) } : undefined; })
     .filter((x): x is { t: TokenRecord; v: string; d: number } => Boolean(x))
@@ -113,7 +130,7 @@ function resolveColor(tokens: TokenRecord[], raw: string, value: string, theme: 
     withinTolerance: delta <= TOLERANCE.color!,
     suggestion: `var(${best.t.cssVar})`,
     alternatives: scored.slice(1, 4).map((s) => ({ token: s.t.name, cssVar: s.t.cssVar ?? '', tokenValue: s.v, delta: Math.round(s.d * 100) / 100 })),
-    note: delta === 0 ? undefined : `nearest semantic token in ${theme}; ΔE ${delta}${delta > TOLERANCE.color! ? ' is beyond tolerance — an exception or a new token, not a silent snap' : ''}`,
+    note: delta === 0 ? undefined : `nearest ${scope} in ${theme}; ΔE ${delta}${delta > TOLERANCE.color! ? ' is beyond tolerance: an exception or a new token, not a silent snap' : ''}`,
   };
 }
 

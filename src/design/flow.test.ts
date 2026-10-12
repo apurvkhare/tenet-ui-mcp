@@ -170,6 +170,10 @@ test('off-scale rules: dimensions snap to the scale, near colours snap, far colo
   assert.equal(normal['a.background']!.status, 'snapped', 'ΔE within 2× tolerance snaps');
   assert.equal(normal['a.background']!.token, 'bgColor-accent-emphasis');
   assert.equal(normal['b.color']!.status, 'exception');
+  const white = resolveLayoutTokens(data, normalizeLayout({ viewport: { width: 400, height: 200 }, theme: 'light', regions: [
+    { id: 'w', role: 'container', parent: null, bounds: box(0, 0, 400, 200), style: { background: '#ffffff', color: '#ffffff' } },
+  ] } as never), 'light', 'normal').entries;
+  assert.deepEqual(white.map((e) => [e.property, e.token]), [['background', 'bgColor-default'], ['color', 'fgColor-onEmphasis']], 'the role picks the token group');
   assert.ok(normal['b.color']!.decision!.reason.length > 20);
   const strict = resolveLayoutTokens(data, layout, 'light', 'strict').entries;
   assert.ok(strict.filter((e) => e.status !== 'exact').every((e) => e.status === 'exception' && e.decision?.rule === 'tolerance strict'));

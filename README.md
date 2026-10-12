@@ -36,7 +36,7 @@ Dashboard: `GET /dashboard` (HTML) and `GET /metrics.json?days=7`, bearer-authen
 | `get_component` | 8 KB (64 KB with `full`) | Import, props from the types with defaults and deprecations, subcomponents, stories, a11y, guidelines. `sections` scoping with requery hints. |
 | `find_tokens` | 4 KB | Tokens by meaning or group, per theme, with documented AA contrast pairs. |
 | `search_icons` | 2 KB | Icons by keyword with the exact import statement. |
-| `resolve_value` | 4 KB | Nearest token for raw values: colours by ΔE in Lab against semantic tokens, dimensions by distance, with tolerance and alternatives. |
+| `resolve_value` | 4 KB | Nearest token for raw values: colours by ΔE in Lab against the semantic tokens of their role (a background among `bgColor`, text among `fgColor`, a border among `borderColor`; pass `role`), dimensions by distance, with tolerance and alternatives. `resolve_tokens` and both audits take the role from the property. |
 
 Every tool takes `dsVersion`. Its JSON schema carries `x-mcp-header: DsVersion`, so a 2026-07-28 client mirrors it as the `Mcp-Param-DsVersion` request header and the SDK checks the header against the argument: a mismatch or a missing header is `400` with JSON-RPC error `-32020`. Resolution: exact → newest patch of that minor → nearest earlier minor → latest of that major → latest, and the effective version is echoed in every result.
 

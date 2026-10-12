@@ -3,7 +3,7 @@
 // nearest step of its scale (the contract: every space, radius and font is a token); a colour
 // snaps when it is near a semantic token and otherwise becomes a documented exception, because
 // snapping a clearly different colour would change what it means. Each decision says why.
-import { resolveValue, TOLERANCE, type Resolution, type Theme, type ValueKind } from '../catalog/resolve.js';
+import { colorRoleFor, resolveValue, TOLERANCE, type Resolution, type Theme, type ValueKind } from '../catalog/resolve.js';
 import type { VersionData } from '../catalog/store.js';
 import type { Layout } from './layout.js';
 
@@ -37,7 +37,7 @@ export function resolveLayoutTokens(data: VersionData, layout: Layout, theme: Th
   for (const region of layout.regions) {
     for (const [property, raw] of Object.entries(region.style)) {
       if (!raw) continue;
-      const r = resolveValue(data.tokens, raw, KIND_FOR[property] ?? 'auto', theme);
+      const r = resolveValue(data.tokens, raw, KIND_FOR[property] ?? 'auto', theme, colorRoleFor(property));
       entries.push(decideValue(data, region.id, property, r, tolerance));
     }
   }

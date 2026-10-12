@@ -1,7 +1,7 @@
 // Static checks the server runs itself over the supplied files (DESIGN.md §11 "tokens" and
 // "deprecations" rows, plus the hand-built-element and contract rules of audit_code). Pure text
 // scanning: no execution, no parsing beyond what a regex can do honestly.
-import { resolveValue } from '../catalog/resolve.js';
+import { colorRoleFor, resolveValue } from '../catalog/resolve.js';
 import type { VersionData } from '../catalog/store.js';
 import { similarity } from '../catalog/synonyms.js';
 
@@ -56,7 +56,9 @@ export function staticChecks(data: VersionData, files: SourceFile[], theme: 'lig
       for (const m of text.matchAll(/(?<![\w&])(#(?:[0-9a-f]{8}|[0-9a-f]{6}|[0-9a-f]{3,4})\b|rgba?\([^)]*\)|hsla?\([^)]*\))/gi)) {
         const value = m[1]!;
         if (/^#[0-9a-f]{3,4}$/i.test(value) && !isStyle && !/(color|background|border|fill|stroke)/i.test(text)) continue; // #abc in JS is more often a hash than a colour
-        const r = resolveValue(data.tokens, value, 'color', theme);
+        // The property the colour is assigned to (`background: #fff`, `borderColor: '#ccc'`, `color="#333"`) decides the token group.
+        const property = text.slice(0, m.index).match(/([a-zA-Z-]+)\s*[:=]\s*[^:;=]*$/)?.[1];
+        const r = resolveValue(data.tokens, value, 'color', theme, colorRoleFor(property));
         out.push({ check: 'tokens', rule: 'tokens/no-raw-color', severity: 'error', file: f.path, line, column: m.index! + 1, message: `raw colour ${value}`, fix: { hint: r.token ? `use var(${r.cssVar}) (${r.tokenValue}, ΔE ${r.delta})${r.withinTolerance ? '' : ' — beyond tolerance: an exception or a new token, not a silent snap'}` : 'no colour tokens in this version', token: r.token, guideline: guideline('color') }, id: fid(['tokens', 'no-raw-color', f.path, line, value]) });
       }
       // Raw lengths on spacing / type / radius properties.

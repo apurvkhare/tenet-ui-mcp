@@ -268,16 +268,17 @@ export const searchIcons: ToolDef<{ query: z.ZodString; dsVersion: typeof dsVers
 
 // ---- resolve_value -----------------------------------------------------------------------------
 const KINDS = ['color', 'space', 'fontSize', 'radius', 'borderWidth', 'fontWeight', 'lineHeight', 'shadow', 'fontFamily', 'letterSpacing', 'auto'] as const;
+const ROLES = ['background', 'foreground', 'border'] as const;
 const resolutionOut = shape('{raw,kind,token?,cssVar?,tokenValue?,delta?,exact,withinTolerance,suggestion?,alternatives[]?,note?}');
 
-export const resolveValueTool: ToolDef<{ values: z.ZodArray<z.ZodObject<{ kind: z.ZodDefault<z.ZodEnum<Record<(typeof KINDS)[number], (typeof KINDS)[number]>>>; raw: z.ZodString }>>; dsVersion: typeof dsVersionArg; theme: z.ZodDefault<z.ZodEnum<{ light: 'light'; dark: 'dark' }>> }> = {
+export const resolveValueTool: ToolDef<{ values: z.ZodArray<z.ZodObject<{ kind: z.ZodDefault<z.ZodEnum<Record<(typeof KINDS)[number], (typeof KINDS)[number]>>>; raw: z.ZodString; role: z.ZodOptional<z.ZodEnum<Record<(typeof ROLES)[number], (typeof ROLES)[number]>>> }>>; dsVersion: typeof dsVersionArg; theme: z.ZodDefault<z.ZodEnum<{ light: 'light'; dark: 'dark' }>> }> = {
   name: 'resolve_value',
   title: 'Resolve raw values to tokens',
-  description: 'Nearest token for raw CSS values (hex, px, weights) with the distance, deterministically; colours by ΔE in Lab against semantic tokens. Up to 20 per call.',
+  description: 'Nearest token for raw CSS values (hex, px, weights) with the distance, deterministically; colours by ΔE in Lab against semantic tokens of the given role. Up to 20 per call.',
   scope: 'ds:read',
   cap: 4096,
   inputSchema: {
-    values: z.array(z.object({ kind: z.enum(KINDS).default('auto'), raw: z.string().min(1).max(80) })).min(1).max(20),
+    values: z.array(z.object({ kind: z.enum(KINDS).default('auto'), raw: z.string().min(1).max(80), role: z.enum(ROLES).optional().describe('For colours: background, foreground (text, icons) or border. Picks among that role\'s tokens only.') })).min(1).max(20),
     dsVersion: dsVersionArg,
     theme: z.enum(['light', 'dark']).default('light'),
   },
@@ -285,7 +286,7 @@ export const resolveValueTool: ToolDef<{ values: z.ZodArray<z.ZodObject<{ kind: 
   run(args, ctx) {
     const v = pickVersion(ctx, args.dsVersion);
     const meta = versionMeta(v);
-    const results = args.values.map((x) => resolveValue(v.data.tokens, x.raw, x.kind as ValueKind, args.theme as Theme));
+    const results = args.values.map((x) => resolveValue(v.data.tokens, x.raw, x.kind as ValueKind, args.theme as Theme, x.role));
     const capped = capJson({ results, theme: args.theme, ...meta }, this.cap, 'send fewer values per call');
     const exact = results.filter((r) => r.exact).length;
     const snap = results.filter((r) => !r.exact && r.withinTolerance).length;
