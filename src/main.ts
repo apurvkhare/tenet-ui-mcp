@@ -29,7 +29,7 @@ setInterval(() => designs.purge(), 60 * 60 * 1000).unref();
 const visionEnabled = Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || process.env.VISION === 'on');
 const server = createHttpServer({ store, publicUrl, auth, allowedOrigins: (process.env.ALLOWED_ORIGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean), clientCredentials: cc, designs, metrics, vision: visionEnabled ? createVision() : undefined });
 server.listen(port, host, () => {
-  console.error(`tenet-ui-mcp listening on ${publicUrl}/mcp — dashboard ${publicUrl}/dashboard?token=… — auth ${auth.mode}${auth.mode === 'hs256' ? ` (aud ${auth.audience})` : ''} — versions ${store.versions().join(', ')} (latest ${store.latest()}) — vision ${visionEnabled ? (process.env.VISION_MODEL ?? 'claude-opus-5') : 'off (layout only)'}`);
+  console.error(`tenet-ui-mcp listening on ${publicUrl}/mcp — dashboard ${publicUrl}/dashboard?token=… — auth ${auth.mode}${auth.mode === 'hs256' ? ` (aud ${auth.audience})` : ''} — versions ${store.versions().join(', ')} (latest ${store.latest()}) — vision ${visionEnabled ? (process.env.VISION_MODEL ?? 'claude-opus-5-5') : 'off (layout only)'}`);
 });
 const stop = (): void => { server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 2000).unref(); };
 process.on('SIGINT', stop);

@@ -18,13 +18,19 @@ test('colorRoleFor reads the role from CSS and style-object property names', () 
   assert.equal(colorRoleFor(undefined), undefined);
 });
 
-test('a colour resolves among the tokens of its role (color guideline §1)', () => {
+test('a colour prefers the tokens of its role (color guideline §1), and takes another role\'s exact match when its own has none', () => {
   // #ffffff is both fgColor-onEmphasis and bgColor-default; the role decides.
   assert.equal(resolveValue(data.tokens, '#ffffff', 'color', 'light', 'background').token, 'bgColor-default');
   assert.equal(resolveValue(data.tokens, '#ffffff', 'color', 'light', 'foreground').token, 'fgColor-onEmphasis');
-  const border = resolveValue(data.tokens, '#ffffff', 'color', 'light', 'border');
-  assert.ok(border.token?.startsWith('borderColor-'), border.token);
-  assert.match(border.note ?? '', /nearest borderColor token/);
+  // Near a borderColor token: the border group wins.
+  const muted = resolveValue(data.tokens, '#ddd2be', 'color', 'light', 'border');
+  assert.equal(muted.token, 'borderColor-default');
+  assert.match(muted.note ?? '', /nearest borderColor token/);
+  // A border in the danger red: tenet-ui draws it with fgColor-danger (no danger border token), so
+  // the exact match from another role wins over a distant borderColor token.
+  const danger = resolveValue(data.tokens, '#8a2817', 'color', 'light', 'border');
+  assert.equal(danger.token, 'fgColor-danger');
+  assert.ok(danger.exact);
   // No role: every semantic token, as before.
   assert.ok(resolveValue(data.tokens, '#ffffff', 'color', 'light').exact);
 });

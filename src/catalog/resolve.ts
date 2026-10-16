@@ -4,7 +4,7 @@ import type { TokenRecord } from '../ingest/extract/package-data.js';
 
 export type ValueKind = 'color' | 'space' | 'fontSize' | 'radius' | 'borderWidth' | 'fontWeight' | 'lineHeight' | 'shadow' | 'fontFamily' | 'letterSpacing' | 'auto';
 export type Theme = 'light' | 'dark';
-/** What a colour is used for. Semantic tokens are chosen by role (color guideline §1), so a background resolves among bgColor tokens only. */
+/** What a colour is used for. Semantic tokens are chosen by role (color guideline §1): a background prefers bgColor tokens, text fgColor, a border borderColor. */
 export type ColorRole = 'background' | 'foreground' | 'border';
 const GROUP_FOR_ROLE: Record<ColorRole, string> = { background: 'bgColor', foreground: 'fgColor', border: 'borderColor' };
 
@@ -107,15 +107,21 @@ function resolveColor(tokens: TokenRecord[], raw: string, value: string, theme: 
   if (!rgb) return { raw, kind: 'color', exact: false, withinTolerance: false, note: 'unparseable colour (hex, rgb() or a named colour expected)' };
   // Semantic tokens only: the base palette exists to be aliased, never used (typography.md / color.md).
   const semantic = tokens.filter((t) => t.type === 'color' && t.path?.[0] !== 'base');
-  // And of the right role: a background never takes an fgColor token, even one with the same value.
-  const group = role ? GROUP_FOR_ROLE[role] : undefined;
-  const ofRole = group ? semantic.filter((t) => t.path?.[0] === group) : [];
-  const candidates = ofRole.length ? ofRole : semantic;
-  const scope = ofRole.length ? `${group} token` : group ? `semantic token (no ${group} tokens in this version)` : 'semantic token';
-  const scored = candidates
+  const score = (list: TokenRecord[]) => list
     .map((t) => { const v = colorValue(t, theme); const c = v ? parseColor(v) : undefined; return c ? { t, v: v!, d: deltaE(rgb, c) } : undefined; })
     .filter((x): x is { t: TokenRecord; v: string; d: number } => Boolean(x))
     .sort((a, b) => a.d - b.d);
+  // Prefer the role's own group: a background takes bgColor-default over fgColor-onEmphasis even
+  // though both are #ffffff. But a system may draw with another role's token (tenet-ui's error
+  // input border is fgColor-danger; there is no danger border token), so when the role's group has
+  // nothing within tolerance and another semantic token does, that token is the match.
+  const group = role ? GROUP_FOR_ROLE[role] : undefined;
+  const ofRole = group ? score(semantic.filter((t) => t.path?.[0] === group)) : [];
+  const any = score(semantic);
+  const roleFits = ofRole.length > 0 && ofRole[0]!.d <= TOLERANCE.color!;
+  const anyFits = any.length > 0 && any[0]!.d <= TOLERANCE.color!;
+  const scored = roleFits || (ofRole.length && !anyFits) ? ofRole : any;
+  const scope = !group ? 'semantic token' : scored === ofRole ? `${group} token` : ofRole.length ? `semantic token (no ${group} token is this colour; the system uses ${any[0]?.t.path?.[0]} here)` : `semantic token (no ${group} tokens in this version)`;
   const best = scored[0];
   if (!best) return { raw, kind: 'color', exact: false, withinTolerance: false, note: 'no colour tokens in this version' };
   const delta = Math.round(best.d * 100) / 100;

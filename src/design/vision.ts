@@ -27,7 +27,7 @@ Be literal: report what is drawn, not what you think it should be.`;
 
 export function createVision(): VisionFn {
   const client = new Anthropic();
-  const model = process.env.VISION_MODEL ?? 'claude-opus-5';
+  const model = process.env.VISION_MODEL ?? 'claude-opus-5-5';
   return async (input) => {
     const vocabulary = `Design-system component ids: ${input.vocabulary.components.join(', ')}.\nToken groups: ${input.vocabulary.tokenGroups.join(', ')}.\nIcon set: ${input.vocabulary.icons} icons.`;
     const hints = [input.hints?.name ? `The screen is called "${input.hints.name}".` : '', input.hints?.viewport ? `The image is ${input.hints.viewport.width}×${input.hints.viewport.height} px.` : '', input.hints?.notes ? `Notes from the host: ${input.hints.notes}` : ''].filter(Boolean).join(' ');
