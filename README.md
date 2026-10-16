@@ -75,7 +75,7 @@ Every tool takes `dsVersion`. Its JSON schema carries `x-mcp-header: DsVersion`,
 
 **Design store:** rows (`dsg_…`, `mtc_…`, `pln_…`, `aud_…`) are bound to the caller's `sub`, expire after 24 h, live under `DATA_DIR` (default `.data/`). Another principal gets not-found, never forbidden. Private resources: `design://{designId}/layout.json`, `screenshot.png`, `match.json`, `matches/{matchId}.json`, `plan.md`, `plans/{planId}.md|.json`.
 
-**Vision:** `@anthropic-ai/sdk`, model `VISION_MODEL` (default `claude-opus-5-5`), structured output via `betaZodOutputFormat`, server-side refusal fallbacks on. Enabled when `ANTHROPIC_API_KEY` (or an `ant auth login` profile with `VISION=on`) is present; otherwise `ingest_design` accepts layouts only and says so. Exercised live on 2026-10-16 against two tenet-ui story baselines: about 8 s and 3.3k input / 0.9k output tokens per screenshot on Opus 5.5. The model's hex colours are estimates (ΔE 3 to 20 off the real pixels), so a colour the vision path reports can land on a neighbouring token or become a false exception.
+**Vision:** `@anthropic-ai/sdk`, model `VISION_MODEL` (default `claude-opus-5-5`), structured output via `betaZodOutputFormat`, server-side refusal fallbacks on. Enabled when `ANTHROPIC_API_KEY` (or an `ant auth login` profile with `VISION=on`) is present; otherwise `ingest_design` accepts layouts only and says so. Exercised live on 2026-10-16 against two tenet-ui story baselines: about 8 s and 3.3k input / 0.9k output tokens per screenshot on Opus 5.5. The model's hex colours are estimates (ΔE 3 to 20 off the real pixels), so for a PNG the server re-measures every colour the model reported from the pixels inside the region's bounds (the interior for a background, the edge lines for a border, the glyph fill for text, including small text with subpixel fringes) and records each change in `design://{designId}/layout.json` as `colorCorrections`. On the stat-cards baseline that took the token exceptions from 9 to 0 and fixed a border that had snapped to the wrong token.
 
 **Resources:** `ds://versions`, `ds://{v}/components/{name}` (markdown), `ds://{v}/tokens/{group}.json`, `ds://{v}/guidelines/{topic}` (the nine system pages, any component id, `contract`, `audit-rules`), `ds://{v}/gaps`, `ds://{v}/changelog`, `ds://{v}/deprecations`, `ds://{v}/baselines` (the release's story screenshots) and `ds://{v}/baselines/{storyId}.{theme}.png`. `get_component` links each story to its light baseline.
 
@@ -104,7 +104,7 @@ src/catalog/store.ts   snapshot reads + dsVersion resolution
 src/catalog/resolve.ts nearest-token resolution (ΔE / distance)
 src/catalog/synonyms.ts what people call components and token groups
 src/tools/             tools as plain functions (unit-tested without a transport): catalog-, design-, audit-, test-, checks-tools
-src/design/            layout schema, vision call, matcher, token resolution, plan builder, test-plan builder
+src/design/            layout schema, vision call, pixel colour correction, matcher, token resolution, plan builder, test-plan builder
 src/checks/            static scan + contract rules, source parser, judgment over capture results, page judgment, SSIM, shared report plumbing
 src/store/             the design store (principal-bound rows, 24 h TTL; designs, matches, plans, reports)
 src/resources.ts       ds:// public, design:// and audit:// private resources

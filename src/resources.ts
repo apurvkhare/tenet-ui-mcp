@@ -146,7 +146,7 @@ function readDesignResource(u: URL, uri: string, rc: ReadContext): ResourceConte
   const design = rc.designs.get<DesignRow>('design', rc.sub, designId);
   if (!design) throw new ToolError(`no resource at ${uri}`, 'not_found'); // another principal's design: not-found, never forbidden
   const [artifact, id] = parts;
-  if (artifact === 'layout.json') return { uri, mimeType: 'application/json', text: json({ designId, dsVersion: design.data.dsVersion, source: design.data.source, vision: design.data.vision, layout: design.data.layout }) };
+  if (artifact === 'layout.json') return { uri, mimeType: 'application/json', text: json({ designId, dsVersion: design.data.dsVersion, source: design.data.source, vision: design.data.vision, colorCorrections: design.data.colorCorrections, layout: design.data.layout }) };
   if (artifact === 'screenshot.png') {
     const blob = rc.designs.getBlob(rc.sub, designId, 'screenshot');
     if (!blob) throw new ToolError(`no screenshot for ${designId} (ingested from a layout)`, 'not_found');

@@ -10,6 +10,7 @@ import { buildPlan, planMarkdown, type Plan } from '../design/plan.js';
 import { resolveLayoutTokens, type TokenEntry, type Tolerance } from '../design/tokens.js';
 import type { Row } from '../store/design-store.js';
 import { capJson } from './caps.js';
+import { correctColorsFromPixels, type ColorCorrection } from '../design/pixels.js';
 import type { ToolDef } from './catalog-tools.js';
 import { pickVersion, ToolError, versionMeta, type ToolContext } from './context.js';
 
@@ -26,6 +27,8 @@ export interface DesignRow {
   imageBytes?: number;
   layout: Layout;
   vision?: { model: string; usage: { inputTokens: number; outputTokens: number } };
+  /** Colours the vision model reported that the server re-measured from the pixels. */
+  colorCorrections?: ColorCorrection[];
   matches: string[];
   plans: string[];
 }
@@ -79,7 +82,7 @@ export const ingestDesign: ToolDef<{ source: z.ZodDiscriminatedUnion<[z.ZodObjec
     dsVersion: dsVersionArg,
     hints: z.object({ name: z.string().max(80).optional(), notes: z.string().max(1000).optional(), viewport: z.object({ width: z.number(), height: z.number() }).optional() }).optional(),
   },
-  outputSchema: { designId: z.string(), source: z.string(), summary: shape('{regions, roots, roles{}, texts, palette[], theme}'), vision: shape('{model, usage}').optional(), resources: z.array(z.string()), ...dsMeta },
+  outputSchema: { designId: z.string(), source: z.string(), summary: shape('{regions, roots, roles{}, texts, palette[], theme}'), vision: shape('{model, usage}').optional(), colorCorrections: shape('{count, maxDeltaE, examples[]}').optional(), resources: z.array(z.string()), ...dsMeta },
   async run(args, ctx) {
     const store = needStore(ctx);
     const v = pickVersion(ctx, args.dsVersion);
@@ -87,6 +90,7 @@ export const ingestDesign: ToolDef<{ source: z.ZodDiscriminatedUnion<[z.ZodObjec
     let layout: Layout;
     let row: DesignRow;
     let imageBytes: Buffer | undefined;
+    let corrections: ColorCorrection[] = [];
     if (args.source.type === 'layout') {
       layout = normalizeLayout(args.source.layout);
       row = { dsVersion: v.resolved.effective, name: args.hints?.name, source: 'layout', layout, matches: [], plans: [] };
@@ -98,17 +102,22 @@ export const ingestDesign: ToolDef<{ source: z.ZodDiscriminatedUnion<[z.ZodObjec
       if (!ctx.vision) throw new ToolError('vision is not configured on this server; pass source.type = "layout" with a layout tree instead', 'vision_unavailable');
       const vocabulary = { components: v.data.components.filter((c) => c.kind === 'component').map((c) => c.id), tokenGroups: [...new Set(v.data.tokens.map((t) => t.path?.[0] ?? ''))].filter(Boolean), icons: v.data.icons?.icons.length ?? 0 };
       const result = await ctx.vision({ image: imageBytes, mediaType, vocabulary, hints: args.hints });
-      layout = result.layout;
-      row = { dsVersion: v.resolved.effective, name: args.hints?.name, source: 'image', mediaType, imageBytes: imageBytes.length, layout, vision: result, matches: [], plans: [] };
+      // The model's hex values are estimates; measure the ones it reported from the pixels.
+      const corrected = mediaType === 'image/png' ? correctColorsFromPixels(result.layout, imageBytes) : { layout: result.layout, corrections: [] };
+      layout = corrected.layout;
+      corrections = corrected.corrections;
+      row = { dsVersion: v.resolved.effective, name: args.hints?.name, source: 'image', mediaType, imageBytes: imageBytes.length, layout, vision: { model: result.model, usage: result.usage }, colorCorrections: corrections, matches: [], plans: [] };
     }
     const created = store.create<DesignRow>('design', sub(ctx), row);
     if (imageBytes) store.putBlob(sub(ctx), created.id, 'screenshot', imageBytes);
     const summary = summarizeLayout(layout);
     const resources = [`design://${created.id}/layout.json`, ...(imageBytes ? [`design://${created.id}/screenshot.png`] : [])];
-    const structured = { designId: created.id, source: row.source, summary, vision: row.vision, resources, ...meta };
+    const maxDelta = Math.max(0, ...corrections.map((c) => c.deltaE));
+    const colorCorrections = corrections.length ? { count: corrections.length, maxDeltaE: maxDelta, examples: corrections.slice(0, 3).map((c) => `${c.regionId}.${c.property} ${c.model} → ${c.sampled}`) } : undefined;
+    const structured = { designId: created.id, source: row.source, summary, vision: row.vision, colorCorrections, resources, ...meta };
     return {
       structured: capJson(structured, this.cap, 'read design://…/layout.json for the full tree').value,
-      text: `Design ${created.id} stored against ${v.resolved.effective}: ${summary.regions} regions (${Object.entries(summary.roles).slice(0, 6).map(([r, n]) => `${n} ${r}`).join(', ')}), ${summary.texts} text strings. Next: match_components.`,
+      text: `Design ${created.id} stored against ${v.resolved.effective}: ${summary.regions} regions (${Object.entries(summary.roles).slice(0, 6).map(([r, n]) => `${n} ${r}`).join(', ')}), ${summary.texts} text strings.${colorCorrections ? ` ${colorCorrections.count} colour(s) the model estimated were re-measured from the pixels (off by up to ΔE ${maxDelta}).` : ''} Next: match_components.`,
       links: resources.map((uri) => ({ uri, name: uri.split('/').pop()!, mimeType: uri.endsWith('.png') ? 'image/png' : 'application/json' })),
     };
   },
