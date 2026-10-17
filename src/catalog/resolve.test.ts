@@ -40,3 +40,17 @@ test('the static scan takes the role from the property the colour is assigned to
   const colors = f.filter((x) => x.rule === 'tokens/no-raw-color');
   assert.deepEqual(colors.map((x) => [x.line, x.fix?.token]), [[2, 'bgColor-default'], [3, 'fgColor-onEmphasis']]);
 });
+
+test('a themed shadow resolves per theme (tenet-ui themes shadow-focus since its DTCG 2025.10 source)', () => {
+  // The record shape tenet-ui's build emits once shadow.focus lives under themes.light / themes.dark.
+  const themedFocus = { name: 'shadow-focus', cssVar: '--shadow-focus', type: 'shadow', path: ['shadow', 'focus'], description: 'Focus ring halo for fields.', themed: true, light: '0 0 0 3px #f5e4db', dark: '0 0 0 3px #3a2117' };
+  const tokens = [...data.tokens.filter((t) => t.name !== 'shadow-focus'), themedFocus];
+  const light = resolveValue(tokens, '0 0 0 3px #f5e4db', 'shadow', 'light');
+  assert.equal(light.token, 'shadow-focus');
+  assert.ok(light.exact);
+  assert.equal(resolveValue(tokens, '0 0 0 3px #3a2117', 'shadow', 'dark').token, 'shadow-focus');
+  // The light halo is not the dark token's value.
+  assert.equal(resolveValue(tokens, '0 0 0 3px #f5e4db', 'shadow', 'dark').exact, false);
+  // Unthemed shadows still resolve in either theme.
+  assert.equal(resolveValue(tokens, '0 1px 2px rgba(31, 27, 22, 0.06)', 'shadow', 'dark').token, 'shadow-resting');
+});

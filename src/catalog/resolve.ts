@@ -53,7 +53,7 @@ export function resolveValue(tokens: TokenRecord[], raw: string, kind: ValueKind
   const k = kind === 'auto' ? inferKind(value) : kind;
   if (k === 'unknown' || k === 'auto') return { raw, kind: 'unknown', exact: false, withinTolerance: false, note: 'could not infer the value kind; pass `kind`' };
   if (k === 'color') return resolveColor(tokens, raw, value, theme, role);
-  if (k === 'shadow' || k === 'fontFamily') return resolveExactString(tokens, raw, value, k);
+  if (k === 'shadow' || k === 'fontFamily') return resolveExactString(tokens, raw, value, k, theme);
   return resolveDimension(tokens, raw, value, k);
 }
 
@@ -97,7 +97,8 @@ export function deltaE(a: [number, number, number], b: [number, number, number])
   return Math.sqrt((l1 - l2) ** 2 + (a1 - a2) ** 2 + (b1 - b2) ** 2);
 }
 
-function colorValue(t: TokenRecord, theme: Theme): string | undefined {
+/** A token's string value in `theme`: the themed value when the token is themed, else its single value. */
+function themeValue(t: TokenRecord, theme: Theme): string | undefined {
   const v = t.themed ? t[theme] : t.value;
   return typeof v === 'string' ? v : undefined;
 }
@@ -108,7 +109,7 @@ function resolveColor(tokens: TokenRecord[], raw: string, value: string, theme: 
   // Semantic tokens only: the base palette exists to be aliased, never used (typography.md / color.md).
   const semantic = tokens.filter((t) => t.type === 'color' && t.path?.[0] !== 'base');
   const score = (list: TokenRecord[]) => list
-    .map((t) => { const v = colorValue(t, theme); const c = v ? parseColor(v) : undefined; return c ? { t, v: v!, d: deltaE(rgb, c) } : undefined; })
+    .map((t) => { const v = themeValue(t, theme); const c = v ? parseColor(v) : undefined; return c ? { t, v: v!, d: deltaE(rgb, c) } : undefined; })
     .filter((x): x is { t: TokenRecord; v: string; d: number } => Boolean(x))
     .sort((a, b) => a.d - b.d);
   // Prefer the role's own group: a background takes bgColor-default over fgColor-onEmphasis even
@@ -184,11 +185,16 @@ function resolveDimension(tokens: TokenRecord[], raw: string, value: string, kin
   };
 }
 
-function resolveExactString(tokens: TokenRecord[], raw: string, value: string, kind: 'shadow' | 'fontFamily'): Resolution {
+// Shadows and font stacks can be themed (tenet-ui themes shadow-focus since its DTCG 2025.10 source), so read the theme's value.
+function resolveExactString(tokens: TokenRecord[], raw: string, value: string, kind: 'shadow' | 'fontFamily', theme: Theme): Resolution {
   const norm = (s: string): string => s.replace(/\s+/g, ' ').replace(/['"]/g, '').trim().toLowerCase();
   const groups = GROUP_FOR_KIND[kind];
-  const hit = tokens.find((t) => groups.includes(t.path?.[0] ?? '') && typeof t.value === 'string' && norm(t.value) === norm(value));
-  if (hit) return { raw, kind, token: hit.name, cssVar: hit.cssVar, tokenValue: String(hit.value), delta: 0, exact: true, withinTolerance: true, suggestion: `var(${hit.cssVar})` };
-  const options = tokens.filter((t) => groups.includes(t.path?.[0] ?? '')).map((t) => ({ token: t.name, cssVar: t.cssVar ?? '', tokenValue: String(t.value), delta: 1 }));
+  const candidates = tokens
+    .filter((t) => groups.includes(t.path?.[0] ?? ''))
+    .map((t) => ({ t, v: themeValue(t, theme) }))
+    .filter((x): x is { t: TokenRecord; v: string } => x.v !== undefined);
+  const hit = candidates.find((x) => norm(x.v) === norm(value));
+  if (hit) return { raw, kind, token: hit.t.name, cssVar: hit.t.cssVar, tokenValue: hit.v, delta: 0, exact: true, withinTolerance: true, suggestion: `var(${hit.t.cssVar})` };
+  const options = candidates.map((x) => ({ token: x.t.name, cssVar: x.t.cssVar ?? '', tokenValue: x.v, delta: 1 }));
   return { raw, kind, exact: false, withinTolerance: false, alternatives: options.slice(0, 4), note: `no ${kind} token matches; pick one of the ${options.length} defined` };
 }
