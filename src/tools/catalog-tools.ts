@@ -274,11 +274,11 @@ const resolutionOut = shape('{raw,kind,token?,cssVar?,tokenValue?,delta?,exact,w
 export const resolveValueTool: ToolDef<{ values: z.ZodArray<z.ZodObject<{ kind: z.ZodDefault<z.ZodEnum<Record<(typeof KINDS)[number], (typeof KINDS)[number]>>>; raw: z.ZodString; role: z.ZodOptional<z.ZodEnum<Record<(typeof ROLES)[number], (typeof ROLES)[number]>>> }>>; dsVersion: typeof dsVersionArg; theme: z.ZodDefault<z.ZodEnum<{ light: 'light'; dark: 'dark' }>> }> = {
   name: 'resolve_value',
   title: 'Resolve raw values to tokens',
-  description: 'Nearest token for raw CSS values (hex, px, weights) with the distance, deterministically; colours by ΔE in Lab against semantic tokens of the given role. Up to 20 per call.',
+  description: 'Nearest token for raw CSS values (hex, px, weights) with the distance, deterministically; colours by ΔE in Lab against semantic tokens, preferring the given role. Up to 20 per call.',
   scope: 'ds:read',
   cap: 4096,
   inputSchema: {
-    values: z.array(z.object({ kind: z.enum(KINDS).default('auto'), raw: z.string().min(1).max(80), role: z.enum(ROLES).optional().describe('For colours: background, foreground (text, icons) or border. Picks among that role\'s tokens only.') })).min(1).max(20),
+    values: z.array(z.object({ kind: z.enum(KINDS).default('auto'), raw: z.string().min(1).max(80), role: z.enum(ROLES).optional().describe('For colours: background, foreground (text, icons) or border. Prefers that role\'s tokens; falls back to any semantic token when none of them is close.') })).min(1).max(20),
     dsVersion: dsVersionArg,
     theme: z.enum(['light', 'dark']).default('light'),
   },
