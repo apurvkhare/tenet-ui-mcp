@@ -65,7 +65,9 @@ test('ingest_design with an image alone needs vision, which is off by default: t
     assert.equal(err.code, 'vision_unavailable');
     assert.equal(err.message, noVisionMessage('0.4.0'));
     assert.match(err.message, /Describe the screenshot yourself as a layout tree/);
-    assert.match(err.message, /source \{type: "layout", layout, image: \{data\}\}/);
+    assert.match(err.message, /measure its colours locally with the tenet-ui plugin's scripts\/measure-colors\.mjs/);
+    assert.match(err.message, /source \{type: "layout", layout\}/);
+    assert.match(err.message, /add this image as image\.data/, 'the server-side fallback');
     assert.match(err.message, /ds:\/\/0\.4\.0\/layout-schema/);
     return true;
   });
@@ -84,7 +86,8 @@ test('ds://{v}/layout-schema gives the agent the rules, roles, component ids, a 
   assert.equal(r.dsVersion, '0.4.0');
   assert.ok(r.roles.includes('button') && r.roles.includes('card'));
   assert.ok(r.components.includes('card') && r.components.includes('icon-button'));
-  assert.ok(r.rules.some((x) => /candidates/.test(x)) && r.rules.some((x) => /image\.data/.test(x)));
+  assert.ok(r.rules.some((x) => /candidates/.test(x)) && r.rules.some((x) => /measure script/.test(x)) && r.rules.some((x) => /Figma/.test(x)));
+  assert.match((r as unknown as { measure: string }).measure, /measure-colors\.mjs <screenshot\.png> <layout\.json>/);
   assert.ok('regions' in r.schema.properties);
   const ing = await ingestDesign.run({ source: { type: 'layout', layout: r.example }, dsVersion: '0.4.0' } as never, ctx);
   assert.equal((ing.structured.summary as { regions: number }).regions, 4);

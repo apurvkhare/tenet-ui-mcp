@@ -57,11 +57,13 @@ function baselineResource(data: VersionData, uri: string, file: string | undefin
 export function layoutSchemaResource(data: VersionData): unknown {
   return {
     dsVersion: data.version,
-    call: 'ingest_design { source: { type: "layout", layout, image: { data: "<base64 PNG of the same screenshot>" } }, dsVersion }',
+    call: 'ingest_design { source: { type: "layout", layout }, dsVersion }',
+    measure: 'node <tenet-ui plugin>/scripts/measure-colors.mjs <screenshot.png> <layout.json>: re-measures the colours in layout.json from the pixels on your machine before you send it. Skip it for a Figma design.',
     rules: [
       ...LAYOUT_RULES,
       'Set viewport to the image size as you see it and give bounds in that same space; the server scales them to the real pixels. Omitted style fields are fine.',
-      'Send the screenshot as image.data. For a PNG the server re-measures every colour you report (background inside the bounds, borderColor on the edges, color from the glyphs), so give bounds that hug the element.',
+      'Your hex values are estimates. Run the measure script on the screenshot before sending: it re-measures every colour you report (background inside the bounds, borderColor on the edges, color from the glyphs), so give bounds that hug the element. From Figma, use its exact values and skip measuring.',
+      'If you cannot run the script, send the screenshot as image: {data: "<base64 PNG>"} with the layout and the server measures the same way.',
     ],
     roles: ROLE_HINTS,
     components: data.components.filter((c) => c.kind === 'component').map((c) => c.id),

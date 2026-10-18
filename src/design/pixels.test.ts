@@ -2,7 +2,8 @@
 // screens is a real token, so a correct sample lands on the token's exact value. The "model" values
 // are what a live vision run (claude-opus-5, 2026-10-16) reported for the same screenshots.
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -11,7 +12,7 @@ import { readResource } from '../resources.js';
 import { DesignStore } from '../store/design-store.js';
 import type { ToolContext } from '../tools/context.js';
 import { ingestDesign, matchComponents, resolveTokens } from '../tools/design-tools.js';
-import { normalizeLayout, type Layout } from './layout.js';
+import { LayoutInputSchema, normalizeLayout, type Layout } from './layout.js';
 import { correctColorsFromPixels } from './pixels.js';
 
 const baseline = (id: string): Buffer => readFileSync(`snapshots/0.4.0/baselines/${id}.light.png`);
@@ -114,4 +115,41 @@ test('the agent\'s layout with a JPEG is stored but not measured, and the result
   assert.equal(ing.structured.colorCorrections, undefined);
   assert.match(ing.text, /not measured from the image: that needs a PNG/);
   assert.equal((ing.structured.resources as string[]).length, 2);
+});
+
+// The plugin's local script (plugin/scripts/measure-colors.mjs) is a dependency-free port of this
+// file, so the screenshot can stay on the agent's machine. It must measure exactly what the server does.
+const measureLocally = (layout: unknown, png: string): { layout: Layout; colorCorrections: unknown[]; count: number } => {
+  const dir = mkdtempSync(join(tmpdir(), 'tenet-measure-'));
+  writeFileSync(join(dir, 'layout.json'), JSON.stringify(layout));
+  const out = JSON.parse(execFileSync(process.execPath, ['plugin/scripts/measure-colors.mjs', png, join(dir, 'layout.json'), '--out', join(dir, 'measured.json')], { encoding: 'utf8' })) as { colorCorrections: unknown[]; count: number };
+  return { ...out, layout: JSON.parse(readFileSync(join(dir, 'measured.json'), 'utf8')) as Layout };
+};
+
+test('the plugin\'s measure-colors script and the server give identical corrections on the stat-cards baseline', () => {
+  const png = 'snapshots/0.4.0/baselines/components-grid--stat-cards.light.png';
+  const server = correctColorsFromPixels(STAT_CARDS, readFileSync(png));
+  const local = measureLocally(STAT_CARDS, png);
+  assert.ok(server.corrections.length >= 5);
+  assert.deepEqual(local.colorCorrections, server.corrections);
+  assert.equal(local.count, server.corrections.length);
+  assert.deepEqual(local.layout, server.layout, 'same styles and palette');
+});
+
+test('the script matches the server on the error-state baseline too, and accepts a sparse agent layout', () => {
+  const png = 'snapshots/0.4.0/baselines/components-formcontrol--with-error.light.png';
+  // What an agent writes: no viewport (both default to 1280x800), partial styles, a region without bounds.
+  const sparse = { regions: [
+    { id: 'r4', role: 'input', bounds: box(16, 36, 1248, 32), style: { background: '#ffffff', color: '#1f1f1f', borderColor: '#8b1a10' } },
+    { id: 'r5', role: 'caption', bounds: box(16, 71, 149, 15), text: ['Enter a valid email address.'], style: { color: '#8b1a10' } },
+    { id: 'r6', role: 'text', text: ['no bounds'], style: { color: '#123456' } },
+  ] };
+  const server = correctColorsFromPixels(normalizeLayout(LayoutInputSchema.parse(sparse)), readFileSync(png)); // as ingest_design parses it
+  const local = measureLocally(sparse, png);
+  assert.ok(server.corrections.length >= 2);
+  assert.deepEqual(local.colorCorrections, server.corrections);
+  for (const r of server.layout.regions) for (const p of ['background', 'color', 'borderColor'] as const) {
+    assert.equal(local.layout.regions.find((x) => x.id === r.id)!.style[p] ?? null, r.style[p], `${r.id}.${p}`);
+  }
+  assert.ok(!('viewport' in local.layout), 'the agent\'s layout keeps its own shape');
 });

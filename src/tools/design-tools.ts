@@ -71,8 +71,10 @@ function sniffImage(buf: Buffer): 'image/png' | 'image/jpeg' | 'image/webp' | 'i
 
 // ---- ingest_design -------------------------------------------------------------------------------
 // The agent's model already sees the screenshot, so it describes the layout and the server makes no
-// model call. An optional screenshot rides along: for a PNG the server measures the colours the
-// layout reports from the pixels. Image-only ingest needs the opt-in vision call (VISION=on).
+// model call. The agent measures the layout's colours from the screenshot on its own machine with the
+// plugin's measure-colors script, so by default the screenshot never leaves it. Fallback for an agent
+// that cannot run the script: send the screenshot with the layout and, for a PNG, the server runs the
+// same measurement. Image-only ingest needs the opt-in vision call (VISION=on).
 const imageData = z.string().min(16).describe('base64 PNG/JPEG/WebP/GIF, ≤ 5 MB');
 type ImageArg = z.ZodObject<{ data: z.ZodString; mediaType: z.ZodOptional<z.ZodString> }>;
 type IngestSource = z.ZodDiscriminatedUnion<[
@@ -82,17 +84,17 @@ type IngestSource = z.ZodDiscriminatedUnion<[
 
 /** What the agent is told when it sends a screenshot alone and the server has no vision. */
 export const noVisionMessage = (dsVersion: string): string =>
-  `This server does not read screenshots (vision is off). Describe the screenshot yourself as a layout tree (regions with id, role, bounds, parent, raw style values and candidate component ids) and call ingest_design again with source {type: "layout", layout, image: {data}}, passing this same image as image.data so the server measures the colours from its pixels. Schema, roles and component ids: ds://${dsVersion}/layout-schema`;
+  `This server does not read screenshots (vision is off). Describe the screenshot yourself as a layout tree (regions with id, role, bounds, parent, raw style values and candidate component ids), measure its colours locally with the tenet-ui plugin's scripts/measure-colors.mjs, and call ingest_design again with source {type: "layout", layout}. If you cannot run the script, add this image as image.data and the server measures the colours. Schema, roles and component ids: ds://${dsVersion}/layout-schema`;
 
 export const ingestDesign: ToolDef<{ source: IngestSource; dsVersion: typeof dsVersionArg; hints: z.ZodOptional<z.ZodObject<{ name: z.ZodOptional<z.ZodString>; notes: z.ZodOptional<z.ZodString>; viewport: z.ZodOptional<z.ZodObject<{ width: z.ZodNumber; height: z.ZodNumber }>> }>> }> = {
   name: 'ingest_design',
   title: 'Ingest a design',
-  description: 'Store a design as a layout tree; returns a designId for match_components. Look at the screenshot yourself and send source {type: "layout", layout, image}: regions with roles, bounds and raw styles (ds://{v}/layout-schema). A PNG in image lets the server measure your colours from its pixels.',
+  description: 'Store a design as a layout tree; returns a designId for match_components. Describe the screenshot yourself (ds://{v}/layout-schema), measure its colours locally with the plugin\'s measure-colors.mjs, then send source {type: "layout", layout}. From Figma, use its exact values.',
   scope: 'design:ingest',
   cap: 6144,
   inputSchema: {
     source: z.discriminatedUnion('type', [
-      z.object({ type: z.literal('layout'), layout: LayoutInputSchema, image: z.object({ data: imageData, mediaType: z.string().optional() }).optional().describe('The screenshot, recommended') }),
+      z.object({ type: z.literal('layout'), layout: LayoutInputSchema, image: z.object({ data: imageData, mediaType: z.string().optional() }).optional().describe('PNG fallback if you cannot measure locally') }),
       z.object({ type: z.literal('image'), data: imageData, mediaType: z.string().optional() }).describe('Only if the server has vision on'),
     ]),
     dsVersion: dsVersionArg,
