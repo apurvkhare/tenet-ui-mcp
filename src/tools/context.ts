@@ -11,7 +11,7 @@ export interface ToolContext {
   /** Present on transports that carry a principal (HTTP, stdio); design tools need all three. */
   principal?: Principal;
   designs?: DesignStore;
-  /** Perception; undefined when no model credentials are configured. */
+  /** Opt-in perception (VISION=on); undefined by default, when the agent supplies the layout. */
   vision?: VisionFn;
 }
 

@@ -22,12 +22,14 @@ const shape = (fields: string): z.ZodUnknown => z.unknown().describe(fields);
 export interface DesignRow {
   dsVersion: string;
   name?: string;
+  /** 'layout': the agent described it (with or without a screenshot); 'image': the vision call did. */
   source: 'image' | 'layout';
   mediaType?: string;
   imageBytes?: number;
   layout: Layout;
+  /** Set only when the opt-in vision call produced the layout. */
   vision?: { model: string; usage: { inputTokens: number; outputTokens: number } };
-  /** Colours the vision model reported that the server re-measured from the pixels. */
+  /** Colours the layout reported that the server re-measured from the screenshot's pixels (PNG only). */
   colorCorrections?: ColorCorrection[];
   matches: string[];
   plans: string[];
@@ -68,16 +70,30 @@ function sniffImage(buf: Buffer): 'image/png' | 'image/jpeg' | 'image/webp' | 'i
 }
 
 // ---- ingest_design -------------------------------------------------------------------------------
-export const ingestDesign: ToolDef<{ source: z.ZodDiscriminatedUnion<[z.ZodObject<{ type: z.ZodLiteral<'image'>; data: z.ZodString; mediaType: z.ZodOptional<z.ZodString> }>, z.ZodObject<{ type: z.ZodLiteral<'layout'>; layout: typeof LayoutInputSchema }>]>; dsVersion: typeof dsVersionArg; hints: z.ZodOptional<z.ZodObject<{ name: z.ZodOptional<z.ZodString>; notes: z.ZodOptional<z.ZodString>; viewport: z.ZodOptional<z.ZodObject<{ width: z.ZodNumber; height: z.ZodNumber }>> }>> }> = {
+// The agent's model already sees the screenshot, so it describes the layout and the server makes no
+// model call. An optional screenshot rides along: for a PNG the server measures the colours the
+// layout reports from the pixels. Image-only ingest needs the opt-in vision call (VISION=on).
+const imageData = z.string().min(16).describe('base64 PNG/JPEG/WebP/GIF, ≤ 5 MB');
+type ImageArg = z.ZodObject<{ data: z.ZodString; mediaType: z.ZodOptional<z.ZodString> }>;
+type IngestSource = z.ZodDiscriminatedUnion<[
+  z.ZodObject<{ type: z.ZodLiteral<'layout'>; layout: typeof LayoutInputSchema; image: z.ZodOptional<ImageArg> }>,
+  z.ZodObject<{ type: z.ZodLiteral<'image'>; data: z.ZodString; mediaType: z.ZodOptional<z.ZodString> }>,
+]>;
+
+/** What the agent is told when it sends a screenshot alone and the server has no vision. */
+export const noVisionMessage = (dsVersion: string): string =>
+  `This server does not read screenshots (vision is off). Describe the screenshot yourself as a layout tree (regions with id, role, bounds, parent, raw style values and candidate component ids) and call ingest_design again with source {type: "layout", layout, image: {data}}, passing this same image as image.data so the server measures the colours from its pixels. Schema, roles and component ids: ds://${dsVersion}/layout-schema`;
+
+export const ingestDesign: ToolDef<{ source: IngestSource; dsVersion: typeof dsVersionArg; hints: z.ZodOptional<z.ZodObject<{ name: z.ZodOptional<z.ZodString>; notes: z.ZodOptional<z.ZodString>; viewport: z.ZodOptional<z.ZodObject<{ width: z.ZodNumber; height: z.ZodNumber }>> }>> }> = {
   name: 'ingest_design',
   title: 'Ingest a design',
-  description: 'Turn a screenshot (or a host-supplied layout tree) into a stored design with a layout in the catalog\'s vocabulary. Returns a designId for match_components.',
+  description: 'Store a design as a layout tree; returns a designId for match_components. Look at the screenshot yourself and send source {type: "layout", layout, image}: regions with roles, bounds and raw styles (ds://{v}/layout-schema). A PNG in image lets the server measure your colours from its pixels.',
   scope: 'design:ingest',
   cap: 6144,
   inputSchema: {
     source: z.discriminatedUnion('type', [
-      z.object({ type: z.literal('image'), data: z.string().min(16).describe('base64 PNG/JPEG/WebP/GIF, ≤ 5 MB'), mediaType: z.string().optional() }),
-      z.object({ type: z.literal('layout'), layout: LayoutInputSchema }),
+      z.object({ type: z.literal('layout'), layout: LayoutInputSchema, image: z.object({ data: imageData, mediaType: z.string().optional() }).optional().describe('The screenshot, recommended') }),
+      z.object({ type: z.literal('image'), data: imageData, mediaType: z.string().optional() }).describe('Only if the server has vision on'),
     ]),
     dsVersion: dsVersionArg,
     hints: z.object({ name: z.string().max(80).optional(), notes: z.string().max(1000).optional(), viewport: z.object({ width: z.number(), height: z.number() }).optional() }).optional(),
@@ -87,27 +103,32 @@ export const ingestDesign: ToolDef<{ source: z.ZodDiscriminatedUnion<[z.ZodObjec
     const store = needStore(ctx);
     const v = pickVersion(ctx, args.dsVersion);
     const meta = versionMeta(v);
-    let layout: Layout;
-    let row: DesignRow;
+    const src = args.source;
+    const image = src.type === 'image' ? src : src.image;
     let imageBytes: Buffer | undefined;
-    let corrections: ColorCorrection[] = [];
-    if (args.source.type === 'layout') {
-      layout = normalizeLayout(args.source.layout);
-      row = { dsVersion: v.resolved.effective, name: args.hints?.name, source: 'layout', layout, matches: [], plans: [] };
-    } else {
-      imageBytes = Buffer.from(args.source.data, 'base64');
+    let mediaType: ReturnType<typeof sniffImage>;
+    if (image) {
+      imageBytes = Buffer.from(image.data, 'base64');
       if (imageBytes.length > MAX_IMAGE) throw new ToolError(`image is ${(imageBytes.length / 1024 / 1024).toFixed(1)} MB; the limit is 5 MB`, 'image_too_large');
-      const mediaType = sniffImage(imageBytes);
+      mediaType = sniffImage(imageBytes);
       if (!mediaType) throw new ToolError('image bytes are not PNG, JPEG, WebP or GIF', 'image_unsupported');
-      if (!ctx.vision) throw new ToolError('vision is not configured on this server; pass source.type = "layout" with a layout tree instead', 'vision_unavailable');
-      const vocabulary = { components: v.data.components.filter((c) => c.kind === 'component').map((c) => c.id), tokenGroups: [...new Set(v.data.tokens.map((t) => t.path?.[0] ?? ''))].filter(Boolean), icons: v.data.icons?.icons.length ?? 0 };
-      const result = await ctx.vision({ image: imageBytes, mediaType, vocabulary, hints: args.hints });
-      // The model's hex values are estimates; measure the ones it reported from the pixels.
-      const corrected = mediaType === 'image/png' ? correctColorsFromPixels(result.layout, imageBytes) : { layout: result.layout, corrections: [] };
-      layout = corrected.layout;
-      corrections = corrected.corrections;
-      row = { dsVersion: v.resolved.effective, name: args.hints?.name, source: 'image', mediaType, imageBytes: imageBytes.length, layout, vision: { model: result.model, usage: result.usage }, colorCorrections: corrections, matches: [], plans: [] };
     }
+    let layout: Layout;
+    let vision: DesignRow['vision'];
+    if (src.type === 'layout') {
+      layout = normalizeLayout(src.layout);
+    } else {
+      if (!ctx.vision) throw new ToolError(noVisionMessage(v.resolved.effective), 'vision_unavailable', { resource: `ds://${v.resolved.effective}/layout-schema` });
+      const vocabulary = { components: v.data.components.filter((c) => c.kind === 'component').map((c) => c.id), tokenGroups: [...new Set(v.data.tokens.map((t) => t.path?.[0] ?? ''))].filter(Boolean), icons: v.data.icons?.icons.length ?? 0 };
+      const result = await ctx.vision({ image: imageBytes!, mediaType: mediaType!, vocabulary, hints: args.hints });
+      layout = result.layout;
+      vision = { model: result.model, usage: result.usage };
+    }
+    // Hex values read off a screenshot by eye are estimates, whichever model read them; measure the
+    // ones the layout reports from the pixels.
+    let corrections: ColorCorrection[] = [];
+    if (imageBytes && mediaType === 'image/png') ({ layout, corrections } = correctColorsFromPixels(layout, imageBytes));
+    const row: DesignRow = { dsVersion: v.resolved.effective, name: args.hints?.name, source: src.type, mediaType, imageBytes: imageBytes?.length, layout, vision, colorCorrections: imageBytes ? corrections : undefined, matches: [], plans: [] };
     const created = store.create<DesignRow>('design', sub(ctx), row);
     if (imageBytes) store.putBlob(sub(ctx), created.id, 'screenshot', imageBytes);
     const summary = summarizeLayout(layout);
@@ -115,9 +136,10 @@ export const ingestDesign: ToolDef<{ source: z.ZodDiscriminatedUnion<[z.ZodObjec
     const maxDelta = Math.max(0, ...corrections.map((c) => c.deltaE));
     const colorCorrections = corrections.length ? { count: corrections.length, maxDeltaE: maxDelta, examples: corrections.slice(0, 3).map((c) => `${c.regionId}.${c.property} ${c.model} → ${c.sampled}`) } : undefined;
     const structured = { designId: created.id, source: row.source, summary, vision: row.vision, colorCorrections, resources, ...meta };
+    const measured = colorCorrections ? ` ${colorCorrections.count} colour(s) ${vision ? 'the model estimated' : 'in the layout'} were re-measured from the pixels (off by up to ΔE ${maxDelta}).` : imageBytes && mediaType !== 'image/png' ? ' Colours were not measured from the image: that needs a PNG.' : '';
     return {
       structured: capJson(structured, this.cap, 'read design://…/layout.json for the full tree').value,
-      text: `Design ${created.id} stored against ${v.resolved.effective}: ${summary.regions} regions (${Object.entries(summary.roles).slice(0, 6).map(([r, n]) => `${n} ${r}`).join(', ')}), ${summary.texts} text strings.${colorCorrections ? ` ${colorCorrections.count} colour(s) the model estimated were re-measured from the pixels (off by up to ΔE ${maxDelta}).` : ''} Next: match_components.`,
+      text: `Design ${created.id} stored against ${v.resolved.effective}: ${summary.regions} regions (${Object.entries(summary.roles).slice(0, 6).map(([r, n]) => `${n} ${r}`).join(', ')}), ${summary.texts} text strings.${measured} Next: match_components.`,
       links: resources.map((uri) => ({ uri, name: uri.split('/').pop()!, mimeType: uri.endsWith('.png') ? 'image/png' : 'application/json' })),
     };
   },

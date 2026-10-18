@@ -9,11 +9,12 @@ import { test } from 'node:test';
 import { CatalogStore } from '../catalog/store.js';
 import { readResource } from '../resources.js';
 import { DesignStore } from '../store/design-store.js';
-import type { ToolContext } from '../tools/context.js';
-import { ingestDesign, matchComponents, planComponent, resolveTokens } from '../tools/design-tools.js';
+import type { ToolContext, ToolError } from '../tools/context.js';
+import { ingestDesign, matchComponents, noVisionMessage, planComponent, resolveTokens } from '../tools/design-tools.js';
 import { normalizeLayout } from './layout.js';
 import { assignRegions, type Assignment } from './match.js';
 import { resolveLayoutTokens } from './tokens.js';
+import { visionFromEnv } from './vision.js';
 
 const store = new CatalogStore('snapshots');
 const designs = new DesignStore(mkdtempSync(join(tmpdir(), 'tenet-designs-')));
@@ -52,13 +53,42 @@ test('ingest_design stores a host-supplied layout and summarises it', async () =
   assert.equal(s.summary.roles.button, 2);
   assert.equal(s.dsVersion, '0.4.0');
   assert.deepEqual(s.resources, [`design://${s.designId}/layout.json`]);
+  assert.ok(!('colorCorrections' in s) || (s as Record<string, unknown>).colorCorrections === undefined, 'no image, nothing measured');
+  assert.equal((s as Record<string, unknown>).vision, undefined, 'no model call');
   designId = s.designId;
 });
 
-test('ingest_design with an image needs vision; bad bytes are rejected first', async () => {
+test('ingest_design with an image alone needs vision, which is off by default: the error tells the agent to send a layout with the image', async () => {
   await assert.rejects(async () => ingestDesign.run({ source: { type: 'image', data: Buffer.from('not an image at all').toString('base64') }, dsVersion: 'latest' }, ctx), /not PNG, JPEG/);
   const png = Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), Buffer.alloc(64)]);
-  await assert.rejects(async () => ingestDesign.run({ source: { type: 'image', data: png.toString('base64') }, dsVersion: 'latest' }, ctx), /vision is not configured/);
+  await assert.rejects(async () => ingestDesign.run({ source: { type: 'image', data: png.toString('base64') }, dsVersion: '0.4.0' }, ctx), (err: ToolError) => {
+    assert.equal(err.code, 'vision_unavailable');
+    assert.equal(err.message, noVisionMessage('0.4.0'));
+    assert.match(err.message, /Describe the screenshot yourself as a layout tree/);
+    assert.match(err.message, /source \{type: "layout", layout, image: \{data\}\}/);
+    assert.match(err.message, /ds:\/\/0\.4\.0\/layout-schema/);
+    return true;
+  });
+});
+
+test('vision is opt-in: a model key alone does not turn it on', () => {
+  assert.equal(visionFromEnv({}).vision, undefined);
+  const keyOnly = visionFromEnv({ ANTHROPIC_API_KEY: 'sk-ant-test' });
+  assert.equal(keyOnly.vision, undefined);
+  assert.match(keyOnly.status, /VISION=on is not/);
+  assert.equal(visionFromEnv({ ANTHROPIC_AUTH_TOKEN: 'x', VISION: 'off' }).vision, undefined);
+});
+
+test('ds://{v}/layout-schema gives the agent the rules, roles, component ids, a JSON Schema and an example that ingests', async () => {
+  const r = JSON.parse(readResource(store, 'ds://0.4.0/layout-schema').text!) as { dsVersion: string; rules: string[]; roles: string[]; components: string[]; schema: { properties: Record<string, unknown> }; example: unknown };
+  assert.equal(r.dsVersion, '0.4.0');
+  assert.ok(r.roles.includes('button') && r.roles.includes('card'));
+  assert.ok(r.components.includes('card') && r.components.includes('icon-button'));
+  assert.ok(r.rules.some((x) => /candidates/.test(x)) && r.rules.some((x) => /image\.data/.test(x)));
+  assert.ok('regions' in r.schema.properties);
+  const ing = await ingestDesign.run({ source: { type: 'layout', layout: r.example }, dsVersion: '0.4.0' } as never, ctx);
+  assert.equal((ing.structured.summary as { regions: number }).regions, 4);
+  for (const id of (r.example as { regions: Array<{ candidates: string[] }> }).regions.flatMap((x) => x.candidates)) assert.ok(r.components.includes(id), `example candidate ${id} is a real id`);
 });
 
 test('match_components decides the Card-vs-Stack close call from the layout guideline and never asks', async () => {

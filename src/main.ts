@@ -2,7 +2,7 @@
 // Start the HTTP server.
 //   PORT=3000 HOST=127.0.0.1 PUBLIC_URL=http://127.0.0.1:3000 AUTH_MODE=hs256 AUTH_HMAC_KEY=… npm start
 import { authConfigFromEnv } from './auth/tokens.js';
-import { createVision } from './design/vision.js';
+import { visionFromEnv } from './design/vision.js';
 import { DesignStore } from './store/design-store.js';
 import { resolve } from 'node:path';
 import { CatalogStore } from './catalog/store.js';
@@ -26,10 +26,10 @@ const metrics = new MetricsStore(resolve(dataDir, 'events'));
 // Layer one to stderr (as before) and to the spool the dashboard reads.
 setTelemetrySink((e: Event) => { if (process.env.TELEMETRY !== 'off') process.stderr.write(JSON.stringify({ ts: new Date().toISOString(), ...e }) + '\n'); if (e.event === 'tool' || e.event === 'request') metrics.record(e); });
 setInterval(() => designs.purge(), 60 * 60 * 1000).unref();
-const visionEnabled = Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || process.env.VISION === 'on');
-const server = createHttpServer({ store, publicUrl, auth, allowedOrigins: (process.env.ALLOWED_ORIGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean), clientCredentials: cc, designs, metrics, vision: visionEnabled ? createVision() : undefined });
+const { vision, status: visionStatus } = visionFromEnv();
+const server = createHttpServer({ store, publicUrl, auth, allowedOrigins: (process.env.ALLOWED_ORIGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean), clientCredentials: cc, designs, metrics, vision });
 server.listen(port, host, () => {
-  console.error(`tenet-ui-mcp listening on ${publicUrl}/mcp — dashboard ${publicUrl}/dashboard?token=… — auth ${auth.mode}${auth.mode === 'hs256' ? ` (aud ${auth.audience})` : ''} — versions ${store.versions().join(', ')} (latest ${store.latest()}) — vision ${visionEnabled ? (process.env.VISION_MODEL ?? 'claude-opus-5-5') : 'off (layout only)'}`);
+  console.error(`tenet-ui-mcp listening on ${publicUrl}/mcp — dashboard ${publicUrl}/dashboard?token=… — auth ${auth.mode}${auth.mode === 'hs256' ? ` (aud ${auth.audience})` : ''} — versions ${store.versions().join(', ')} (latest ${store.latest()}) — vision ${visionStatus}`);
 });
 const stop = (): void => { server.close(() => process.exit(0)); setTimeout(() => process.exit(0), 2000).unref(); };
 process.on('SIGINT', stop);

@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import { CatalogStore } from '../catalog/store.js';
+import { readResource } from '../resources.js';
 import { DesignStore } from '../store/design-store.js';
 import type { ToolContext } from '../tools/context.js';
 import { ingestDesign, matchComponents, resolveTokens } from '../tools/design-tools.js';
@@ -82,4 +83,35 @@ test('ingest_design corrects the model\'s colours before matching, and resolve_t
   assert.deepEqual([entry('r5', 'color').token, entry('r5', 'color').status], ['fgColor-default', 'exact']);
   assert.deepEqual([entry('r4', 'color').token, entry('r4', 'color').status], ['fgColor-muted', 'exact']);
   assert.equal(t.structured.exceptions, 0, 'no false exceptions');
+});
+
+test('the agent\'s layout with a PNG: no model call, the same pixel correction, exact tokens downstream', async () => {
+  const designs = new DesignStore(mkdtempSync(join(tmpdir(), 'tenet-pixels-')));
+  const ctx: ToolContext = { store: new CatalogStore('snapshots'), traceId: 't', publicUrl: 'http://127.0.0.1:3000', designs, principal: { sub: 'apurv', scopes: ['design:ingest'], clientId: 'apurv' } };
+  const image = baseline('components-grid--stat-cards');
+  const ing = await ingestDesign.run({ source: { type: 'layout', layout: STAT_CARDS, image: { data: image.toString('base64') } }, dsVersion: '0.4.0' } as never, ctx);
+  const s = ing.structured as { designId: string; source: string; vision?: unknown; colorCorrections: { count: number; maxDeltaE: number }; resources: string[] };
+  assert.equal(s.source, 'layout');
+  assert.equal(s.vision, undefined, 'no model call');
+  assert.ok(s.colorCorrections.count >= 5 && s.colorCorrections.maxDeltaE > 9);
+  assert.match(ing.text, /colour\(s\) in the layout were re-measured from the pixels/);
+  assert.deepEqual(s.resources, [`design://${s.designId}/layout.json`, `design://${s.designId}/screenshot.png`]);
+  const stored = readResource(ctx.store, `design://${s.designId}/layout.json`, { designs, sub: 'apurv' });
+  const body = JSON.parse(stored.text!) as { source: string; colorCorrections: unknown[]; layout: Layout };
+  assert.equal(body.colorCorrections.length, s.colorCorrections.count, 'colorCorrections recorded as on the vision path');
+  assert.equal(body.layout.regions.find((r) => r.id === 'r3')!.style.borderColor, '#ddd2bf');
+  assert.deepEqual(readResource(ctx.store, `design://${s.designId}/screenshot.png`, { designs, sub: 'apurv' }).blob, image, 'the screenshot is stored');
+  const m = await matchComponents.run({ designId: s.designId }, ctx);
+  const t = await resolveTokens.run({ matchId: m.structured.matchId as string, theme: 'light', tolerance: 'normal' } as never, ctx);
+  assert.equal(t.structured.exceptions, 0, 'no false exceptions');
+});
+
+test('the agent\'s layout with a JPEG is stored but not measured, and the result says why', async () => {
+  const designs = new DesignStore(mkdtempSync(join(tmpdir(), 'tenet-pixels-')));
+  const ctx: ToolContext = { store: new CatalogStore('snapshots'), traceId: 't', publicUrl: 'http://127.0.0.1:3000', designs, principal: { sub: 'apurv', scopes: ['design:ingest'], clientId: 'apurv' } };
+  const jpeg = Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(64)]);
+  const ing = await ingestDesign.run({ source: { type: 'layout', layout: STAT_CARDS, image: { data: jpeg.toString('base64') } }, dsVersion: '0.4.0' } as never, ctx);
+  assert.equal(ing.structured.colorCorrections, undefined);
+  assert.match(ing.text, /not measured from the image: that needs a PNG/);
+  assert.equal((ing.structured.resources as string[]).length, 2);
 });

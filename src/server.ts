@@ -82,7 +82,7 @@ export function createMcpServer(store: CatalogStore, scope: RequestScope): McpSe
     instructions: [
       `Design-system server for ${store.packageName}. Search-first: search_components → get_component, find_tokens / resolve_value for styling, search_icons for glyphs.`,
       'Always pass dsVersion from the consumer\'s lockfile; results echo the effective version. Read ds://{version}/guidelines/contract before writing code.',
-      'Design to code: ingest_design → match_components → resolve_tokens → plan_component → write → capture → run_checks. The server decides close matches and off-scale values itself and says why; never ask the user to choose. Existing UI: audit_code + audit_page (capture.mjs page) → fix by severity → run_checks. Tests: plan_tests → write → run_checks.',
+      'Design to code: describe the screenshot as a layout tree yourself (ds://{version}/layout-schema), ingest_design with the layout and the image → match_components → resolve_tokens → plan_component → write → capture → run_checks. The server decides close matches and off-scale values itself and says why; never ask the user to choose. Existing UI: audit_code + audit_page (capture.mjs page) → fix by severity → run_checks. Tests: plan_tests → write → run_checks.',
     ].join(' '),
     cacheHints: CACHE_HINTS,
     // The lists never change while the server runs (a new design-system version means a restart),

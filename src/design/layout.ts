@@ -1,6 +1,6 @@
-// The layout tree: what perception produces (DESIGN.md §4 ingest_design) and what a host may
-// supply instead of an image. Region roles are free text in the catalog's vocabulary; the
-// analyser also proposes catalog ids in `candidates`.
+// The layout tree: what the agent's own model describes from the screenshot it sees (DESIGN.md §4
+// ingest_design), or what the opt-in vision call produces. Region roles are free text in the
+// catalog's vocabulary; the analyser also proposes catalog ids in `candidates`.
 import { z } from 'zod';
 
 export const ROLE_HINTS = [
@@ -8,6 +8,14 @@ export const ROLE_HINTS = [
   'button', 'icon-button', 'link', 'heading', 'text', 'label', 'caption', 'table', 'row', 'list', 'list-item', 'tabs', 'tab', 'breadcrumb', 'pagination',
   'badge', 'tag', 'avatar', 'icon', 'image', 'divider', 'banner', 'toast', 'dialog', 'menu', 'tooltip', 'progress', 'spinner', 'empty-state', 'footer', 'unknown',
 ] as const;
+
+/** How to describe a screenshot as a layout tree. The vision call and ds://{v}/layout-schema share it. */
+export const LAYOUT_RULES = [
+  `Return regions from the outside in: the page, then its sections, then every control and text block. Give each region a stable id (r1, r2, …), a role from this list where one fits (${ROLE_HINTS.join(', ')}), a short label, the visible text strings, pixel bounds relative to the image, its parent id (null for roots), and the raw styles you can read off the pixels (hex colours, px sizes, weights). Fill every field; use null when a style is not visible.`,
+  'In "candidates", propose up to three component ids from the design system that could implement the region, most likely first. Do not invent ids. For plain layout containers with no border or background, propose "stack" or "grid". For a bordered or raised container, propose "card".',
+  'In "states", note things like primary, secondary, danger, disabled, selected, error, required, icon-only, sortable, selectable, loading.',
+  'Be literal: report what is drawn, not what you think it should be.',
+];
 
 const bounds = z.object({ x: z.number(), y: z.number(), width: z.number(), height: z.number() });
 const style = z.object({
@@ -42,21 +50,21 @@ export const VisionLayoutSchema = z.object({
 export type Layout = z.infer<typeof VisionLayoutSchema>;
 export type Region = Layout['regions'][number];
 
-/** Lenient shape a host may pass: defaults filled in, unknown style keys dropped. */
+/** Lenient shape the agent passes: defaults filled in, unknown style keys dropped. */
 export const LayoutInputSchema = z.object({
-  viewport: z.object({ width: z.number().int().positive(), height: z.number().int().positive() }).default({ width: 1280, height: 800 }),
+  viewport: z.object({ width: z.number().int().positive(), height: z.number().int().positive() }).default({ width: 1280, height: 800 }).describe('The image size as you see it; bounds use the same space'),
   theme: z.enum(['light', 'dark', 'unknown']).default('unknown'),
   regions: z.array(z.object({
     id: z.string().min(1).max(40),
-    role: z.string().min(1).max(40),
+    role: z.string().min(1).max(40).describe('page, section, card, button, input, heading, text, …'),
     label: z.string().max(200).optional(),
     text: z.array(z.string().max(500)).max(50).optional(),
     bounds: bounds.optional(),
     parent: z.string().nullable().optional(),
-    candidates: z.array(z.string()).max(5).optional(),
-    style: style.partial().optional(),
+    candidates: z.array(z.string()).max(5).optional().describe('Catalog component ids, most likely first'),
+    style: style.partial().optional().describe('Raw values you see: hex colours, px sizes'),
     states: z.array(z.string()).max(10).optional(),
-  })).min(1).max(200),
+  })).min(1).max(200).describe('Outside in; roles, rules and ids at ds://{v}/layout-schema'),
   palette: z.array(z.string()).max(32).optional(),
   notes: z.string().max(2000).optional(),
 });

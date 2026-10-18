@@ -8,7 +8,7 @@ import { randomBytes } from 'node:crypto';
 import { resolve } from 'node:path';
 import { SCOPES } from './auth/tokens.js';
 import { CatalogStore } from './catalog/store.js';
-import { createVision } from './design/vision.js';
+import { visionFromEnv } from './design/vision.js';
 import { config } from './ingest/config.js';
 import { createMcpServer } from './server.js';
 import { DesignStore } from './store/design-store.js';
@@ -16,7 +16,7 @@ import { emit } from './telemetry.js';
 
 const store = new CatalogStore(config.snapshotsDir);
 const designs = new DesignStore(resolve(process.env.DATA_DIR ?? '.data', 'store'));
-const vision = process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || process.env.VISION === 'on' ? createVision() : undefined;
+const { vision } = visionFromEnv();
 const principal = { sub: process.env.USER ?? 'stdio', scopes: [...SCOPES], clientId: 'stdio' };
 
 serveStdio(() => createMcpServer(store, {

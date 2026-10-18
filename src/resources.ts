@@ -6,6 +6,8 @@ import { A11Y_CONTRACT } from './tools/catalog-tools.js';
 import { ToolError } from './tools/context.js';
 import type { DesignStore } from './store/design-store.js';
 import type { DesignRow, MatchRow, PlanRow } from './tools/design-tools.js';
+import { z } from 'zod';
+import { LAYOUT_RULES, LayoutInputSchema, ROLE_HINTS } from './design/layout.js';
 import type { ReportRow } from './checks/report.js';
 
 export interface ResourceContent { uri: string; mimeType: string; text?: string; blob?: Buffer }
@@ -16,7 +18,7 @@ export function readResource(store: CatalogStore, uri: string, rc: ReadContext =
   if (u.protocol === 'design:') return readDesignResource(u, uri, rc);
   if (u.protocol === 'audit:') return readAuditResource(u, uri, rc);
   if (u.protocol !== 'ds:') throw new ToolError(`unsupported scheme ${u.protocol}`, 'not_found');
-  // ds://versions  |  ds://{v}/components/{name}  |  ds://{v}/tokens/{group}.json  |  ds://{v}/guidelines/{topic}  |  ds://{v}/gaps  |  ds://{v}/baselines[/{file}]
+  // ds://versions  |  ds://{v}/components/{name}  |  ds://{v}/tokens/{group}.json  |  ds://{v}/guidelines/{topic}  |  ds://{v}/gaps  |  ds://{v}/baselines[/{file}]  |  ds://{v}/layout-schema
   const host = u.host;
   const path = u.pathname.replace(/^\/+/, '').split('/');
   if (host === 'versions' && !path[0]) return { uri, mimeType: 'application/json', text: json(versionsResource(store)) };
@@ -30,6 +32,7 @@ export function readResource(store: CatalogStore, uri: string, rc: ReadContext =
   if (kind === 'changelog' && !rest) return { uri, mimeType: 'text/markdown', text: changelogMarkdown(data) };
   if (kind === 'deprecations' && !rest) return { uri, mimeType: 'application/json', text: json(data.deprecations ?? { deprecations: [] }) };
   if (kind === 'baselines') return baselineResource(data, uri, rest);
+  if (kind === 'layout-schema' && !rest) return { uri, mimeType: 'application/json', text: json(layoutSchemaResource(data)) };
   throw new ToolError(`no resource at ${uri}`, 'not_found');
 }
 
@@ -47,6 +50,33 @@ function baselineResource(data: VersionData, uri: string, file: string | undefin
   const path = join(b.dir, e.file);
   if (!existsSync(path)) throw new ToolError(`baseline file missing: ${e.file}`, 'not_found');
   return { uri, mimeType: 'image/png', blob: readFileSync(path) };
+}
+
+// What the agent needs to describe a screenshot for ingest_design: the rules the vision call
+// follows, the role list, this version's component ids for `candidates`, the JSON Schema, an example.
+export function layoutSchemaResource(data: VersionData): unknown {
+  return {
+    dsVersion: data.version,
+    call: 'ingest_design { source: { type: "layout", layout, image: { data: "<base64 PNG of the same screenshot>" } }, dsVersion }',
+    rules: [
+      ...LAYOUT_RULES,
+      'Set viewport to the image size as you see it and give bounds in that same space; the server scales them to the real pixels. Omitted style fields are fine.',
+      'Send the screenshot as image.data. For a PNG the server re-measures every colour you report (background inside the bounds, borderColor on the edges, color from the glyphs), so give bounds that hug the element.',
+    ],
+    roles: ROLE_HINTS,
+    components: data.components.filter((c) => c.kind === 'component').map((c) => c.id),
+    schema: z.toJSONSchema(LayoutInputSchema, { io: 'input' }),
+    example: {
+      viewport: { width: 1280, height: 800 },
+      theme: 'light',
+      regions: [
+        { id: 'r1', role: 'page', parent: null, bounds: { x: 0, y: 0, width: 1280, height: 800 }, style: { background: '#ffffff' }, candidates: ['stack'] },
+        { id: 'r2', role: 'card', label: 'Revenue', parent: 'r1', bounds: { x: 16, y: 16, width: 300, height: 86 }, style: { background: '#ffffff', borderColor: '#ddd2bf', borderRadius: '6px', padding: '16px' }, candidates: ['card'] },
+        { id: 'r3', role: 'text', label: 'Value', text: ['128'], parent: 'r2', bounds: { x: 32, y: 55, width: 44, height: 28 }, style: { color: '#2a241b', fontSize: '26px', fontWeight: '600' }, candidates: ['text'] },
+        { id: 'r4', role: 'button', label: 'Primary action', text: ['Save'], parent: 'r1', states: ['primary'], bounds: { x: 16, y: 120, width: 80, height: 32 }, style: { background: '#c2502e', color: '#ffffff' }, candidates: ['button'] },
+      ],
+    },
+  };
 }
 
 export function versionsResource(store: CatalogStore): unknown {
@@ -133,6 +163,7 @@ export function listResources(store: CatalogStore): Array<{ uri: string; name: s
     out.push({ uri: `ds://${v}/deprecations`, name: `${v} deprecations`, mimeType: 'application/json', description: 'Migration registry: deprecated components and props with replacements.' });
     out.push({ uri: `ds://${v}/guidelines/contract`, name: `${v} component contract`, mimeType: 'text/markdown' });
     out.push({ uri: `ds://${v}/guidelines/audit-rules`, name: `${v} audit rule catalog`, mimeType: 'text/markdown' });
+    out.push({ uri: `ds://${v}/layout-schema`, name: `${v} layout schema`, mimeType: 'application/json', description: 'How to describe a screenshot for ingest_design: rules, roles, component ids for candidates, JSON Schema, example.' });
     if (store.load(v).baselines) out.push({ uri: `ds://${v}/baselines`, name: `${v} story baselines`, mimeType: 'application/json', description: 'Release screenshots per story and theme, with the URI of each PNG.' });
   }
   return out;
@@ -149,7 +180,7 @@ function readDesignResource(u: URL, uri: string, rc: ReadContext): ResourceConte
   if (artifact === 'layout.json') return { uri, mimeType: 'application/json', text: json({ designId, dsVersion: design.data.dsVersion, source: design.data.source, vision: design.data.vision, colorCorrections: design.data.colorCorrections, layout: design.data.layout }) };
   if (artifact === 'screenshot.png') {
     const blob = rc.designs.getBlob(rc.sub, designId, 'screenshot');
-    if (!blob) throw new ToolError(`no screenshot for ${designId} (ingested from a layout)`, 'not_found');
+    if (!blob) throw new ToolError(`no screenshot for ${designId} (ingested from a layout without an image)`, 'not_found');
     return { uri, mimeType: design.data.mediaType ?? 'image/png', blob };
   }
   const matchId = artifact === 'matches' ? id?.replace(/\.json$/, '') : artifact === 'match.json' ? design.data.matches.at(-1) : undefined;
