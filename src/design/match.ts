@@ -1,7 +1,9 @@
 // match_components (DESIGN.md §4): rank catalog components per region using structure, synonyms,
 // role and the analyser's candidates; record confidence. Where the top two are within 0.15 the
 // server decides: the guideline tests below settle the pair from structural cues, and the result
-// names the pick, the rule it applied, the confidence and the runner-up. It never asks the user.
+// names the pick, the rule it applied, the confidence and the runner-up. A rule whose test reads
+// only the region's own content (a count or a word) applies to its pair at any gap, because the
+// role the analyser chose can outweigh what the region says. It never asks the user.
 // Visual similarity to the baselines is a later refinement.
 import { rankComponents } from '../catalog/search.js';
 import type { VersionData } from '../catalog/store.js';
@@ -15,7 +17,7 @@ export interface Assignment {
   component: string | null;
   confidence: number;
   candidates: Candidate[];
-  /** auto: a clear winner; decided: a close call the server settled (see `decision`); none: no system component. */
+  /** auto: a clear winner; decided: a close call, or a pair a decisive rule covers, the server settled (see `decision`); none: no system component. */
   source: 'auto' | 'decided' | 'none';
   decision?: Decision;
   note?: string;
@@ -144,8 +146,9 @@ export function assignRegions(data: VersionData, layout: Layout): Assignment[] {
         ? { regionId: region.id, role: region.role, label: region.label, component: top.component, confidence: top.confidence, candidates, source: 'auto' }
         : { regionId: region.id, role: region.role, label: region.label, component: null, confidence: 0, candidates, source: 'none', note: `no system component for role "${region.role}"; keep as plain markup and flag for review` };
       const second = candidates[1];
-      if (top && second && top.confidence - second.confidence < CLOSE_CALL) {
-        const d = decide(data, layout, region, top, second, byId);
+      const close = Boolean(top && second && top.confidence - second.confidence < CLOSE_CALL);
+      const d = top && second ? decide(data, layout, region, top, second, byId, !close) : undefined;
+      if (top && second && d) {
         a.component = d.pick;
         a.confidence = d.basis === 'guideline' ? Math.max(GUIDELINE_CONFIDENCE, top.confidence) : top.confidence;
         a.source = 'decided';
@@ -167,6 +170,12 @@ interface Cues { region: Region; kids: Region[]; ancestors: Array<{ region: Regi
 interface Rule {
   /** Applies when the close pair is exactly these two components (in either order); `*` matches any. */
   pair: [string, string];
+  /**
+   * The test reads only the region's own content, so its answer holds at any gap: the pair is decided
+   * even when the scores are not close. Rules that fall back to a default when a cue is missing
+   * (button/link, menu/select) or that read structure (Card) stay inside the close-call band.
+   */
+  decisive?: boolean;
   rule: string;
   topics: string[];
   test: (c: Cues, pair: [string, string]) => { pick: string; reason: string } | undefined;
@@ -201,7 +210,7 @@ const RULES: Rule[] = [
   { pair: ['card', 'stack'], rule: 'layout §9-10: Card or plain section', topics: ['layout', 'card'], test: cardTest('stack') },
   { pair: ['card', 'grid'], rule: 'layout §9-10: Card or plain section', topics: ['layout', 'card'], test: cardTest('grid') },
   {
-    pair: ['badge', 'tag'], rule: 'badge: count or dot vs a labelled status word', topics: ['badge', 'tag'],
+    pair: ['badge', 'tag'], rule: 'badge: count or dot vs a labelled status word', topics: ['badge', 'tag'], decisive: true,
     test: (c) => { const t = c.region.text.join(' ').trim(); return /^\d+\+?$/.test(t) || t === '' ? { pick: 'badge', reason: t ? `"${t}" is a count; a compact count or presence dot is a Badge` : 'no text: a presence dot is a Badge' } : { pick: 'tag', reason: `"${t.slice(0, 30)}" is a word; a labelled status word is a Tag, not a Badge` }; },
   },
   {
@@ -234,16 +243,19 @@ const RULES: Rule[] = [
   },
 ];
 
-function decide(data: VersionData, layout: Layout, region: Region, top: Candidate, second: Candidate, assigned: Map<string, Assignment>): Verdict {
+/** Settles the top two. With `decisiveOnly` (not a close call) only a decisive rule may, else undefined. */
+function decide(data: VersionData, layout: Layout, region: Region, top: Candidate, second: Candidate, assigned: Map<string, Assignment>, decisiveOnly = false): Verdict | undefined {
   const ancestors: Cues['ancestors'] = [];
   for (let p = region.parent; p; ) { const r = layout.regions.find((x) => x.id === p); if (!r) break; ancestors.push({ region: r, component: assigned.get(r.id)?.component ?? null }); p = r.parent; }
   const cues: Cues = { region, kids: childrenOf(layout, region.id), ancestors, siblings: childrenOf(layout, region.parent ?? null).filter((s) => s.id !== region.id), layout };
   const pair: [string, string] = [top.component, second.component];
   for (const rule of RULES) {
+    if (decisiveOnly && !rule.decisive) continue;
     if (!rule.pair.every((id) => id === '*' || pair.includes(id))) continue;
     const v = rule.test(cues, pair);
     if (v && pair.includes(v.pick)) return { pick: v.pick, basis: 'guideline', rule: rule.rule, reason: v.reason, cites: cites(data, rule.topics) };
   }
+  if (decisiveOnly) return undefined;
   return {
     pick: top.component,
     basis: 'score',

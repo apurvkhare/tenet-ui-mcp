@@ -12,7 +12,7 @@ import { DesignStore } from '../store/design-store.js';
 import type { ToolContext, ToolError } from '../tools/context.js';
 import { ingestDesign, matchComponents, noVisionMessage, planComponent, resolveTokens } from '../tools/design-tools.js';
 import { normalizeLayout } from './layout.js';
-import { assignRegions, type Assignment } from './match.js';
+import { assignRegions, scoreRegion, type Assignment } from './match.js';
 import { resolveLayoutTokens } from './tokens.js';
 import { visionFromEnv } from './vision.js';
 
@@ -168,6 +168,36 @@ test('other close pairs follow their guideline: count vs word, actions vs a valu
     assert.match(a.decision!.reason, reason);
     assert.ok(a.decision!.cites.length > 0);
   }
+});
+
+test('Badge or Tag is decided from the text at any gap: role "badge" on a status word is a Tag, a count is a Badge', () => {
+  // As an agent following ds://{v}/layout-schema describes a pill: role "badge" or "tag", inside a bordered section.
+  const pill = (role: string, text: string): Assignment => decided([
+    { id: 's', role: 'section', parent: null, bounds: box(0, 0, 600, 300), style: { borderColor: val('borderColor-default') } },
+    { id: 'p', role, text: [text], parent: 's', bounds: box(24, 24, 64, 22) },
+  ]).p!;
+  for (const [role, text, component, runnerUp] of [['badge', 'Active', 'tag', 'badge'], ['badge', '3', 'badge', 'tag'], ['tag', 'Active', 'tag', 'badge'], ['tag', '3', 'badge', 'tag']] as const) {
+    const a = pill(role, text);
+    assert.equal(a.component, component, `role "${role}" + "${text}"`);
+    assert.equal(a.source, 'decided');
+    assert.equal(a.decision!.basis, 'guideline');
+    assert.equal(a.decision!.rule, 'badge: count or dot vs a labelled status word');
+    assert.equal(a.decision!.runnerUp.component, runnerUp);
+    assert.match(a.decision!.reason, component === 'tag' ? /"Active" is a word; a labelled status word is a Tag/ : /"3" is a count/);
+    assert.ok(a.decision!.cites.includes('ds://0.4.0/guidelines/badge'));
+    assert.ok(a.confidence >= 0.85);
+  }
+  const lone = normalizeLayout({ viewport: { width: 1280, height: 800 }, theme: 'light', regions: [{ id: 'p', role: 'badge', text: ['Active'], parent: null, bounds: box(0, 0, 64, 22) }] } as never);
+  const gap = scoreRegion(store.load('0.4.0'), lone, lone.regions[0]!);
+  assert.equal(gap[0]!.component, 'badge', 'the role alone ranks Badge first');
+  assert.ok(gap[0]!.confidence - gap[1]!.confidence >= 0.15, 'outside the close-call band, so only the decisive path reaches it');
+});
+
+test('rules that fall back to a default stay inside the close-call band: a clear Button is not re-decided', () => {
+  const a = decided([{ id: 'b', role: 'button', text: ['Save'], parent: null, bounds: box(0, 0, 120, 36) }]).b!;
+  assert.equal(a.component, 'button');
+  assert.equal(a.source, 'auto');
+  assert.equal(a.decision, undefined);
 });
 
 test('resolve_tokens decides every value: exact, snapped with its delta and rule, or a documented exception; never asks', async () => {
