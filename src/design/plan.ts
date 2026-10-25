@@ -1,7 +1,7 @@
 // plan_component (DESIGN.md §4): the implementation plan — component tree with exact imports,
 // prop mapping per node, token references by name, a11y requirements per node, files to create,
 // applicable contract rules, plus the catalog excerpts the plan depends on. A plan, never source.
-import { readFileSync } from 'node:fs';
+import { contentText } from '../catalog/files.js';
 import type { VersionData } from '../catalog/store.js';
 import type { CatalogComponent } from '../ingest/extract/catalog.js';
 import { A11Y_CONTRACT } from '../tools/catalog-tools.js';
@@ -233,7 +233,7 @@ function importLines(data: VersionData, used: Set<string>): string[] {
 
 function contractRules(): string[] {
   try {
-    const md = readFileSync(new URL('../content/contract.md', import.meta.url), 'utf8');
+    const md = contentText('contract.md') ?? '';
     return md.split('\n').filter((l) => l.startsWith('- ')).map((l) => l.slice(2)).slice(0, 12);
   } catch { return []; }
 }

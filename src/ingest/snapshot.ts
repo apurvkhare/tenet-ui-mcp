@@ -12,6 +12,7 @@ import { extractTypes } from './extract/types.js';
 import { checkProvenance, fetchPackument, resolveVersion, type Provenance } from './registry.js';
 import { downloadAndExtract } from './tarball.js';
 import { IngestError, ensureDir, hashJson, listFiles, nowIso, readJson, readJsonIfExists, sha256, writeJson } from './util.js';
+import { compareSemver } from './semver.js';
 
 export interface SourceRecord {
   kind: string;
@@ -277,15 +278,4 @@ function latestGuidelineRevision(): GuidelinesRevision | undefined {
   return last ? readJson<GuidelinesRevision>(join(dir, last, 'revision.json')) : undefined;
 }
 
-export function compareSemver(a: string, b: string): number {
-  const pa = a.split(/[.-]/).map((x) => (Number.isNaN(Number(x)) ? x : Number(x)));
-  const pb = b.split(/[.-]/).map((x) => (Number.isNaN(Number(x)) ? x : Number(x)));
-  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
-    const x = pa[i] ?? 0;
-    const y = pb[i] ?? 0;
-    if (x === y) continue;
-    if (typeof x === 'number' && typeof y === 'number') return x - y;
-    return String(x) < String(y) ? -1 : 1;
-  }
-  return 0;
-}
+export { compareSemver };

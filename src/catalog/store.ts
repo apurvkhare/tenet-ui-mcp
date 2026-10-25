@@ -1,15 +1,13 @@
 // Read side of the snapshots the ingest pipeline writes. One folder per dsVersion, resolved per
 // call (DESIGN.md §10 "Resolution per call"): exact version, else the newest patch of that minor,
 // else the nearest earlier minor of that major, else the latest of that major, else latest.
-import { existsSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { diskFiles, type SnapshotFiles } from './files.js';
 import type { CatalogComponent } from '../ingest/extract/catalog.js';
 import type { GuidelinesRevision, GuidelinePage } from '../ingest/extract/guidelines.js';
 import type { DeprecationsRegistry, IconsManifest, TokenRecord } from '../ingest/extract/package-data.js';
 import type { StoriesIndex } from '../ingest/extract/stories.js';
 import type { GapsReport, SnapshotIndex, SnapshotManifest } from '../ingest/snapshot.js';
-import { compareSemver } from '../ingest/snapshot.js';
-import { readJson, readJsonIfExists } from '../ingest/util.js';
+import { compareSemver } from '../ingest/semver.js';
 
 export interface VersionData {
   version: string;
@@ -23,8 +21,9 @@ export interface VersionData {
   gaps: GapsReport | undefined;
   changelog: { entries: Array<{ version: string; date?: string; body: string }> } | undefined;
   guidelines: GuidelinesRevision | undefined;
+  /** Relative to the snapshots root; read through `store.files`. */
   guidelinesDir: string | undefined;
-  /** Story baseline screenshots from the release (served as ds://{v}/baselines/{file}); absent when the release shipped none. */
+  /** Story baseline screenshots from the release (served as ds://{v}/baselines/{file}); absent when the release shipped none. `dir` is relative to the snapshots root. */
   baselines: { dir: string; viewport?: { width: number; height: number }; entries: BaselineEntry[] } | undefined;
 }
 
@@ -45,15 +44,30 @@ export class CatalogStore {
   private cache = new Map<string, VersionData>();
   private revisions = new Map<string, GuidelinesRevision>();
 
-  constructor(readonly snapshotsDir: string) {}
+  readonly files: SnapshotFiles;
+
+  /** A snapshots folder on disk, or the files themselves (the Worker bundles them). */
+  constructor(source: string | SnapshotFiles) {
+    this.files = typeof source === 'string' ? diskFiles(source) : source;
+  }
+
+  private json<T>(path: string): T | undefined {
+    const text = this.files.text(path);
+    return text === undefined ? undefined : (JSON.parse(text) as T);
+  }
+
+  private requireJson<T>(path: string): T {
+    const v = this.json<T>(path);
+    if (v === undefined) throw new Error(`snapshot file missing: ${path}`);
+    return v;
+  }
 
   /** Re-reads index.json when it changed on disk (the ingest job commits new snapshots). */
   getIndex(): SnapshotIndex {
-    const file = join(this.snapshotsDir, 'index.json');
-    if (!existsSync(file)) throw new Error(`no snapshot index at ${file} — run \`npm run ingest -- latest\` first`);
-    const mtime = statSync(file).mtimeMs;
+    const mtime = this.files.stamp('index.json');
+    if (mtime === undefined) throw new Error('no snapshot index (index.json) — run `npm run ingest -- latest` first');
     if (!this.index || mtime !== this.indexMtime) {
-      this.index = readJson<SnapshotIndex>(file);
+      this.index = this.requireJson<SnapshotIndex>('index.json');
       this.indexMtime = mtime;
       this.cache.clear();
     }
@@ -113,10 +127,10 @@ export class CatalogStore {
     if (cached) return cached;
     const entry = this.getIndex().versions[version];
     if (!entry) throw new Error(`no snapshot for ${version}`);
-    const dir = join(this.snapshotsDir, entry.dir);
-    const manifest = readJson<SnapshotManifest>(join(dir, 'manifest.json'));
-    const catalog = readJson<{ components: CatalogComponent[] }>(join(dir, 'components.json'));
-    const tokens = readJsonIfExists<{ tokens: TokenRecord[] }>(join(dir, 'tokens.json'))?.tokens ?? [];
+    const dir = entry.dir;
+    const manifest = this.requireJson<SnapshotManifest>(`${dir}/manifest.json`);
+    const catalog = this.requireJson<{ components: CatalogComponent[] }>(`${dir}/components.json`);
+    const tokens = this.json<{ tokens: TokenRecord[] }>(`${dir}/tokens.json`)?.tokens ?? [];
     const guidelines = manifest.guidelinesRevision ? this.revision(manifest.guidelinesRevision) : undefined;
     const data: VersionData = {
       version,
@@ -124,14 +138,14 @@ export class CatalogStore {
       components: catalog.components,
       byId: new Map(catalog.components.map((c) => [c.id, c])),
       tokens,
-      icons: readJsonIfExists<IconsManifest>(join(dir, 'icons.json')),
-      deprecations: readJsonIfExists<DeprecationsRegistry>(join(dir, 'deprecations.json')),
-      stories: readJsonIfExists<StoriesIndex>(join(dir, 'stories.json')),
-      gaps: readJsonIfExists<GapsReport>(join(dir, 'gaps.json')),
-      changelog: readJsonIfExists<{ entries: Array<{ version: string; date?: string; body: string }> }>(join(dir, 'changelog.json')),
+      icons: this.json<IconsManifest>(`${dir}/icons.json`),
+      deprecations: this.json<DeprecationsRegistry>(`${dir}/deprecations.json`),
+      stories: this.json<StoriesIndex>(`${dir}/stories.json`),
+      gaps: this.json<GapsReport>(`${dir}/gaps.json`),
+      changelog: this.json<{ entries: Array<{ version: string; date?: string; body: string }> }>(`${dir}/changelog.json`),
       guidelines,
-      guidelinesDir: manifest.guidelinesRevision ? join(this.snapshotsDir, 'guidelines', manifest.guidelinesRevision) : undefined,
-      baselines: baselinesIn(join(dir, 'baselines')),
+      guidelinesDir: manifest.guidelinesRevision ? `guidelines/${manifest.guidelinesRevision}` : undefined,
+      baselines: this.baselinesIn(`${dir}/baselines`),
     };
     this.cache.set(version, data);
     return data;
@@ -140,15 +154,19 @@ export class CatalogStore {
   revision(id: string): GuidelinesRevision | undefined {
     const cached = this.revisions.get(id);
     if (cached) return cached;
-    const rev = readJsonIfExists<GuidelinesRevision>(join(this.snapshotsDir, 'guidelines', id, 'revision.json'));
+    const rev = this.json<GuidelinesRevision>(`guidelines/${id}/revision.json`);
     if (rev) this.revisions.set(id, rev);
     return rev;
   }
 
   /** Every guidelines revision on disk, oldest first. */
   revisionIds(): string[] {
-    const dir = join(this.snapshotsDir, 'guidelines');
-    return existsSync(dir) ? readdirSync(dir).filter((d) => existsSync(join(dir, d, 'revision.json'))).sort() : [];
+    return this.files.list('guidelines').filter((d) => this.files.text(`guidelines/${d}/revision.json`) !== undefined).sort();
+  }
+
+  private baselinesIn(dir: string): VersionData['baselines'] {
+    const m = this.json<{ viewport?: { width: number; height: number }; entries: BaselineEntry[] }>(`${dir}/manifest.json`);
+    return m ? { dir, viewport: m.viewport, entries: m.entries } : undefined;
   }
 
   /** Find a component by id, export name, display name, or a sub-export (case-insensitive). */
@@ -166,11 +184,6 @@ export class CatalogStore {
   guidelinePage(data: VersionData, id: string, scope?: GuidelinePage['scope']): GuidelinePage | undefined {
     return data.guidelines?.pages.find((p) => p.id === id && (!scope || p.scope === scope));
   }
-}
-
-function baselinesIn(dir: string): VersionData['baselines'] {
-  const m = readJsonIfExists<{ viewport?: { width: number; height: number }; entries: BaselineEntry[] }>(join(dir, 'manifest.json'));
-  return m ? { dir, viewport: m.viewport, entries: m.entries } : undefined;
 }
 
 /** URI of a story's baseline screenshot, when the release shipped one. */

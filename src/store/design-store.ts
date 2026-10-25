@@ -1,6 +1,7 @@
 // The design store (DESIGN.md §3): the only mutable state. Rows are keyed by the caller's `sub`
 // and expire after 24 h. Another principal gets not-found, never forbidden. File-backed so one
-// container needs nothing else; the interface is small enough to swap for SQLite or Redis.
+// container needs nothing else; the Worker (src/worker/kv-design-store.ts) implements the same
+// DesignRows interface on Workers KV.
 import { createHash, randomBytes } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -17,7 +18,22 @@ export interface Row<T> {
   data: T;
 }
 
-export class DesignStore {
+/** What the tools and resources use. Async so a remote store (Workers KV) can sit behind it. */
+export interface DesignRows {
+  create<T>(kind: RowKind, sub: string, data: T): Promise<Row<T>>;
+  update<T>(row: Row<T>, data: T): Promise<Row<T>>;
+  /** Not-found for another principal's row, an unknown id, or an expired row. */
+  get<T>(kind: RowKind, sub: string, id: string): Promise<Row<T> | undefined>;
+  putBlob(sub: string, id: string, name: string, bytes: Buffer): Promise<void>;
+  getBlob(sub: string, id: string, name: string): Promise<Buffer | undefined>;
+}
+
+export const ROW_PREFIX = PREFIX;
+/** Row ids are `<prefix>_<24 hex>`; anything else is not-found without touching storage. */
+export const isRowId = (kind: RowKind, id: string): boolean => /^[a-z]{3}_[0-9a-f]{24}$/.test(id) && id.startsWith(PREFIX[kind]);
+export const newRowId = (kind: RowKind): string => `${PREFIX[kind]}_${randomBytes(12).toString('hex')}`;
+
+export class DesignStore implements DesignRows {
   constructor(readonly dir: string, readonly ttlMs = 24 * 60 * 60 * 1000) {
     mkdirSync(dir, { recursive: true });
   }
@@ -26,23 +42,22 @@ export class DesignStore {
     return join(this.dir, createHash('sha256').update(sub).digest('hex').slice(0, 24));
   }
 
-  create<T>(kind: RowKind, sub: string, data: T): Row<T> {
-    const id = `${PREFIX[kind]}_${randomBytes(12).toString('hex')}`;
+  async create<T>(kind: RowKind, sub: string, data: T): Promise<Row<T>> {
+    const id = newRowId(kind);
     const now = Date.now();
     const row: Row<T> = { id, kind, sub, createdAt: new Date(now).toISOString(), expiresAt: new Date(now + this.ttlMs).toISOString(), data };
     this.write(row);
     return row;
   }
 
-  update<T>(row: Row<T>, data: T): Row<T> {
+  async update<T>(row: Row<T>, data: T): Promise<Row<T>> {
     const next = { ...row, data };
     this.write(next);
     return next;
   }
 
-  /** Not-found for another principal's row, an unknown id, or an expired row. */
-  get<T>(kind: RowKind, sub: string, id: string): Row<T> | undefined {
-    if (!/^[a-z]{3}_[0-9a-f]{24}$/.test(id) || !id.startsWith(PREFIX[kind])) return undefined;
+  async get<T>(kind: RowKind, sub: string, id: string): Promise<Row<T> | undefined> {
+    if (!isRowId(kind, id)) return undefined;
     const file = join(this.subDir(sub), `${id}.json`);
     if (!existsSync(file)) return undefined;
     const row = JSON.parse(readFileSync(file, 'utf8')) as Row<T>;
@@ -51,13 +66,13 @@ export class DesignStore {
     return row;
   }
 
-  putBlob(sub: string, id: string, name: string, bytes: Buffer): void {
+  async putBlob(sub: string, id: string, name: string, bytes: Buffer): Promise<void> {
     const d = join(this.subDir(sub), id);
     mkdirSync(d, { recursive: true });
     writeFileSync(join(d, name), bytes);
   }
 
-  getBlob(sub: string, id: string, name: string): Buffer | undefined {
+  async getBlob(sub: string, id: string, name: string): Promise<Buffer | undefined> {
     const file = join(this.subDir(sub), id, name.replace(/[^a-z0-9._-]/gi, '_'));
     return existsSync(file) ? readFileSync(file) : undefined;
   }

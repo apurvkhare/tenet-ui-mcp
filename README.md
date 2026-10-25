@@ -115,11 +115,15 @@ src/metrics.ts         event spool, the §7 summary, the dashboard page
 src/server.ts          McpServer factory: registration order, structured output, cache hints, _meta, telemetry with derived metrics
 src/http.ts            Streamable HTTP via createMcpHandler: Origin, bearer, scopes, PRM, AS metadata, client credentials; /events, /metrics.json, /dashboard
 src/stdio.ts           stdio via serveStdio, same server factory
+src/worker/            Cloudflare Worker entry: workers-oauth-provider login (owner + read-only guest), bundled snapshots, design store on KV
+src/catalog/files.ts   where snapshot files come from: disk on Node, bundle + ASSETS on the Worker
+src/design/png.ts      PNG decoding on zlib.inflateSync (pngjs's sync reader does not run on Workers)
 plugin/                the companion Claude Code plugin: scripts/measure-colors.mjs + the describe-design skill, hooks.json + ds-hook.mjs (layer two)
 src/auth/tokens.ts     HS256 issuer + verifier (jose); src/auth/cli.ts mints tokens
 src/content/           the component contract and audit rule catalog (ds://…/guidelines/contract, audit-rules)
 snapshots/             one folder per ingested version + one per guidelines revision (committed)
-.github/workflows/     ci.yml · ingest.yml
+.github/workflows/     ci.yml (check, then deploy the Worker from main) · ingest.yml
+scripts/               bundle-snapshots.mjs, with-env.mjs (fills wrangler.jsonc from .env), logs.mjs, oauth-smoke.mjs
 Dockerfile             single container, no browser
 ```
 
@@ -142,6 +146,32 @@ npm run ingest -- --list
 | Baselines | `baselines-vX.Y.Z.tgz` on the GitHub release | 1280×800 screenshots per story per theme with a sha256 manifest |
 
 Every snapshot carries a `manifest.json` (each source with `sourceRef`, content hash, `extractedAt`) and a `gaps.json`. The version index is only updated after the whole snapshot validates. `ingest.yml` runs on `repository_dispatch: tenet-ui-released` from tenet-ui's release workflow, on a 6-hourly schedule, and by hand, and commits new snapshots.
+
+## Deploy (Cloudflare Workers)
+
+Live at `https://tenet-ui-mcp.<sub>.workers.dev`, set up the same way as the expensify MCP server: OAuth 2.1 through `@cloudflare/workers-oauth-provider`, a login page with an owner (password, every scope) and a guest (no password, `ds:read` only), so a host connects with
+
+```bash
+claude mcp add --transport http tenet-ui https://tenet-ui-mcp.<sub>.workers.dev/mcp
+```
+
+What differs from the Node server: the snapshot text files are bundled into the Worker and the baseline PNGs are its static assets (`npm run worker:bundle` packs both into `.worker/`), the design store is Workers KV with KV expiry instead of the purge timer, telemetry and hook events go to Workers Logs, and `/dashboard` and `/metrics.json` exist only on the Node server. No Cloudflare id is in git: `wrangler.jsonc` has `${...}` tokens that `scripts/with-env.mjs` fills from `.env`.
+
+```bash
+cp .env.example .env
+npx wrangler kv namespace create tenet-ui-mcp-OAUTH_KV     # id -> OAUTH_KV_ID
+npx wrangler kv namespace create tenet-ui-mcp-DESIGNS      # id -> DESIGNS_KV_ID
+# WORKERS_SUBDOMAIN: the <sub> of your workers.dev URL
+npm run deploy
+npx wrangler secret put OWNER_PASSWORD --config wrangler.generated.jsonc
+npm run logs                                               # readable live tail
+OWNER_PASSWORD=... node scripts/oauth-smoke.mjs https://tenet-ui-mcp.<sub>.workers.dev apurv   # OAuth + every tool, timed
+npm run worker:dev                                         # local, http://localhost:8789 (.dev.vars: OWNER_PASSWORD, PUBLIC_URL)
+```
+
+CI deploys every green `main`, including the snapshot commits of `ingest.yml` (which starts CI itself, since a push made with `GITHUB_TOKEN` triggers no workflows). It needs the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets and the `OAUTH_KV_ID`, `DESIGNS_KV_ID` and `WORKERS_SUBDOMAIN` repository variables; without the token the deploy job does nothing.
+
+**CPU.** The free plan allows 10 ms of CPU per request. Measured on the deployed Worker (2026-10-25): catalog calls 6 to 22 ms, `match_components` 43 ms, `ingest_design` with a 1280×800 screenshot 175 ms, `run_checks` with SSIM against that screenshot 286 ms. All of them completed, but they are over the documented limit, so Cloudflare may reject them under steady use (error 1102). Workers Paid ($5 a month, 30 s of CPU) removes that risk.
 
 ## Next
 

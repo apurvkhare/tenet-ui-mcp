@@ -47,7 +47,7 @@ export const auditCode: ToolDef<{ files: z.ZodArray<z.ZodObject<{ path: z.ZodStr
     next: z.string().optional(),
     ...dsMeta,
   },
-  run(args, ctx) {
+  async run(args, ctx) {
     const v = pickVersion(ctx, args.dsVersion);
     const meta = versionMeta(v);
     const all = [...staticChecks(v.data, args.files, args.theme), ...contractChecks(v.data, args.files)];
@@ -61,8 +61,8 @@ export const auditCode: ToolDef<{ files: z.ZodArray<z.ZodObject<{ path: z.ZodStr
     }
     const status = overallStatus(checks, findings, new Set());
     const summary = summarize(findings);
-    const delta = deltaAgainst(ctx, args.auditId, findings);
-    const { reportId } = saveReport(ctx, { kind: 'code', dsVersion: v.resolved.effective, status, checks, previous: args.auditId, delta, files: args.files.map((f) => f.path) }, findings);
+    const delta = await deltaAgainst(ctx, args.auditId, findings);
+    const { reportId } = await saveReport(ctx, { kind: 'code', dsVersion: v.resolved.effective, status, checks, previous: args.auditId, delta, files: args.files.map((f) => f.path) }, findings);
     const files = args.files.map((f) => {
       const src = /\.(tsx|jsx|ts|js|mjs|mts)$/.test(f.path) ? parseSource(f, v.data.manifest.package) : undefined;
       return { path: f.path, findings: findings.filter((x) => x.file === f.path).length, imports: src?.packageImports ?? [], components: src?.components.filter((c) => c.exported).map((c) => c.name) ?? [] };
@@ -114,7 +114,7 @@ export const auditPage: ToolDef<{ snapshot: z.ZodUnknown; dsVersion: typeof dsVe
     next: z.string().optional(),
     ...dsMeta,
   },
-  run(args, ctx) {
+  async run(args, ctx) {
     const v = pickVersion(ctx, args.dsVersion);
     const meta = versionMeta(v);
     const raw = JSON.stringify(args.snapshot ?? null);
@@ -131,9 +131,9 @@ export const auditPage: ToolDef<{ snapshot: z.ZodUnknown; dsVersion: typeof dsVe
 
     let visual: Record<string, unknown> | undefined;
     if (wanted.has('visual')) {
-      const ref = args.designId && ctx.designs && ctx.principal ? ctx.designs.get<DesignRow>('design', ctx.principal.sub, args.designId) : undefined;
+      const ref = args.designId && ctx.designs && ctx.principal ? await ctx.designs.get<DesignRow>('design', ctx.principal.sub, args.designId) : undefined;
       if (args.designId && !ref) throw new ToolError(`design ${args.designId} not found (unknown, expired, or not yours)`, 'not_found');
-      const refPng = ref && ctx.designs && ctx.principal ? ctx.designs.getBlob(ctx.principal.sub, ref.id, 'screenshot') : undefined;
+      const refPng = ref && ctx.designs && ctx.principal ? await ctx.designs.getBlob(ctx.principal.sub, ref.id, 'screenshot') : undefined;
       if (!args.designId) checks.visual = { status: 'skipped', detail: 'no designId; nothing to measure drift against' };
       else if (!snap.screenshot?.data) checks.visual = { status: 'skipped', detail: 'snapshot has no screenshot.data; capture with --embed-screenshots' };
       else if (!refPng) checks.visual = { status: 'skipped', detail: `design ${ref!.id} was ingested from a layout, not an image` };
@@ -145,8 +145,8 @@ export const auditPage: ToolDef<{ snapshot: z.ZodUnknown; dsVersion: typeof dsVe
     sortFindings(findings);
     const summary = summarize(findings);
     const status = overallStatus(checks, findings, new Set(['visual']));
-    const delta = deltaAgainst(ctx, args.auditId, findings);
-    const { reportId } = saveReport(ctx, { kind: 'page', dsVersion: v.resolved.effective, status, checks, designId: args.designId, previous: args.auditId, delta }, findings);
+    const delta = await deltaAgainst(ctx, args.auditId, findings);
+    const { reportId } = await saveReport(ctx, { kind: 'page', dsVersion: v.resolved.effective, status, checks, designId: args.designId, previous: args.auditId, delta }, findings);
     const paged = paginate(findings, args.page, this.cap, (f) => f.rule);
     const top = topFindings(findings);
     const structured: Record<string, unknown> = {

@@ -82,7 +82,7 @@ test('vision is opt-in: a model key alone does not turn it on', () => {
 });
 
 test('ds://{v}/layout-schema gives the agent the rules, roles, component ids, a JSON Schema and an example that ingests', async () => {
-  const r = JSON.parse(readResource(store, 'ds://0.4.0/layout-schema').text!) as { dsVersion: string; rules: string[]; roles: string[]; components: string[]; schema: { properties: Record<string, unknown> }; example: unknown };
+  const r = JSON.parse((await readResource(store, 'ds://0.4.0/layout-schema')).text!) as { dsVersion: string; rules: string[]; roles: string[]; components: string[]; schema: { properties: Record<string, unknown> }; example: unknown };
   assert.equal(r.dsVersion, '0.4.0');
   assert.ok(r.roles.includes('button') && r.roles.includes('card'));
   assert.ok(r.components.includes('card') && r.components.includes('icon-button'));
@@ -272,15 +272,15 @@ test('plan_component: tree, imports, prop mapping, files, exceptions, catalog ex
   assert.ok(r.links?.some((l) => l.uri === `design://${designId}/plans/${s.planId}.md`));
 });
 
-test('design:// resources are private to the principal', () => {
-  const mine = readResource(store, `design://${designId}/layout.json`, { designs, sub: 'apurv' });
+test('design:// resources are private to the principal', async () => {
+  const mine = await readResource(store, `design://${designId}/layout.json`, { designs, sub: 'apurv' });
   assert.equal(JSON.parse(mine.text!).layout.regions.length, 11);
-  const plan = readResource(store, `design://${designId}/plan.md`, { designs, sub: 'apurv' });
+  const plan = await readResource(store, `design://${designId}/plan.md`, { designs, sub: 'apurv' });
   assert.match(plan.text!, /^# Plan: NotificationSettings/);
   assert.match(plan.text!, /## Decisions \(close matches the server settled\)/);
   assert.match(plan.text!, /## Documented exceptions/);
-  const match = readResource(store, `design://${designId}/match.json`, { designs, sub: 'apurv' });
+  const match = await readResource(store, `design://${designId}/match.json`, { designs, sub: 'apurv' });
   assert.ok(JSON.parse(match.text!).assignments.length === 11);
-  assert.throws(() => readResource(store, `design://${designId}/layout.json`, { designs, sub: 'someone-else' }), /no resource/);
-  assert.throws(() => readResource(store, `design://${designId}/screenshot.png`, { designs, sub: 'apurv' }), /no screenshot/);
+  await assert.rejects(async () => readResource(store, `design://${designId}/layout.json`, { designs, sub: 'someone-else' }), /no resource/);
+  await assert.rejects(async () => readResource(store, `design://${designId}/screenshot.png`, { designs, sub: 'apurv' }), /no screenshot/);
 });

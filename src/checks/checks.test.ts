@@ -130,7 +130,7 @@ test('run_checks visual: compares embedded screenshots against the design image'
   const png = (v: number): Buffer => { const p = new PNG({ width: 32, height: 32 }); p.data.fill(v); for (let i = 3; i < p.data.length; i += 4) p.data[i] = 255; return PNG.sync.write(p); };
   const d = await ingestDesign.run({ source: { type: 'layout', layout: { viewport: { width: 32, height: 32 }, theme: 'light' as const, regions: [{ id: 'r1', role: 'page' }] } }, dsVersion: 'latest' }, ctx);
   const designId = (d.structured as { designId: string }).designId;
-  designs.putBlob('apurv', designId, 'screenshot', png(200));
+  await designs.putBlob('apurv', designId, 'screenshot', png(200));
   const results = { schemaVersion: 1, checks: { visual: { status: 'captured', screenshots: [{ story: 'Default', theme: 'light', status: 'captured', data: png(200).toString('base64') }, { story: 'Dark', theme: 'dark', status: 'captured', data: png(20).toString('base64') }] } } };
   const r = await runChecks.run({ files: [], results, checks: ['visual'], dsVersion: 'latest', theme: 'light', designId, page: 1 }, ctx);
   const s = r.structured as { status: string; visual: { screenshots: Array<{ story: string; ssim: number; verdict: string }> }; findings: Array<{ rule: string; severity: string }> };

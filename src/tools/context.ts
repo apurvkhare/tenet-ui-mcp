@@ -1,7 +1,7 @@
 import type { Principal } from '../auth/tokens.js';
 import type { CatalogStore, ResolvedVersion, VersionData } from '../catalog/store.js';
 import type { VisionFn } from '../design/vision.js';
-import type { DesignStore } from '../store/design-store.js';
+import type { DesignRows } from '../store/design-store.js';
 
 export interface ToolContext {
   store: CatalogStore;
@@ -10,7 +10,7 @@ export interface ToolContext {
   publicUrl: string;
   /** Present on transports that carry a principal (HTTP, stdio); design tools need all three. */
   principal?: Principal;
-  designs?: DesignStore;
+  designs?: DesignRows;
   /** Opt-in perception (VISION=on); undefined by default, when the agent supplies the layout. */
   vision?: VisionFn;
 }

@@ -109,11 +109,11 @@ test('audit_code: findings by rule, per-file summary, rules filter, auditId delt
   assert.equal(t.delta.new, 0);
 
   // audit:// is private and carries every finding.
-  const findings = JSON.parse(readResource(store, `audit://${s.auditId}/findings.json`, { designs, sub: 'apurv' }).text!) as { findings: unknown[] };
+  const findings = JSON.parse((await readResource(store, `audit://${s.auditId}/findings.json`, { designs, sub: 'apurv' })).text!) as { findings: unknown[] };
   assert.equal(findings.findings.length, s.findings.length);
-  const delta = JSON.parse(readResource(store, `audit://${t.auditId}/delta.json`, { designs, sub: 'apurv' }).text!) as { fixed: number };
+  const delta = JSON.parse((await readResource(store, `audit://${t.auditId}/delta.json`, { designs, sub: 'apurv' })).text!) as { fixed: number };
   assert.equal(delta.fixed, t.delta.fixed);
-  assert.throws(() => readResource(store, `audit://${s.auditId}/findings.json`, { designs, sub: 'someone-else' }), /no resource/);
+  await assert.rejects(async () => readResource(store, `audit://${s.auditId}/findings.json`, { designs, sub: 'someone-else' }), /no resource/);
   await assert.rejects(async () => auditCode.run({ files, dsVersion: '0.4.0', theme: 'light', auditId: 'aud_000000000000000000000000', page: 1 }, ctx), /not found/);
 });
 
@@ -216,7 +216,7 @@ test('audit_page: report with auditId, delta, and advisory drift against a desig
   const png = (v: number): Buffer => { const p = new PNG({ width: 32, height: 32 }); p.data.fill(v); for (let i = 3; i < p.data.length; i += 4) p.data[i] = 255; return PNG.sync.write(p); };
   const d = await ingestDesign.run({ source: { type: 'layout', layout: { viewport: { width: 32, height: 32 }, theme: 'light' as const, regions: [{ id: 'r1', role: 'page' }] } }, dsVersion: 'latest' }, ctx);
   const designId = (d.structured as { designId: string }).designId;
-  designs.putBlob('apurv', designId, 'screenshot', png(120));
+  await designs.putBlob('apurv', designId, 'screenshot', png(120));
   const drift = await auditPage.run({ snapshot: { ...clean, screenshot: { ...snapshot.screenshot, data: png(120).toString('base64') } }, dsVersion: '0.4.0', designId, checks: ['visual'], page: 1 }, ctx);
   const v = drift.structured as { status: string; visual: { screenshots: Array<{ ssim: number; verdict: string }> }; checks: Record<string, { status: string }> };
   assert.equal(v.checks.visual!.status, 'pass');

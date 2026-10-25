@@ -1,12 +1,12 @@
 // Visual similarity (DESIGN.md §11 "visual", rev 3): SSIM over grayscale with a per-region map,
 // between the agent's screenshot and a reference (the design's screenshot, or a story baseline).
 // A number the dashboard can track; the judgment of whether a difference matters is the agent's.
-import { PNG } from 'pngjs';
+import { decodePngRgba } from '../design/png.js';
 
 export interface Gray { width: number; height: number; data: Float32Array }
 
 export function decodePng(buf: Buffer): Gray {
-  const png = PNG.sync.read(buf);
+  const png = decodePngRgba(buf);
   const data = new Float32Array(png.width * png.height);
   for (let i = 0, p = 0; i < data.length; i++, p += 4) {
     const a = png.data[p + 3]! / 255;

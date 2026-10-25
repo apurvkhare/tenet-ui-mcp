@@ -8,8 +8,8 @@ import { createServer, type IncomingMessage, type Server, type ServerResponse } 
 import { createMcpHandler, getOAuthProtectedResourceMetadataUrl, TRACEPARENT_META_KEY, type AuthInfo } from '@modelcontextprotocol/server';
 import { AuthError, SCOPES, authConfigFromEnv, mintToken, requireScopes, verifyBearer, type AuthConfig, type Principal } from './auth/tokens.js';
 import type { CatalogStore } from './catalog/store.js';
-import { createMcpServer, SERVER_INFO, TOOL_SCOPES } from './server.js';
-import type { DesignStore } from './store/design-store.js';
+import { createMcpServer, requiredScopes, SERVER_INFO } from './server.js';
+import type { DesignRows } from './store/design-store.js';
 import type { VisionFn } from './design/vision.js';
 import { emit, principalHash, traceFromHeader } from './telemetry.js';
 import { DASHBOARD_HTML, HookEventSchema, type MetricsStore } from './metrics.js';
@@ -22,7 +22,7 @@ export interface HttpOptions {
   /** Optional client-credentials client for CI (DESIGN.md §9 "Machine" row, self-hosted flavour). */
   clientCredentials?: { clientId: string; clientSecret: string; scopes: string[] };
   maxBodyBytes?: number;
-  designs?: DesignStore;
+  designs?: DesignRows;
   vision?: VisionFn;
   /** Event spool behind /events, /metrics.json and /dashboard (DESIGN.md §7). */
   metrics?: MetricsStore;
@@ -91,14 +91,8 @@ export function createHttpServer(opts: HttpOptions): Server {
       if (typeof metaTrace === 'string' && /^00-[0-9a-f]{32}-/i.test(metaTrace)) { trace = traceFromHeader(metaTrace); res.setHeader('traceparent', trace.traceparent); }
 
       // Scope check per tool, before dispatch: one 403 with every missing scope (DESIGN.md §9).
-      const messages = Array.isArray(parsed) ? parsed : [parsed];
-      const required = new Set<string>();
-      for (const m of messages as Array<{ method?: string; params?: { name?: string } }>) {
-        if (m?.method === 'tools/call' && m.params?.name) required.add(TOOL_SCOPES[m.params.name] ?? 'ds:read');
-        else if (m?.method?.startsWith('resources/')) required.add('ds:read');
-      }
       try {
-        requireScopes(principal, [...required]);
+        requireScopes(principal, requiredScopes(parsed));
       } catch (err) {
         if (!(err instanceof AuthError)) throw err;
         status = 403;

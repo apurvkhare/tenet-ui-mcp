@@ -29,6 +29,8 @@ export const planTests: ToolDef<{ files: z.ZodOptional<z.ZodArray<z.ZodObject<{ 
   },
   outputSchema: {
     component: z.string(),
+    propsType: z.string().optional(),
+    source: z.enum(['files', 'plan', 'match']),
     file: z.string(),
     runner: z.string(),
     setup: shape('{imports[], notes[]}'),
@@ -40,17 +42,17 @@ export const planTests: ToolDef<{ files: z.ZodOptional<z.ZodArray<z.ZodObject<{ 
     markdown: z.string().optional(),
     ...dsMeta,
   },
-  run(args, ctx) {
+  async run(args, ctx) {
     if (!args.files?.length && !args.matchId) throw new ToolError('pass files[] (component + stories) or a matchId', 'invalid_arguments');
     let plan: TestPlan;
     let v = pickVersion(ctx, args.dsVersion);
     if (args.matchId) {
       if (!ctx.designs || !ctx.principal) throw new ToolError('design handles are not available on this transport', 'unavailable');
-      const match = ctx.designs.get<MatchRow>('match', ctx.principal.sub, args.matchId);
+      const match = await ctx.designs.get<MatchRow>('match', ctx.principal.sub, args.matchId);
       if (!match) throw new ToolError(`match ${args.matchId} not found (unknown, expired, or not yours)`, 'not_found');
       v = pickVersion(ctx, match.data.dsVersion);
-      const design = ctx.designs.get<DesignRow>('design', ctx.principal.sub, match.data.designId);
-      const planRow = design?.data.plans.map((id) => ctx.designs!.get<PlanRow>('plan', ctx.principal!.sub, id)).filter((p): p is Row<PlanRow> => Boolean(p)).reverse().find((p) => p.data.matchId === match.id);
+      const design = await ctx.designs.get<DesignRow>('design', ctx.principal.sub, match.data.designId);
+      const planRow = (await Promise.all((design?.data.plans ?? []).map((id) => ctx.designs!.get<PlanRow>('plan', ctx.principal!.sub, id)))).filter((p): p is Row<PlanRow> => Boolean(p)).reverse().find((p) => p.data.matchId === match.id);
       plan = buildTestPlan(v.data, planRow ? { plan: planRow.data.plan, name: args.name, runner: args.runner } : { matchComponents: match.data.assignments.map((a) => a.component).filter((c): c is string => Boolean(c)), name: args.name ?? design?.data.name, runner: args.runner });
     } else {
       plan = buildTestPlan(v.data, { files: args.files, name: args.name, runner: args.runner });

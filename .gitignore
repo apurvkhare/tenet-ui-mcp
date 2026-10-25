@@ -4,3 +4,10 @@ node_modules/
 .DS_Store
 .data/
 sessions/
+
+# Cloudflare Worker: real ids live in .env; scripts/with-env.mjs renders them into wrangler.generated.jsonc.
+.env
+.dev.vars
+.wrangler/
+.worker/
+wrangler.generated.jsonc

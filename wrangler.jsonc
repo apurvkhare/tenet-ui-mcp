@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tenet-ui-mcp",
+  "main": "src/worker/worker.ts",
+  "compatibility_date": "2026-09-01",
+  // nodejs_compat: Buffer, node:crypto and node:zlib (pngjs) for the shared server code.
+  // global_fetch_strictly_public: required by workers-oauth-provider for Client ID Metadata Documents.
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // ${...} values come from .env, filled in by scripts/with-env.mjs. See .env.example.
+  "kv_namespaces": [
+    { "binding": "OAUTH_KV", "id": "${OAUTH_KV_ID}" },
+    { "binding": "DESIGNS", "id": "${DESIGNS_KV_ID}" }
+  ],
+  // Story baseline PNGs, packed by scripts/bundle-snapshots.mjs. The Worker runs first on every
+  // route, so the files are reachable only through the ASSETS binding (ds://{v}/baselines/{file}).
+  "assets": { "directory": ".worker/assets", "binding": "ASSETS", "run_worker_first": true },
+  "vars": {
+    // This Worker's own public origin. The OAuth resource identifier is PUBLIC_URL + /mcp
+    "PUBLIC_URL": "https://tenet-ui-mcp.${WORKERS_SUBDOMAIN}.workers.dev"
+  },
+  "observability": {
+    "enabled": true,
+    "traces": { "enabled": true }
+  }
+}

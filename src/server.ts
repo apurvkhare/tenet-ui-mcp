@@ -14,7 +14,7 @@ import { CHECK_TOOLS } from './tools/checks-tools.js';
 import { AUDIT_TOOLS } from './tools/audit-tools.js';
 import { TEST_TOOLS } from './tools/test-tools.js';
 import { PROMPTS } from './prompts.js';
-import type { DesignStore } from './store/design-store.js';
+import type { DesignRows } from './store/design-store.js';
 import type { VisionFn } from './design/vision.js';
 import { bytes } from './tools/caps.js';
 import { ToolError, type ToolContext } from './tools/context.js';
@@ -24,6 +24,16 @@ export const SERVER_INFO = { name: 'tenet-ui-mcp', version: '0.2.0', title: 'ten
 
 export const ALL_TOOLS = [...CATALOG_TOOLS, ...DESIGN_TOOLS, ...AUDIT_TOOLS, ...TEST_TOOLS, ...CHECK_TOOLS];
 export const TOOL_SCOPES: Record<string, string> = Object.fromEntries(ALL_TOOLS.map((t) => [t.name, t.scope]));
+
+/** Scopes a JSON-RPC body (one message or a batch) needs: each tool's own scope, ds:read for resources. */
+export function requiredScopes(body: unknown): string[] {
+  const required = new Set<string>();
+  for (const m of (Array.isArray(body) ? body : [body]) as Array<{ method?: string; params?: { name?: string } } | null>) {
+    if (m?.method === 'tools/call' && m.params?.name) required.add(TOOL_SCOPES[m.params.name] ?? 'ds:read');
+    else if (m?.method?.startsWith('resources/')) required.add('ds:read');
+  }
+  return [...required];
+}
 
 /**
  * Tools that write rows to the design store. Every write adds a handle or fills the match's token
@@ -49,7 +59,7 @@ export interface RequestScope {
   /** The trace of the HTTP request (or of the stdio connection); a call's own `_meta.traceparent` wins. */
   traceId: string;
   publicUrl: string;
-  designs?: DesignStore;
+  designs?: DesignRows;
   vision?: VisionFn;
 }
 
@@ -127,8 +137,8 @@ export function createMcpServer(store: CatalogStore, scope: RequestScope): McpSe
     );
   }
 
-  const read = (uri: URL, mcpCtx: ServerContext) => {
-    const c = readResource(store, uri.href, readCtx);
+  const read = async (uri: URL, mcpCtx: ServerContext) => {
+    const c = await readResource(store, uri.href, readCtx);
     emit({ event: 'resource', traceId: traceOf(mcpCtx, scope.traceId), uri: uri.href, bytes: c.blob ? c.blob.length : Buffer.byteLength(c.text ?? ''), principal: principalHash(scope.principal.sub) });
     return {
       contents: [c.blob ? { uri: c.uri, mimeType: c.mimeType, blob: c.blob.toString('base64') } : { uri: c.uri, mimeType: c.mimeType, text: c.text ?? '' }],

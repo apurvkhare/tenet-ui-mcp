@@ -97,11 +97,11 @@ test('the agent\'s layout with a PNG: no model call, the same pixel correction, 
   assert.ok(s.colorCorrections.count >= 5 && s.colorCorrections.maxDeltaE > 9);
   assert.match(ing.text, /colour\(s\) in the layout were re-measured from the pixels/);
   assert.deepEqual(s.resources, [`design://${s.designId}/layout.json`, `design://${s.designId}/screenshot.png`]);
-  const stored = readResource(ctx.store, `design://${s.designId}/layout.json`, { designs, sub: 'apurv' });
+  const stored = await readResource(ctx.store, `design://${s.designId}/layout.json`, { designs, sub: 'apurv' });
   const body = JSON.parse(stored.text!) as { source: string; colorCorrections: unknown[]; layout: Layout };
   assert.equal(body.colorCorrections.length, s.colorCorrections.count, 'colorCorrections recorded as on the vision path');
   assert.equal(body.layout.regions.find((r) => r.id === 'r3')!.style.borderColor, '#ddd2bf');
-  assert.deepEqual(readResource(ctx.store, `design://${s.designId}/screenshot.png`, { designs, sub: 'apurv' }).blob, image, 'the screenshot is stored');
+  assert.deepEqual((await readResource(ctx.store, `design://${s.designId}/screenshot.png`, { designs, sub: 'apurv' })).blob, image, 'the screenshot is stored');
   const m = await matchComponents.run({ designId: s.designId }, ctx);
   const t = await resolveTokens.run({ matchId: m.structured.matchId as string, theme: 'light', tolerance: 'normal' } as never, ctx);
   assert.equal(t.structured.exceptions, 0, 'no false exceptions');

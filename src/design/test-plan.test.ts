@@ -75,8 +75,8 @@ test('plan_tests tool: files path, matchId path (from a match without a plan), a
   assert.ok(Buffer.byteLength(JSON.stringify(r.structured)) <= planTests.cap);
   assert.ok(r.links!.some((l) => l.name === 'IconButton'));
 
-  const design = designs.create<DesignRow>('design', 'apurv', { dsVersion: '0.4.0', name: 'Settings', source: 'layout', layout: { viewport: { width: 10, height: 10 }, theme: 'light', regions: [], texts: [] } as never, matches: [], plans: [] });
-  const match = designs.create<MatchRow>('match', 'apurv', { designId: design.id, dsVersion: '0.4.0', assignments: [{ regionId: 'r1', role: 'card', label: '', component: 'card', confidence: 0.9, candidates: [], source: 'auto' }, { regionId: 'r2', role: 'button', label: '', component: 'icon-button', confidence: 0.8, candidates: [], source: 'auto' }] });
+  const design = await designs.create<DesignRow>('design', 'apurv', { dsVersion: '0.4.0', name: 'Settings', source: 'layout', layout: { viewport: { width: 10, height: 10 }, theme: 'light', regions: [], texts: [] } as never, matches: [], plans: [] });
+  const match = await designs.create<MatchRow>('match', 'apurv', { designId: design.id, dsVersion: '0.4.0', assignments: [{ regionId: 'r1', role: 'card', label: '', component: 'card', confidence: 0.9, candidates: [], source: 'auto' }, { regionId: 'r2', role: 'button', label: '', component: 'icon-button', confidence: 0.8, candidates: [], source: 'auto' }] });
   const m = await planTests.run({ matchId: match.id, runner: 'vitest', dsVersion: 'latest', skeleton: false, markdown: false }, ctx);
   const ms = m.structured as { component: string; source: string; primitives: string[]; gaps: string[]; cases: Array<{ primitive?: string }> };
   assert.equal(ms.source, 'match');
@@ -84,6 +84,9 @@ test('plan_tests tool: files path, matchId path (from a match without a plan), a
   assert.deepEqual(ms.primitives, ['Card', 'IconButton']);
   assert.ok(ms.cases.some((c) => c.primitive === 'IconButton'));
   assert.ok(ms.gaps.some((g) => /plan_component/.test(g)));
+  // Workers validate structuredContent against the JSON Schema strictly: every key must be declared.
+  const declared = new Set([...Object.keys(planTests.outputSchema), 'truncated', 'truncatedNote']);
+  assert.deepEqual(Object.keys(m.structured).filter((k) => !declared.has(k)), []);
   await assert.rejects(async () => planTests.run({ runner: 'vitest', dsVersion: 'latest', skeleton: true, markdown: false }, ctx), /files\[\]/);
   await assert.rejects(async () => planTests.run({ matchId: 'mtc_000000000000000000000000', runner: 'vitest', dsVersion: 'latest', skeleton: true, markdown: false }, ctx), /not found/);
   await assert.rejects(async () => planTests.run({ matchId: match.id, runner: 'vitest', dsVersion: 'latest', skeleton: true, markdown: false }, { ...ctx, principal: { sub: 'other', scopes: [], clientId: 'o' } }), /not found/);

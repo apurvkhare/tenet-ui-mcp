@@ -1,7 +1,7 @@
 // Shared report plumbing for run_checks, audit_code and audit_page (DESIGN.md §5, §6): the
 // stored report row, the findings blob behind audit://{auditId}/findings.json, the delta against
 // a previous report, sorting, summary and pagination. One shape for every report.
-import type { DesignStore, Row } from '../store/design-store.js';
+import type { DesignRows, Row } from '../store/design-store.js';
 import { ToolError, type ToolContext } from '../tools/context.js';
 import type { Finding, Severity } from './static.js';
 
@@ -45,10 +45,10 @@ export function byRule(findings: Finding[]): Record<string, number> {
 export const publicFinding = (f: Finding): Record<string, unknown> => ({ id: f.id, check: f.check, rule: f.rule, severity: f.severity, file: f.file, line: f.line, column: f.column, message: f.message, fix: f.fix });
 
 /** Delta against a previous report of the caller's; not-found for another principal's id. */
-export function deltaAgainst(ctx: ToolContext, auditId: string | undefined, findings: Finding[]): Delta | undefined {
+export async function deltaAgainst(ctx: ToolContext, auditId: string | undefined, findings: Finding[]): Promise<Delta | undefined> {
   if (!auditId) return undefined;
   if (!ctx.designs || !ctx.principal) throw new ToolError('reports are not stored on this transport; auditId cannot be resolved', 'unavailable');
-  const prev = ctx.designs.get<ReportRow>('audit', ctx.principal.sub, auditId);
+  const prev = await ctx.designs.get<ReportRow>('audit', ctx.principal.sub, auditId);
   if (!prev) throw new ToolError(`report ${auditId} not found (unknown, expired, or not yours)`, 'not_found');
   const before = new Set(prev.data.findingIds);
   const now = new Set(findings.map((f) => f.id));
@@ -58,16 +58,16 @@ export function deltaAgainst(ctx: ToolContext, auditId: string | undefined, find
 }
 
 /** Store the report row and its findings blob; returns the id (a local one when nothing is stored). */
-export function saveReport(ctx: ToolContext, row: Omit<ReportRow, 'findingIds' | 'summary'>, findings: Finding[]): { reportId: string; stored: boolean } {
+export async function saveReport(ctx: ToolContext, row: Omit<ReportRow, 'findingIds' | 'summary'>, findings: Finding[]): Promise<{ reportId: string; stored: boolean }> {
   const summary = summarize(findings);
   if (!ctx.designs || !ctx.principal) return { reportId: `${row.kind === 'checks' ? 'chk' : 'aud'}_${Date.now().toString(16)}`, stored: false };
-  const stored: Row<ReportRow> = ctx.designs.create<ReportRow>('audit', ctx.principal.sub, { ...row, findingIds: findings.map((f) => f.id), summary });
-  ctx.designs.putBlob(ctx.principal.sub, stored.id, 'findings.json', Buffer.from(JSON.stringify({ reportId: stored.id, kind: row.kind, dsVersion: row.dsVersion, status: row.status, summary, checks: row.checks, findings: findings.map(publicFinding) }, null, 2)));
+  const stored: Row<ReportRow> = await ctx.designs.create<ReportRow>('audit', ctx.principal.sub, { ...row, findingIds: findings.map((f) => f.id), summary });
+  await ctx.designs.putBlob(ctx.principal.sub, stored.id, 'findings.json', Buffer.from(JSON.stringify({ reportId: stored.id, kind: row.kind, dsVersion: row.dsVersion, status: row.status, summary, checks: row.checks, findings: findings.map(publicFinding) }, null, 2)));
   return { reportId: stored.id, stored: true };
 }
 
-export function readReportFindings(designs: DesignStore, sub: string, auditId: string): Record<string, unknown> | undefined {
-  const blob = designs.getBlob(sub, auditId, 'findings.json');
+export async function readReportFindings(designs: DesignRows, sub: string, auditId: string): Promise<Record<string, unknown> | undefined> {
+  const blob = await designs.getBlob(sub, auditId, 'findings.json');
   return blob ? (JSON.parse(blob.toString('utf8')) as Record<string, unknown>) : undefined;
 }
 

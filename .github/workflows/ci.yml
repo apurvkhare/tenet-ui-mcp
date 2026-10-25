@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # The ingest workflow starts this after committing a snapshot: its own pushes do not trigger `push`.
+  workflow_dispatch:
 
 jobs:
   check:
@@ -30,3 +32,38 @@ jobs:
             }
             console.log(`ok: ${Object.keys(idx.versions).length} snapshot(s), latest ${idx.latest}`);
           '
+
+  # The Worker (src/worker/). Every green main deploys, so a new snapshot
+  # goes live minutes after its ingest. Skipped until the CLOUDFLARE_API_TOKEN secret exists.
+  deploy:
+    needs: check
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      OAUTH_KV_ID: ${{ vars.OAUTH_KV_ID }}
+      DESIGNS_KV_ID: ${{ vars.DESIGNS_KV_ID }}
+      WORKERS_SUBDOMAIN: ${{ vars.WORKERS_SUBDOMAIN }}
+    steps:
+      - name: Skip without Cloudflare credentials
+        id: creds
+        run: echo "ok=${{ env.CLOUDFLARE_API_TOKEN != '' }}" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        if: steps.creds.outputs.ok == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.creds.outputs.ok == 'true'
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        if: steps.creds.outputs.ok == 'true'
+      - run: npm run deploy
+        if: steps.creds.outputs.ok == 'true'
+      - name: Health check
+        if: steps.creds.outputs.ok == 'true'
+        run: curl -fsS "https://tenet-ui-mcp.${WORKERS_SUBDOMAIN}.workers.dev/healthz"

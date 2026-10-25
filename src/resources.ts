@@ -1,19 +1,18 @@
 // ds:// resources (DESIGN.md §6): public, cacheable reads over the snapshots.
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { contentText } from './catalog/files.js';
 import type { CatalogStore, VersionData } from './catalog/store.js';
 import { A11Y_CONTRACT } from './tools/catalog-tools.js';
 import { ToolError } from './tools/context.js';
-import type { DesignStore } from './store/design-store.js';
+import type { DesignRows } from './store/design-store.js';
 import type { DesignRow, MatchRow, PlanRow } from './tools/design-tools.js';
 import { z } from 'zod';
 import { LAYOUT_RULES, LayoutInputSchema, ROLE_HINTS } from './design/layout.js';
 import type { ReportRow } from './checks/report.js';
 
 export interface ResourceContent { uri: string; mimeType: string; text?: string; blob?: Buffer }
-export interface ReadContext { designs?: DesignStore; sub?: string }
+export interface ReadContext { designs?: DesignRows; sub?: string }
 
-export function readResource(store: CatalogStore, uri: string, rc: ReadContext = {}): ResourceContent {
+export async function readResource(store: CatalogStore, uri: string, rc: ReadContext = {}): Promise<ResourceContent> {
   const u = new URL(uri);
   if (u.protocol === 'design:') return readDesignResource(u, uri, rc);
   if (u.protocol === 'audit:') return readAuditResource(u, uri, rc);
@@ -31,7 +30,7 @@ export function readResource(store: CatalogStore, uri: string, rc: ReadContext =
   if (kind === 'gaps' && !rest) return { uri, mimeType: 'application/json', text: json(data.gaps ?? { version: data.version, summary: {}, components: [] }) };
   if (kind === 'changelog' && !rest) return { uri, mimeType: 'text/markdown', text: changelogMarkdown(data) };
   if (kind === 'deprecations' && !rest) return { uri, mimeType: 'application/json', text: json(data.deprecations ?? { deprecations: [] }) };
-  if (kind === 'baselines') return baselineResource(data, uri, rest);
+  if (kind === 'baselines') return baselineResource(store, data, uri, rest);
   if (kind === 'layout-schema' && !rest) return { uri, mimeType: 'application/json', text: json(layoutSchemaResource(data)) };
   throw new ToolError(`no resource at ${uri}`, 'not_found');
 }
@@ -41,15 +40,15 @@ const json = (v: unknown): string => JSON.stringify(v, null, 2);
 
 // The release's story screenshots (DESIGN.md §10): the manifest at ds://{v}/baselines, one PNG per
 // story per theme at ds://{v}/baselines/{storyId}.{theme}.png. Only files named in the manifest are served.
-function baselineResource(data: VersionData, uri: string, file: string | undefined): ResourceContent {
+async function baselineResource(store: CatalogStore, data: VersionData, uri: string, file: string | undefined): Promise<ResourceContent> {
   const b = data.baselines;
   if (!b) throw new ToolError(`no baselines shipped with ${data.version}`, 'not_found');
   if (!file) return { uri, mimeType: 'application/json', text: json({ dsVersion: data.version, viewport: b.viewport, count: b.entries.length, entries: b.entries.map((e) => ({ storyId: e.storyId, theme: e.theme, uri: `ds://${data.version}/baselines/${e.file}` })) }) };
   const e = b.entries.find((x) => x.file === file);
   if (!e) throw new ToolError(`no baseline ${file} in ${data.version}; read ds://${data.version}/baselines for the list`, 'not_found');
-  const path = join(b.dir, e.file);
-  if (!existsSync(path)) throw new ToolError(`baseline file missing: ${e.file}`, 'not_found');
-  return { uri, mimeType: 'image/png', blob: readFileSync(path) };
+  const bytes = await store.files.bytes(`${b.dir}/${e.file}`);
+  if (!bytes) throw new ToolError(`baseline file missing: ${e.file}`, 'not_found');
+  return { uri, mimeType: 'image/png', blob: Buffer.from(bytes) };
 }
 
 // What the agent needs to describe a screenshot for ingest_design: the rules the vision call
@@ -131,8 +130,9 @@ const STATIC_TOPICS: Record<string, () => string> = {
   'audit-rules': () => readStatic('audit-rules.md'),
 };
 function readStatic(name: string): string {
-  const p = new URL(`./content/${name}`, import.meta.url);
-  return readFileSync(p, 'utf8');
+  const text = contentText(name);
+  if (text === undefined) throw new ToolError(`content page missing: ${name}`, 'not_found');
+  return text;
 }
 
 export function guidelineMarkdown(store: CatalogStore, data: VersionData, topic: string): string {
@@ -145,9 +145,9 @@ export function guidelineMarkdown(store: CatalogStore, data: VersionData, topic:
     const topics = [...Object.keys(STATIC_TOPICS), ...(data.guidelines?.pages.filter((p) => p.scope === 'system').map((p) => p.id) ?? [])];
     throw new ToolError(`no guideline "${topic}" in ${data.version}; topics: ${topics.join(', ')}${data.guidelines ? ' plus every component id' : ' (this version ships no guidelines)'}`, 'not_found');
   }
-  const file = join(data.guidelinesDir, page.file);
-  if (!existsSync(file)) throw new ToolError(`guideline file missing: ${page.file}`, 'not_found');
-  return readFileSync(file, 'utf8');
+  const text = store.files.text(`${data.guidelinesDir}/${page.file}`);
+  if (text === undefined) throw new ToolError(`guideline file missing: ${page.file}`, 'not_found');
+  return text;
 }
 
 function changelogMarkdown(data: VersionData): string {
@@ -172,28 +172,28 @@ export function listResources(store: CatalogStore): Array<{ uri: string; name: s
 }
 
 // ---- design:// (private, principal-bound; DESIGN.md §6) -----------------------------------------
-function readDesignResource(u: URL, uri: string, rc: ReadContext): ResourceContent {
+async function readDesignResource(u: URL, uri: string, rc: ReadContext): Promise<ResourceContent> {
   if (!rc.designs || !rc.sub) throw new ToolError('design resources are not available on this transport', 'not_found');
   const designId = u.host;
   const parts = u.pathname.replace(/^\/+/, '').split('/');
-  const design = rc.designs.get<DesignRow>('design', rc.sub, designId);
+  const design = await rc.designs.get<DesignRow>('design', rc.sub, designId);
   if (!design) throw new ToolError(`no resource at ${uri}`, 'not_found'); // another principal's design: not-found, never forbidden
   const [artifact, id] = parts;
   if (artifact === 'layout.json') return { uri, mimeType: 'application/json', text: json({ designId, dsVersion: design.data.dsVersion, source: design.data.source, vision: design.data.vision, colorCorrections: design.data.colorCorrections, layout: design.data.layout }) };
   if (artifact === 'screenshot.png') {
-    const blob = rc.designs.getBlob(rc.sub, designId, 'screenshot');
+    const blob = await rc.designs.getBlob(rc.sub, designId, 'screenshot');
     if (!blob) throw new ToolError(`no screenshot for ${designId} (ingested from a layout without an image)`, 'not_found');
     return { uri, mimeType: design.data.mediaType ?? 'image/png', blob };
   }
   const matchId = artifact === 'matches' ? id?.replace(/\.json$/, '') : artifact === 'match.json' ? design.data.matches.at(-1) : undefined;
   if (matchId) {
-    const m = rc.designs.get<MatchRow>('match', rc.sub, matchId);
+    const m = await rc.designs.get<MatchRow>('match', rc.sub, matchId);
     if (!m || m.data.designId !== designId) throw new ToolError(`no resource at ${uri}`, 'not_found');
     return { uri, mimeType: 'application/json', text: json({ matchId, ...m.data }) };
   }
   const planId = artifact === 'plans' ? id?.replace(/\.(md|json)$/, '') : artifact === 'plan.md' || artifact === 'plan.json' ? design.data.plans.at(-1) : undefined;
   if (planId) {
-    const p = rc.designs.get<PlanRow>('plan', rc.sub, planId);
+    const p = await rc.designs.get<PlanRow>('plan', rc.sub, planId);
     if (!p || p.data.designId !== designId) throw new ToolError(`no resource at ${uri}`, 'not_found');
     const wantJson = (id ?? artifact ?? '').endsWith('.json');
     return wantJson ? { uri, mimeType: 'application/json', text: json({ planId, ...p.data.plan }) } : { uri, mimeType: 'text/markdown', text: p.data.markdown };
@@ -202,14 +202,14 @@ function readDesignResource(u: URL, uri: string, rc: ReadContext): ResourceConte
 }
 
 // ---- audit:// (private, principal-bound; DESIGN.md §6) ------------------------------------------
-function readAuditResource(u: URL, uri: string, rc: ReadContext): ResourceContent {
+async function readAuditResource(u: URL, uri: string, rc: ReadContext): Promise<ResourceContent> {
   if (!rc.designs || !rc.sub) throw new ToolError('audit resources are not available on this transport', 'not_found');
   const auditId = u.host;
   const artifact = u.pathname.replace(/^\/+/, '');
-  const row = rc.designs.get<ReportRow>('audit', rc.sub, auditId);
+  const row = await rc.designs.get<ReportRow>('audit', rc.sub, auditId);
   if (!row) throw new ToolError(`no resource at ${uri}`, 'not_found');
   if (artifact === 'findings.json') {
-    const blob = rc.designs.getBlob(rc.sub, auditId, 'findings.json');
+    const blob = await rc.designs.getBlob(rc.sub, auditId, 'findings.json');
     return { uri, mimeType: 'application/json', text: blob ? blob.toString('utf8') : json({ reportId: auditId, findings: [], note: 'findings were not stored for this report' }) };
   }
   if (artifact === 'delta.json') return { uri, mimeType: 'application/json', text: json(row.data.delta ?? { reportId: auditId, note: 'no previous report was given; pass auditId on the next run to get a delta' }) };

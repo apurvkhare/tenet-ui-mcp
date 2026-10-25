@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  actions: write # start CI (and with it the Worker deploy) on the snapshot commit
 
 concurrency:
   group: ingest
@@ -33,6 +34,7 @@ jobs:
     timeout-minutes: 25 # up to 10 of them waiting for npm to serve a just-published version
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # release-asset download, higher API rate limit
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # gh workflow run
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -73,3 +75,5 @@ jobs:
           if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
           git commit -m "snapshots: ingest $(node -p "require('./snapshots/index.json').latest") ($(date -u +%Y-%m-%dT%H:%MZ))"
           git push
+          # A push made with GITHUB_TOKEN starts no `push` workflows; workflow_dispatch is allowed.
+          gh workflow run ci.yml --ref main

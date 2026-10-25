@@ -13,11 +13,16 @@
     "dev": "tsx watch src/main.ts",
     "stdio": "tsx src/stdio.ts",
     "token": "tsx src/auth/cli.ts",
-    "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test \"src/**/*.test.ts\""
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.worker.json",
+    "test": "node --import tsx --test \"src/**/*.test.ts\"",
+    "worker:bundle": "node scripts/bundle-snapshots.mjs",
+    "worker:dev": "npm run worker:bundle && node scripts/with-env.mjs wrangler dev --port 8789",
+    "deploy": "npm run worker:bundle && node scripts/with-env.mjs wrangler deploy",
+    "logs": "node scripts/logs.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",
+    "@cloudflare/workers-oauth-provider": "^0.10.4",
     "@modelcontextprotocol/server": "^2.3.1",
     "@types/pngjs": "^6.0.5",
     "jose": "^6.2.12",
@@ -27,8 +32,10 @@
     "zod": "^4.6.4"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261025.1",
     "@modelcontextprotocol/client": "^2.3.1",
     "@types/node": "^22.15.0",
-    "tsx": "^4.20.0"
+    "tsx": "^4.20.0",
+    "wrangler": "^4.152.0"
   }
 }

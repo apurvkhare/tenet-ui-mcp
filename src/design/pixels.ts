@@ -3,7 +3,7 @@
 // neighbouring token or turn an exact token into a false exception. The server has the image and
 // the region bounds, so it measures the colours the model reported instead of trusting the guess.
 // Only properties the model reported are corrected; nothing is added. PNG only.
-import { PNG } from 'pngjs';
+import { decodePngRgba } from './png.js';
 import { deltaE } from '../catalog/resolve.js';
 import type { Layout, Region } from './layout.js';
 
@@ -23,11 +23,11 @@ export interface ColorCorrection {
 /** A sampled colour further than this from the model's estimate is probably a different element; keep the estimate. */
 const MAX_CORRECTION = 30;
 
-interface Img { width: number; height: number; data: Buffer }
+interface Img { width: number; height: number; data: Uint8Array }
 
 export function correctColorsFromPixels(layout: Layout, png: Buffer): { layout: Layout; corrections: ColorCorrection[] } {
   let img: Img;
-  try { img = PNG.sync.read(png); } catch { return { layout, corrections: [] }; }
+  try { img = decodePngRgba(png); } catch { return { layout, corrections: [] }; }
   // Bounds are relative to the image; scale when the model's viewport differs from the pixel size.
   const sx = layout.viewport.width > 0 ? img.width / layout.viewport.width : 1;
   const sy = layout.viewport.height > 0 ? img.height / layout.viewport.height : 1;

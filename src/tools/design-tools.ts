@@ -50,13 +50,13 @@ function needStore(ctx: ToolContext): NonNullable<ToolContext['designs']> {
 }
 const sub = (ctx: ToolContext): string => ctx.principal!.sub;
 
-function loadDesign(ctx: ToolContext, designId: string): Row<DesignRow> {
-  const row = needStore(ctx).get<DesignRow>('design', sub(ctx), designId);
+async function loadDesign(ctx: ToolContext, designId: string): Promise<Row<DesignRow>> {
+  const row = await needStore(ctx).get<DesignRow>('design', sub(ctx), designId);
   if (!row) throw new ToolError(`design ${designId} not found (unknown, expired, or not yours)`, 'not_found');
   return row;
 }
-function loadMatch(ctx: ToolContext, matchId: string): Row<MatchRow> {
-  const row = needStore(ctx).get<MatchRow>('match', sub(ctx), matchId);
+async function loadMatch(ctx: ToolContext, matchId: string): Promise<Row<MatchRow>> {
+  const row = await needStore(ctx).get<MatchRow>('match', sub(ctx), matchId);
   if (!row) throw new ToolError(`match ${matchId} not found (unknown, expired, or not yours)`, 'not_found');
   return row;
 }
@@ -110,9 +110,10 @@ export const ingestDesign: ToolDef<{ source: IngestSource; dsVersion: typeof dsV
     let imageBytes: Buffer | undefined;
     let mediaType: ReturnType<typeof sniffImage>;
     if (image) {
-      imageBytes = Buffer.from(image.data, 'base64');
-      if (imageBytes.length > MAX_IMAGE) throw new ToolError(`image is ${(imageBytes.length / 1024 / 1024).toFixed(1)} MB; the limit is 5 MB`, 'image_too_large');
-      mediaType = sniffImage(imageBytes);
+      const bytes = Buffer.from(image.data, 'base64');
+      if (bytes.length > MAX_IMAGE) throw new ToolError(`image is ${(bytes.length / 1024 / 1024).toFixed(1)} MB; the limit is 5 MB`, 'image_too_large');
+      imageBytes = bytes;
+      mediaType = sniffImage(bytes);
       if (!mediaType) throw new ToolError('image bytes are not PNG, JPEG, WebP or GIF', 'image_unsupported');
     }
     let layout: Layout;
@@ -131,8 +132,8 @@ export const ingestDesign: ToolDef<{ source: IngestSource; dsVersion: typeof dsV
     let corrections: ColorCorrection[] = [];
     if (imageBytes && mediaType === 'image/png') ({ layout, corrections } = correctColorsFromPixels(layout, imageBytes));
     const row: DesignRow = { dsVersion: v.resolved.effective, name: args.hints?.name, source: src.type, mediaType, imageBytes: imageBytes?.length, layout, vision, colorCorrections: imageBytes ? corrections : undefined, matches: [], plans: [] };
-    const created = store.create<DesignRow>('design', sub(ctx), row);
-    if (imageBytes) store.putBlob(sub(ctx), created.id, 'screenshot', imageBytes);
+    const created = await store.create<DesignRow>('design', sub(ctx), row);
+    if (imageBytes) await store.putBlob(sub(ctx), created.id, 'screenshot', imageBytes);
     const summary = summarizeLayout(layout);
     const resources = [`design://${created.id}/layout.json`, ...(imageBytes ? [`design://${created.id}/screenshot.png`] : [])];
     const maxDelta = Math.max(0, ...corrections.map((c) => c.deltaE));
@@ -156,14 +157,14 @@ export const matchComponents: ToolDef<{ designId: z.ZodString }> = {
   cap: 8192,
   inputSchema: { designId: z.string().min(1) },
   outputSchema: { matchId: z.string(), designId: z.string(), assignments: z.array(shape('{regionId, role, label, component, confidence, candidates[{component, confidence, reasons[]}], source: auto|decided|none, decision?{basis, rule, reason, cites[], runnerUp{component, confidence}}}')), decisions: z.number(), ...dsMeta },
-  run(args, ctx) {
+  async run(args, ctx) {
     const store = needStore(ctx);
-    const design = loadDesign(ctx, args.designId);
+    const design = await loadDesign(ctx, args.designId);
     const v = pickVersion(ctx, design.data.dsVersion);
     const meta = versionMeta(v);
     const assignments = assignRegions(v.data, design.data.layout);
-    const created = store.create<MatchRow>('match', sub(ctx), { designId: design.id, dsVersion: v.resolved.effective, assignments });
-    store.update(design, { ...design.data, matches: [...design.data.matches, created.id] });
+    const created = await store.create<MatchRow>('match', sub(ctx), { designId: design.id, dsVersion: v.resolved.effective, assignments });
+    await store.update(design, { ...design.data, matches: [...design.data.matches, created.id] });
     const decided = assignments.filter((a) => a.source === 'decided');
     const structured = { matchId: created.id, designId: design.id, assignments: assignments.map(compactAssignment), decisions: decided.length, ...meta };
     const capped = capJson(structured, this.cap, `read design://${design.id}/matches/${created.id}.json for the full assignment tree`);
@@ -192,16 +193,16 @@ export const resolveTokens: ToolDef<{ matchId: z.ZodString; theme: z.ZodDefault<
     tolerance: z.enum(['strict', 'normal', 'loose']).default('normal').describe('strict: exact only, the rest are exceptions; normal: the system rules; loose: always snap'),
   },
   outputSchema: { matchId: z.string(), tokenMap: z.array(shape('{regionId, property, raw, token?, cssVar?, delta?, status: exact|snapped|exception, suggestion?, runnerUp?, decision?{rule, reason, cites[]}}')), exceptions: z.number(), snappedBeyondTolerance: z.number(), ...dsMeta },
-  run(args, ctx) {
+  async run(args, ctx) {
     const store = needStore(ctx);
-    const match = loadMatch(ctx, args.matchId);
-    const design = loadDesign(ctx, match.data.designId);
+    const match = await loadMatch(ctx, args.matchId);
+    const design = await loadDesign(ctx, match.data.designId);
     const v = pickVersion(ctx, match.data.dsVersion);
     const meta = versionMeta(v);
     const { entries } = resolveLayoutTokens(v.data, design.data.layout, args.theme, args.tolerance);
     const exceptions = entries.filter((e) => e.status === 'exception').length;
     const beyond = entries.filter((e) => e.status === 'snapped' && e.decision).length;
-    const updated = store.update(match, { ...match.data, tokens: { theme: args.theme, tolerance: args.tolerance, entries, exceptions } });
+    const updated = await store.update(match, { ...match.data, tokens: { theme: args.theme, tolerance: args.tolerance, entries, exceptions } });
     const tokenMap = entries.map((e) => ({ regionId: e.regionId, property: e.property, raw: e.raw, token: e.token, cssVar: e.cssVar, delta: e.delta, status: e.status, suggestion: e.suggestion, runnerUp: e.decision ? e.runnerUp : undefined, decision: e.decision }));
     const structured = { matchId: updated.id, tokenMap, exceptions, snappedBeyondTolerance: beyond, ...meta };
     const exact = entries.filter((e) => e.status === 'exact').length;
@@ -228,18 +229,18 @@ export const planComponent: ToolDef<{ matchId: z.ZodString; name: z.ZodString; o
     options: z.object({ directory: z.string().max(200).optional(), stories: z.boolean().optional(), tests: z.boolean().optional(), typescript: z.boolean().optional() }).optional(),
   },
   outputSchema: { planId: z.string(), plan: shape('{name, dsVersion, imports[], tree[], files[], contract[], a11y[], catalog[], exceptions[], decisions[], stories[], tests[], notes[]}'), ...dsMeta },
-  run(args, ctx) {
+  async run(args, ctx) {
     const store = needStore(ctx);
-    const match = loadMatch(ctx, args.matchId);
-    const design = loadDesign(ctx, match.data.designId);
+    const match = await loadMatch(ctx, args.matchId);
+    const design = await loadDesign(ctx, match.data.designId);
     const v = pickVersion(ctx, match.data.dsVersion);
     const meta = versionMeta(v);
     // Without a resolve_tokens call the plan applies the same rules with the defaults.
     const tokens = match.data.tokens?.entries ?? resolveLayoutTokens(v.data, design.data.layout, design.data.layout.theme === 'dark' ? 'dark' : 'light', 'normal').entries;
     const plan = buildPlan(v.data, design.data.layout, match.data.assignments, tokens, { ...args.options, name: args.name, designId: design.id, matchId: match.id });
     const markdown = planMarkdown(plan);
-    const created = store.create<PlanRow>('plan', sub(ctx), { designId: design.id, matchId: match.id, plan, markdown });
-    store.update(design, { ...design.data, plans: [...design.data.plans, created.id] });
+    const created = await store.create<PlanRow>('plan', sub(ctx), { designId: design.id, matchId: match.id, plan, markdown });
+    await store.update(design, { ...design.data, plans: [...design.data.plans, created.id] });
     const capped = capJson({ planId: created.id, plan, ...meta } as Record<string, unknown>, this.cap, `read design://${design.id}/plans/${created.id}.md for the full plan`);
     const components = plan.catalog.map((c) => c.component);
     return {

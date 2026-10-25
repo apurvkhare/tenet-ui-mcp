@@ -49,7 +49,7 @@ export const runChecks: ToolDef<{ files: z.ZodDefault<z.ZodArray<z.ZodObject<{ p
     nextRound: z.string().optional(),
     ...dsMeta,
   },
-  run(args, ctx) {
+  async run(args, ctx) {
     const v = pickVersion(ctx, args.dsVersion);
     const meta = versionMeta(v);
     const wanted = new Set<string>(args.checks ?? [...CHECKS]);
@@ -81,9 +81,9 @@ export const runChecks: ToolDef<{ files: z.ZodDefault<z.ZodArray<z.ZodObject<{ p
     if (wanted.has('visual')) {
       const shots = (results?.checks.visual?.screenshots ?? []).filter((s) => s.status === 'captured');
       const withData = shots.filter((s) => s.data);
-      const ref = args.designId && ctx.designs && ctx.principal ? ctx.designs.get<DesignRow>('design', ctx.principal.sub, args.designId) : undefined;
+      const ref = args.designId && ctx.designs && ctx.principal ? await ctx.designs.get<DesignRow>('design', ctx.principal.sub, args.designId) : undefined;
       if (args.designId && !ref) throw new ToolError(`design ${args.designId} not found (unknown, expired, or not yours)`, 'not_found');
-      const refPng = ref && ctx.designs && ctx.principal ? ctx.designs.getBlob(ctx.principal.sub, ref.id, 'screenshot') : undefined;
+      const refPng = ref && ctx.designs && ctx.principal ? await ctx.designs.getBlob(ctx.principal.sub, ref.id, 'screenshot') : undefined;
       if (!shots.length) checks.visual = { status: 'skipped', detail: results?.checks.visual?.reason ?? 'no screenshots in results' };
       else if (!withData.length) checks.visual = { status: 'skipped', detail: 'screenshots have no embedded bytes; run the capture script with --embed-screenshots' };
       else if (!ref) checks.visual = { status: 'skipped', detail: `${withData.length} screenshot(s) received but no designId to compare against; look at each one beside its story baseline (ds://${v.data.version}/baselines/{storyId}.{theme}.png, listed at ds://${v.data.version}/baselines)` };
@@ -99,8 +99,8 @@ export const runChecks: ToolDef<{ files: z.ZodDefault<z.ZodArray<z.ZodObject<{ p
     const summary = summarize(findings);
     const status = overallStatus(checks, findings, ADVISORY);
     const skipped = Object.entries(checks).filter(([, s]) => s.status === 'skipped').map(([k, s]) => `${k}: ${s.detail}`);
-    const delta = deltaAgainst(ctx, args.auditId, findings);
-    const { reportId } = saveReport(ctx, { kind: 'checks', dsVersion: v.resolved.effective, status, checks, designId: args.designId, previous: args.auditId, delta, files: args.files.map((f) => f.path) }, findings);
+    const delta = await deltaAgainst(ctx, args.auditId, findings);
+    const { reportId } = await saveReport(ctx, { kind: 'checks', dsVersion: v.resolved.effective, status, checks, designId: args.designId, previous: args.auditId, delta, files: args.files.map((f) => f.path) }, findings);
     const paged = paginate(findings, args.page, this.cap);
     const top = topFindings(findings);
     const structured: Record<string, unknown> = {
