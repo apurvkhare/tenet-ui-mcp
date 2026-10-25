@@ -13,7 +13,7 @@
     "dev": "tsx watch src/main.ts",
     "stdio": "tsx src/stdio.ts",
     "token": "tsx src/auth/cli.ts",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.worker.json",
+    "typecheck": "tsc --noEmit && node scripts/bundle-snapshots.mjs && tsc --noEmit -p tsconfig.worker.json",
     "test": "node --import tsx --test \"src/**/*.test.ts\"",
     "worker:bundle": "node scripts/bundle-snapshots.mjs",
     "worker:dev": "npm run worker:bundle && node scripts/with-env.mjs wrangler dev --port 8789",
