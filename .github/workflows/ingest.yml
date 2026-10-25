@@ -30,7 +30,7 @@ concurrency:
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25 # up to 10 of them waiting for npm to serve a just-published version
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # release-asset download, higher API rate limit
     steps:
@@ -40,6 +40,23 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # The release dispatch arrives seconds after `npm publish`, before the registry serves the new
+      # version ("may take a few minutes to become available"). Wait for it instead of failing.
+      - name: Wait for the version on the registry
+        env:
+          VERSION: ${{ github.event.client_payload.version || github.event.inputs.version }}
+        run: |
+          if [ -z "$VERSION" ]; then exit 0; fi
+          for i in $(seq 1 20); do
+            if curl -fsS "${NPM_REGISTRY:-https://registry.npmjs.org}/tenet-ui" \
+              | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const p=JSON.parse(s);process.exit(p.versions[process.argv[1]]||p["dist-tags"][process.argv[1]]?0:1)})' "$VERSION"; then
+              echo "tenet-ui@$VERSION is on the registry"; exit 0
+            fi
+            echo "tenet-ui@$VERSION not on the registry yet (attempt $i/20), waiting 30s"
+            sleep 30
+          done
+          echo "::error::tenet-ui@$VERSION did not appear on the registry within 10 minutes"
+          exit 1
       - name: Ingest
         run: |
           VERSION="${{ github.event.client_payload.version || github.event.inputs.version }}"
