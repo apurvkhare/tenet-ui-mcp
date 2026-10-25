@@ -1,12 +1,16 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { CatalogStore } from './store.js';
 
 const store = new CatalogStore('snapshots');
+// The newest snapshot moves with every ingest, so read it rather than pin a version.
+const LATEST = (JSON.parse(readFileSync('snapshots/index.json', 'utf8')) as { latest: string }).latest;
 
 test('resolve: exact, newest patch of minor, nearest earlier minor, latest of major, latest', () => {
-  assert.deepEqual(store.versions(), ['0.3.0', '0.4.0']);
-  assert.equal(store.resolve('latest').effective, '0.4.0');
+  assert.deepEqual(store.versions().slice(0, 2), ['0.3.0', '0.4.0']);
+  assert.equal(store.versions().at(-1), LATEST);
+  assert.equal(store.resolve('latest').effective, LATEST);
   assert.equal(store.resolve(undefined).strategy, 'latest');
   assert.equal(store.resolve('0.3.0').strategy, 'exact');
   assert.equal(store.resolve('^0.4.0').effective, '0.4.0');
@@ -16,13 +20,13 @@ test('resolve: exact, newest patch of minor, nearest earlier minor, latest of ma
   const earlier = store.resolve('0.3'); // "0.3" → same minor
   assert.equal(earlier.effective, '0.3.0');
   const none = store.resolve('0.2.0'); // nothing earlier than 0.2 → latest of major 0
-  assert.equal(none.effective, '0.4.0');
+  assert.equal(none.effective, LATEST);
   assert.equal(none.strategy, 'latest-of-major');
   const future = store.resolve('0.9.0'); // nearest earlier minor
-  assert.equal(future.effective, '0.4.0');
+  assert.equal(future.effective, LATEST);
   assert.equal(future.strategy, 'nearest-earlier-minor');
   const major = store.resolve('1.2.0');
-  assert.equal(major.effective, '0.4.0');
+  assert.equal(major.effective, LATEST);
   assert.equal(major.strategy, 'latest');
   assert.match(major.note ?? '', /no 1\.x snapshot/);
 });

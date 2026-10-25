@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { CatalogStore } from '../catalog/store.js';
 import { bytes, capJson } from './caps.js';
 import { findTokens, getComponent, resolveValueTool, searchComponents, searchIcons, CATALOG_TOOLS } from './catalog-tools.js';
 import type { ToolContext } from './context.js';
+
+// The newest snapshot moves with every ingest, so read it rather than pin a version.
+const LATEST = (JSON.parse(readFileSync('snapshots/index.json', 'utf8')) as { latest: string }).latest;
 
 const ctx: ToolContext = { store: new CatalogStore('snapshots'), traceId: 'test', publicUrl: 'http://127.0.0.1:3000' };
 
@@ -40,7 +44,7 @@ test('search_components: synonyms, ranking, zero-result nearest names', async ()
   const z = zero.structured as { results: unknown[]; nearest: string[]; hint: string };
   assert.equal(z.results.length, 0);
   assert.equal(z.nearest.length, 5);
-  assert.equal(zero.structured.dsVersion, '0.4.0');
+  assert.equal(zero.structured.dsVersion, LATEST);
 });
 
 test('search_components on 0.3.0: no Heading, version echoed', async () => {

@@ -11,6 +11,9 @@ import { DesignStore } from './store/design-store.js';
 import { mkdtempSync, readFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+
+// The newest snapshot moves with every ingest, so read it rather than pin a version.
+const LATEST = (JSON.parse(readFileSync('snapshots/index.json', 'utf8')) as { latest: string }).latest;
 import { spawn } from 'node:child_process';
 
 const KEY = 'test-hmac-key-with-at-least-32-characters-0123456789';
@@ -133,7 +136,7 @@ test('design path over the transport: decisions in the result, and every resourc
 test('discovery: healthz, protected resource metadata, AS metadata', async () => {
   const health = await (await fetch(`${baseUrl}/healthz`)).json() as { ok: boolean; latest: string };
   assert.equal(health.ok, true);
-  assert.equal(health.latest, '0.4.0');
+  assert.equal(health.latest, LATEST);
   const prm = await (await fetch(`${baseUrl}/.well-known/oauth-protected-resource`)).json() as { resource: string; authorization_servers: string[]; scopes_supported: string[] };
   assert.equal(prm.resource, `${baseUrl}/mcp`);
   const pathAware = await (await fetch(`${baseUrl}/.well-known/oauth-protected-resource/mcp`)).json() as { resource: string };
